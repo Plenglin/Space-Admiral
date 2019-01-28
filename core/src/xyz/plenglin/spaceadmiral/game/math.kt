@@ -1,19 +1,34 @@
 package xyz.plenglin.spaceadmiral.game
 
 import com.badlogic.gdx.math.Vector2
+import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 import java.util.*
+import kotlin.collections.HashSet
 
-class Transform2D(val posLocal: Vector2, var angleLocal: Float) {
+class Transform2D(val posLocal: Vector2, angleLocal: Float) {
+    constructor(posLocal: Vector2, angleLocal: Double) : this(posLocal, angleLocal.toFloat())
+
+    var angleLocal = angleLocal
+        set(value) {
+            field = value
+            dirty = true
+        }
 
     private var _dirty = true
     var dirty
         get() = _dirty
         set(value) {
-            val queue = LinkedList<Transform2D>()
-            queue.add(this)
             if (value) {
-                children.forEach { it._dirty = true }
-                queue.addAll(children)
+                val stack = LinkedList<Transform2D>()
+                stack.push(this)
+                while (stack.isNotEmpty()) {
+                    val node = stack.pop()
+                    stack.addAll(node.children)
+                    node._dirty = true
+                }
+            } else {
+                _dirty = false
             }
         }
 
@@ -23,16 +38,24 @@ class Transform2D(val posLocal: Vector2, var angleLocal: Float) {
 
     var parent: Transform2D? = null
         set(value) {
+            var node: Transform2D? = value
+            while (node != null) {
+                if (node == this) {
+                    throw IllegalArgumentException("Recursive transform structure dected!")
+                }
+                node = node.parent
+            }
             field?.children?.remove(this)
             value?.children?.add(this)
             dirty = true
             field = value
         }
 
-    private val children = mutableListOf<Transform2D>()
+    private val children = mutableSetOf<Transform2D>()
 
     private fun updateSelf() {
         if (dirty) {
+            println("updating $this")
             parent?.let {
                 posGlobal.set(it.posGlobal).add(posLocal.cpy().rotateRad(it.angleGlobal))
                 angleGlobal = it.angleGlobal + angleLocal
@@ -44,12 +67,22 @@ class Transform2D(val posLocal: Vector2, var angleLocal: Float) {
         }
     }
 
-    private fun update() {
-        var node = this
+    fun setLocalPosition(x: Float, y: Float) {
+        posLocal.set(x, y)
+        dirty = true
+    }
+
+    fun setLocalPosition(v: Vector2) {
+        posLocal.set(v)
+        dirty = true
+    }
+
+    fun update() {
+        var node: Transform2D? = this
         val toUpdate = LinkedList<Transform2D>()
-        while (node.parent != null) {
+        while (node != null) {
             toUpdate.push(node)
-            node = node.parent!!
+            node = node.parent
         }
         toUpdate.forEach(Transform2D::updateSelf)
     }
