@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.game
 
 import kotlin.math.roundToInt
 
+
 /**
  * @param name The name.
  * @param kShield Shield damage multiplier.

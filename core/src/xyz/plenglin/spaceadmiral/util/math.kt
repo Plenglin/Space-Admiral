@@ -1,13 +1,11 @@
-package xyz.plenglin.spaceadmiral.game
+package xyz.plenglin.spaceadmiral.util
 
 import com.badlogic.gdx.math.Vector2
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 import java.util.*
-import kotlin.collections.HashSet
 
-class Transform2D(val posLocal: Vector2, angleLocal: Float) {
-    constructor(posLocal: Vector2, angleLocal: Double) : this(posLocal, angleLocal.toFloat())
+class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D? = null) {
+    constructor(posLocal: Vector2, angleLocal: Double, parent: Transform2D? = null) : this(posLocal, angleLocal.toFloat(), parent)
+    private val children = mutableSetOf<Transform2D>()
 
     var angleLocal = angleLocal
         set(value) {
@@ -36,7 +34,7 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float) {
     var angleGlobal: Float = angleLocal
         private set
 
-    var parent: Transform2D? = null
+    var parent: Transform2D? = parent
         set(value) {
             var node: Transform2D? = value
             while (node != null) {
@@ -50,8 +48,6 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float) {
             dirty = true
             field = value
         }
-
-    private val children = mutableSetOf<Transform2D>()
 
     private fun updateSelf() {
         if (dirty) {
