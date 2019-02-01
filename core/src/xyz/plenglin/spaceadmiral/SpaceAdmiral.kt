@@ -1,31 +1,35 @@
 package xyz.plenglin.spaceadmiral
 
 import com.badlogic.gdx.Game
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.net.client.Client
+import xyz.plenglin.spaceadmiral.net.server.Server
+import xyz.plenglin.spaceadmiral.net.server.generateEntangledPair
+import xyz.plenglin.spaceadmiral.view.screen.GameScreen
+import kotlin.concurrent.thread
 
 class SpaceAdmiral : Game() {
-    lateinit var batch: SpriteBatch
-    lateinit var img: Texture
 
     override fun create() {
-        batch = SpriteBatch()
-        img = Texture("badlogic.jpg")
-    }
-
-    override fun render() {
-        Gdx.gl.glClearColor(1f, 0f, 0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        batch.begin()
-        batch.draw(img, 0f, 0f)
-        batch.end()
+        logger.info("Creating")
+        val (pi, si) = generateEntangledPair()
+        val server = Server(listOf(pi))
+        val screen = GameScreen(Client(si))
+        thread(isDaemon = true) {
+            server.update()
+            Thread.sleep(10L)
+        }
+        setScreen(screen)
     }
 
     override fun dispose() {
-        batch.dispose()
-        img.dispose()
+        super.dispose()
+        logger.info("Disposing")
+    }
+
+    companion object {
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
     }
 }
 

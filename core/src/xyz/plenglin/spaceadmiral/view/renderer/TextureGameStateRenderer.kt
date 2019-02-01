@@ -1,33 +1,32 @@
-package xyz.plenglin.spaceadmiral.view
+package xyz.plenglin.spaceadmiral.view.renderer
 
-import com.badlogic.gdx.Screen
+import com.badlogic.gdx.graphics.Camera
+import xyz.plenglin.spaceadmiral.game.projectile.Projectile
+import xyz.plenglin.spaceadmiral.game.ship.Ship
+import xyz.plenglin.spaceadmiral.game.squad.Squad
 
-class GameScreen : Screen {
-    override fun show() {
+class TextureGameStateRenderer : GameStateRenderer {
+    override fun create(camera: Camera) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun render(delta: Float) {
+    override fun initializeDrawing() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun pause() {
+    override fun finalizeDrawing() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun resume() {
+    override fun traverse(squad: Squad) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun resize(width: Int, height: Int) {
+    override fun traverse(ship: Ship) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun hide() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun dispose() {
+    override fun traverse(projectile: Projectile) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

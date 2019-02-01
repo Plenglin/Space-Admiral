@@ -3,9 +3,14 @@ package xyz.plenglin.spaceadmiral.game.ship
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.*
 import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
+import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.util.Transform2D
 
-class Ship(val parent: Squad) {
+class Ship(val parent: Squad) : GameObject {
+    override fun acceptTraverser(traverser: GameStateTraverser) {
+        traverser.traverse(this)
+    }
+
     val transform = Transform2D(Vector2(), 0f)
     var currentAction: ShipAction? = null
 

@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.game.action
 
-import xyz.plenglin.spaceadmiral.game.Squad
+import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import xyz.plenglin.spaceadmiral.game.ship.MoveShipAction
 import xyz.plenglin.spaceadmiral.game.ship.Ship

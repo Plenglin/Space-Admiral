@@ -9,6 +9,7 @@ project.ext.assetsDir = new File("../android/assets");
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
+    systemProperties['org.slf4j.simpleLogger.defaultLogLevel'] = 'trace'
     standardInput = System.in
     workingDir = project.assetsDir
     ignoreExitValue = true

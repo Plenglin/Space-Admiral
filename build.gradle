@@ -50,6 +50,8 @@ project(":desktop") {
         implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+        implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
     }
 }
 
@@ -62,6 +64,8 @@ project(":core") {
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+
+        implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     }
 }
 
