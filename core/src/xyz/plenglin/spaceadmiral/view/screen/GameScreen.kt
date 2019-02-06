@@ -26,11 +26,11 @@ class GameScreen(val client: Client) : Screen {
 
         override fun keyDown(keycode: Int): Boolean = when (keycode) {
             Input.Keys.W -> {
-                dy -= 1
+                dy += 1
                 true
             }
             Input.Keys.S -> {
-                dy += 1
+                dy -= 1
                 true
             }
             Input.Keys.A -> {
@@ -79,6 +79,8 @@ class GameScreen(val client: Client) : Screen {
         uiCamera = OrthographicCamera()
         batch = SpriteBatch()
         gameRenderer = SimpleGameStateRenderer()
+
+        gameCamera.position.set(0f, 0f, 1f)
         gameRenderer.initialize(gameCamera)
 
         inputMultiplexer.addProcessor(gameWorldInput)
@@ -115,7 +117,7 @@ class GameScreen(val client: Client) : Screen {
     }
 
     companion object {
-        const val cameraSpeed = 10f
+        const val cameraSpeed = 500f
         @JvmStatic
         val logger = LoggerFactory.getLogger(GameScreen::class.java)
     }
