@@ -10,16 +10,11 @@ import xyz.plenglin.spaceadmiral.util.SleepTrigger
 import java.util.*
 
 
-sealed class ETA {
-}
+sealed class ETA
 
-object Indefinite : ETA() {
+object Indefinite : ETA()
 
-}
-
-class Definite(val seconds: Float) : ETA() {
-
-}
+class Definite(val seconds: Float) : ETA()
 
 sealed class SquadAction(val squad: Squad) {
     var future: Future? = null

@@ -13,18 +13,16 @@ import kotlin.collections.ArrayList
 
 class Squad(val template: ShipType, var team: Team) : GameObject {
 
-    val ships: MutableList<Ship>
+    val ships: MutableList<Ship> = (1..template.squadSize).map { Ship(this) }.toMutableList()
     val actionQueue = LinkedList<SquadAction>()
 
     val transform = Transform2D(Vector2(), 0f)
     var formationWidth: Int = template.defaultFormationWidth
 
     init {
-        ships = generateRelativeTransforms().map { trs ->
-            return@map Ship(this).apply {
-                transform.set(trs)
-            }
-        }.toMutableList()
+        generateRelativeTransforms().zip(ships) { trs, ship ->
+            ship.transform.set(trs)
+        }
     }
 
     override fun acceptTraverser(traverser: GameStateTraverser) {
@@ -35,7 +33,7 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
     }
 
     fun update() {
-        if (actionQueue.peek().future == null) {
+        if (actionQueue.peek()?.future == null) {
             nextAction()
         }
     }

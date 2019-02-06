@@ -1,27 +1,24 @@
 package xyz.plenglin.spaceadmiral.view.screen
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
-import com.badlogic.gdx.InputAdapter
-import com.badlogic.gdx.Screen
+import com.badlogic.gdx.*
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.client.Client
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleGameStateRenderer
 
 class GameScreen(val client: Client) : Screen {
     lateinit var batch: SpriteBatch
-    lateinit var img: Texture
 
     lateinit var gameCamera: OrthographicCamera
     lateinit var uiCamera: OrthographicCamera
     lateinit var gameRenderer: GameStateRenderer
 
-    val input = GameInput()
+    private val gameWorldInput = GameInput()
+    private val inputMultiplexer = InputMultiplexer()
 
     inner class GameInput : InputAdapter() {
         var dx: Int = 0
@@ -37,11 +34,11 @@ class GameScreen(val client: Client) : Screen {
                 true
             }
             Input.Keys.A -> {
-                dy -= 1
+                dx -= 1
                 true
             }
             Input.Keys.D -> {
-                dy += 1
+                dx += 1
                 true
             }
             else -> false
@@ -57,11 +54,11 @@ class GameScreen(val client: Client) : Screen {
                 true
             }
             Input.Keys.A -> {
-                dy = 0
+                dx = 0
                 true
             }
             Input.Keys.D -> {
-                dy = 0
+                dx = 0
                 true
             }
             else -> false
@@ -81,16 +78,19 @@ class GameScreen(val client: Client) : Screen {
         gameCamera = OrthographicCamera()
         uiCamera = OrthographicCamera()
         batch = SpriteBatch()
-        img = Texture("badlogic.jpg")
         gameRenderer = SimpleGameStateRenderer()
         gameRenderer.initialize(gameCamera)
+
+        inputMultiplexer.addProcessor(gameWorldInput)
+        Gdx.input.inputProcessor = inputMultiplexer
     }
 
     override fun render(delta: Float) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        println(gameCamera.position)
 
-        gameCamera.translate(Vector2(input.dx.toFloat(), input.dy.toFloat()).scl(cameraSpeed))
+        gameCamera.translate(Vector2(gameWorldInput.dx.toFloat(), gameWorldInput.dy.toFloat()).scl(cameraSpeed * delta))
         gameCamera.update()
 
         gameRenderer.draw(client.gameState)
@@ -103,6 +103,7 @@ class GameScreen(val client: Client) : Screen {
     }
 
     override fun resize(width: Int, height: Int) {
+        gameCamera.setToOrtho(false)
         uiCamera.setToOrtho(false, width.toFloat(), height.toFloat())
     }
 
@@ -111,10 +112,11 @@ class GameScreen(val client: Client) : Screen {
 
     override fun dispose() {
         batch.dispose()
-        img.dispose()
     }
 
     companion object {
         const val cameraSpeed = 10f
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(GameScreen::class.java)
     }
 }

@@ -4,17 +4,7 @@ import com.badlogic.gdx.graphics.Camera
 import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.GameStateTraverser
 
-interface GameStateRenderer : GameStateTraverser {
-
-    fun draw(gs: GameState) {
-        beginDrawing()
-
-        endDrawing()
-    }
-
+interface GameStateRenderer {
+    fun draw(gs: GameState)
     fun initialize(camera: Camera)
-
-    fun beginDrawing()
-    fun endDrawing()
-
 }

@@ -5,9 +5,7 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.team.Team
 
-class GameState {
-    val teams = mutableListOf<Team>()
-}
+data class GameState(val teams: MutableList<Team> = mutableListOf())
 
 interface GameObject {
     fun acceptTraverser(traverser: GameStateTraverser)

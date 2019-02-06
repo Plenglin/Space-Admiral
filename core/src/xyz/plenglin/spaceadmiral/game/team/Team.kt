@@ -9,17 +9,21 @@ import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import java.util.*
 
-class Team(val gameInstance: GameInstance, val color: Color) : GameObject {
+data class Team(val gameInstance: GameInstance,
+                val color: Color,
+                val projectiles: MutableList<Projectile> = LinkedList(),
+                val squads: MutableList<Squad> = mutableListOf())
+    : GameObject {
+
     override fun acceptTraverser(traverser: GameStateTraverser) {
         squads.forEach(traverser::traverse)
     }
 
-    val projectiles = LinkedList<Projectile>()
-    val squads = mutableListOf<Squad>()
-
     fun createSquad(squad: ShipType): Squad {
-        return Squad(squad, this).apply {
+        val squad = Squad(squad, this).apply {
             generateRelativeTransforms()
         }
+        squads.add(squad)
+        return squad
     }
 }

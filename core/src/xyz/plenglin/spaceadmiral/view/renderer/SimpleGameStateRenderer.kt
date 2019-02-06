@@ -2,9 +2,9 @@ package xyz.plenglin.spaceadmiral.view.renderer
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.Matrix3
-import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector2
+import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
@@ -24,25 +24,30 @@ class SimpleGameStateRenderer : GameStateRenderer {
         this.camera = camera
     }
 
-    override fun beginDrawing() {
+    override fun draw(gs: GameState) {
+        logger.trace("$this beginning drawing")
         shape.projectionMatrix = camera.combined
         shape.begin(ShapeRenderer.ShapeType.Filled)
-    }
 
-    override fun endDrawing() {
+        gs.teams.forEach { team ->
+            shape.color = team.color
+            team.squads.forEach { squad ->
+                squad.ships.forEach(this@SimpleGameStateRenderer::draw)
+            }
+            team.projectiles.forEach(this@SimpleGameStateRenderer::draw)
+        }
+
         shape.end()
     }
 
-    override fun traverse(squad: Squad) {
-        shape.color = squad.team.color
-    }
-
-    override fun traverse(ship: Ship) {
+    private fun draw(ship: Ship) {
+        println("Drawing ship")
         val pos = ship.transform.posGlobal
         if (camera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
             val transformed = shipTriangle.map {
                 it.cpy().rotate(ship.transform.angleGlobal).add(pos.x, pos.y)
             }
+            println(transformed)
             shape.color = ship.parent.team.color
             shape.polygon(floatArrayOf(
                     transformed[0].x, transformed[0].y,
@@ -52,12 +57,17 @@ class SimpleGameStateRenderer : GameStateRenderer {
         }
     }
 
-    override fun traverse(projectile: Projectile) {
+    private fun draw(projectile: Projectile) {
         val pos = projectile.pos
         if (camera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
             shape.color = projectile.team.color
             shape.circle(pos.x, pos.y, 1f)
         }
+    }
+
+    companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(SimpleGameStateRenderer::class.java)
     }
 
 }
