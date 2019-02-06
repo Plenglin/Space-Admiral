@@ -21,16 +21,18 @@ class EventLoop(val clock: AdjustableClock) {
     private val sleeping = PriorityQueue<SuspendedFuture>()
     private val eventing = mutableMapOf<String, LinkedList<SuspendedFuture>>()
 
-    private val addBuffer = LinkedList<Coroutine>()
+    private val addBuffer = LinkedList<Future>()
     private val eventBuffer = LinkedList<Event>()
 
-    fun schedule(coroutine: Coroutine) {
-        addBuffer.add(coroutine)
+    fun schedule(coroutine: Coroutine): Future {
+        val future = Future(coroutine)
+        addBuffer.add(future)
+        return future
     }
 
     fun update() {
         addBuffer.forEach {
-            processFuture(Future(it))
+            processFuture(it)
         }
         while (sleeping.peek().time < clock.time) {
             val suspended = sleeping.remove()

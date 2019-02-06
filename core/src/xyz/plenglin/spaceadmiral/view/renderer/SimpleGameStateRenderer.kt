@@ -19,17 +19,17 @@ class SimpleGameStateRenderer : GameStateRenderer {
     lateinit var shape: ShapeRenderer
     lateinit var camera: Camera
 
-    override fun create(camera: Camera) {
+    override fun initialize(camera: Camera) {
         shape = ShapeRenderer()
         this.camera = camera
     }
 
-    override fun initializeDrawing() {
+    override fun beginDrawing() {
         shape.projectionMatrix = camera.combined
-        shape.begin()
+        shape.begin(ShapeRenderer.ShapeType.Filled)
     }
 
-    override fun finalizeDrawing() {
+    override fun endDrawing() {
         shape.end()
     }
 

@@ -15,9 +15,11 @@ class SpaceAdmiral : Game() {
         val (pi, si) = generateEntangledPair()
         val server = Server(listOf(pi))
         val screen = GameScreen(Client(si))
-        thread(isDaemon = true) {
-            server.update()
-            Thread.sleep(10L)
+        thread(start = true, isDaemon = true) {
+            while (true) {
+                server.update()
+                Thread.sleep(20L)
+            }
         }
         setScreen(screen)
     }

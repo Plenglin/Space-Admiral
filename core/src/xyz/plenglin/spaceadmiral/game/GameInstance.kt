@@ -10,9 +10,10 @@ class GameInstance {
     val loop = EventLoop(clock)
 
     fun update() {
-        teams.forEach {
-            it.squads.forEach {
-                it.ships.forEach {
+        teams.forEach { team ->
+            team.squads.forEach { squad ->
+                squad.update()
+                squad.ships.forEach {
                     it.update()
                 }
             }

@@ -7,6 +7,7 @@ import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.util.Transform2D
 
 class Ship(val parent: Squad) : GameObject {
+
     override fun acceptTraverser(traverser: GameStateTraverser) {
         traverser.traverse(this)
     }
@@ -23,18 +24,32 @@ class Ship(val parent: Squad) : GameObject {
     }
 
     fun update() {
-        currentAction?.coroutine?.next()
+        currentAction?.update()
     }
 }
 
 sealed class ShipAction(val ship: Ship) {
     lateinit var coroutine: Iterator<Long>
-    abstract fun createCoroutine(): Sequence<Long>
+    abstract fun initialize()
+    abstract fun update(): Boolean
+    abstract fun terminate()
 }
 
 class MoveShipAction(val parent: MoveSquadAction, ship: Ship, val target: Transform2D) : ShipAction(ship) {
-    override fun createCoroutine(): Sequence<Long> = sequence {
+    override fun initialize() {
+        ship.transform.angleLocal = target.posGlobal.angle(ship.transform.posGlobal)
+    }
 
+    override fun update(): Boolean {
+        val error = target.posGlobal.cpy().sub(ship.transform.posGlobal)
+        val delta = error.setLength(ship.parent.template.speed)
+        ship.transform.angleLocal = delta.angle()
+        ship.transform.posGlobal.add(delta)
+        return error.len2() < 10
+    }
+
+    override fun terminate() {
+        parent.actions.remove(this)
     }
 
 }

@@ -6,15 +6,15 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 
 class TextureGameStateRenderer : GameStateRenderer {
-    override fun create(camera: Camera) {
+    override fun initialize(camera: Camera) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun initializeDrawing() {
+    override fun beginDrawing() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun finalizeDrawing() {
+    override fun endDrawing() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

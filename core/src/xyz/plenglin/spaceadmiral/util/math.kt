@@ -83,6 +83,12 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D?
         toUpdate.forEach(Transform2D::updateSelf)
     }
 
+    fun set(trs: Transform2D) {
+        posLocal.set(trs.posLocal)
+        angleLocal = trs.angleLocal
+        dirty = true
+    }
+
     companion object {
         @JvmStatic
         val ZERO = Transform2D(Vector2.Zero, 0f)

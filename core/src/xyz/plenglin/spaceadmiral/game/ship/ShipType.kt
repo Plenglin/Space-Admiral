@@ -8,4 +8,5 @@ interface ShipType {
     val squadSize: Int
     val speed: Float
     val spacing: Float
+    val defaultFormationWidth: Int
 }
