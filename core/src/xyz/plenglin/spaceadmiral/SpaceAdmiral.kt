@@ -2,7 +2,7 @@ package xyz.plenglin.spaceadmiral
 
 import com.badlogic.gdx.Game
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.ship.Battleship
+import xyz.plenglin.spaceadmiral.game.ship.DummyFighter
 import xyz.plenglin.spaceadmiral.net.client.Client
 import xyz.plenglin.spaceadmiral.net.client.LocalBridge
 import xyz.plenglin.spaceadmiral.net.server.Server
@@ -22,7 +22,7 @@ class SpaceAdmiral : Game() {
                 Thread.sleep(20L)
             }
         }
-        server.instance.teams[0].createSquad(Battleship())
+        server.instance.teams[0].createSquad(DummyFighter())
 
         setScreen(screen)
     }

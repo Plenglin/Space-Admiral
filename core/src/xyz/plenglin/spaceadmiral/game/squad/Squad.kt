@@ -20,8 +20,9 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
     var formationWidth: Int = template.defaultFormationWidth
 
     init {
-        generateRelativeTransforms().zip(ships) { trs, ship ->
-            ship.transform.set(trs)
+        generateRelativeTransforms().zip(ships).forEach { (trs, ship) ->
+            trs.update()
+            ship.transform.set(trs.toGlobal())
         }
     }
 
@@ -49,16 +50,29 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
     fun generateRelativeTransforms(): List<Transform2D> {
         val out = ArrayList<Transform2D>(ships.size)
         val physicalWidth = (formationWidth - 1) * template.spacing
-        val mainFormationHeight = ships.size % formationWidth - 1
-        val physicalHeight = mainFormationHeight * template.spacing
-        (0 until formationWidth).forEach { x ->
-            (0 until mainFormationHeight).forEach { y ->
+        val mainHeight = ships.size / formationWidth
+        println()
+        (0 until mainHeight).forEach { y ->
+            (0 until formationWidth).forEach { x ->
                 val trs = Transform2D(
-                        Vector2(x * template.spacing - physicalWidth / 2, y * template.spacing - physicalHeight / 2),
+                        Vector2(-y * template.spacing, x * template.spacing - physicalWidth / 2),
                         0f
                 )
+                println(trs)
                 out.add(trs)
             }
+        }
+        val leftoverWidth = ships.size % formationWidth
+        val physicalLeftoverWidth = (leftoverWidth - 1) * template.spacing
+        val physicalMainHeight = mainHeight * (template.spacing - 1)
+        val leftoverOffsetY = -physicalMainHeight - mainHeight * template.spacing
+        (0 until leftoverWidth).forEach { x ->
+            val trs = Transform2D(
+                    Vector2(leftoverOffsetY, x * template.spacing - physicalLeftoverWidth / 2),
+                    0f
+            )
+            println(trs)
+            out.add(trs)
         }
         return out
     }

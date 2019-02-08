@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Stage
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.client.Client
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
@@ -14,8 +15,10 @@ class GameScreen(val client: Client) : Screen {
     lateinit var batch: SpriteBatch
 
     lateinit var gameCamera: OrthographicCamera
-    lateinit var uiCamera: OrthographicCamera
     lateinit var gameRenderer: GameStateRenderer
+
+    lateinit var uiCamera: OrthographicCamera
+    lateinit var uiStage: Stage
 
     private val gameWorldInput = GameInput()
     private val inputMultiplexer = InputMultiplexer()
@@ -76,9 +79,12 @@ class GameScreen(val client: Client) : Screen {
 
     override fun show() {
         gameCamera = OrthographicCamera()
-        uiCamera = OrthographicCamera()
-        batch = SpriteBatch()
         gameRenderer = SimpleGameStateRenderer()
+
+        uiCamera = OrthographicCamera()
+        uiStage = Stage()
+
+        batch = SpriteBatch()
 
         gameCamera.position.set(0f, 0f, 1f)
         gameRenderer.initialize(gameCamera)
@@ -88,14 +94,17 @@ class GameScreen(val client: Client) : Screen {
     }
 
     override fun render(delta: Float) {
+        uiStage.act(delta)
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        println(gameCamera.position)
 
-        gameCamera.translate(Vector2(gameWorldInput.dx.toFloat(), gameWorldInput.dy.toFloat()).scl(cameraSpeed * delta))
+        gameCamera.translate(Vector2(gameWorldInput.dx.toFloat(), gameWorldInput.dy.toFloat()).scl(cameraSpeed * delta * gameCamera.zoom))
         gameCamera.update()
 
         gameRenderer.draw(client.gameState)
+
+        uiStage.draw()
     }
 
     override fun pause() {

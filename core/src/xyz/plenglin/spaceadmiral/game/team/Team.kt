@@ -20,9 +20,7 @@ data class Team(val gameInstance: GameInstance,
     }
 
     fun createSquad(squad: ShipType): Squad {
-        val squad = Squad(squad, this).apply {
-            generateRelativeTransforms()
-        }
+        val squad = Squad(squad, this)
         squads.add(squad)
         return squad
     }

@@ -12,9 +12,9 @@ import xyz.plenglin.spaceadmiral.game.squad.Squad
 class SimpleGameStateRenderer : GameStateRenderer {
 
     private val shipTriangle = listOf(
-            Vector2(10.0f, 0.0f),
-            Vector2(0.0f, 5.0f),
-            Vector2(0.0f, -5.0f)
+            Vector2(1.0f, 0.0f),
+            Vector2(0.0f, 0.5f),
+            Vector2(0.0f, -0.5f)
     )
     lateinit var shape: ShapeRenderer
     lateinit var camera: Camera
@@ -25,7 +25,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
     }
 
     override fun draw(gs: GameState) {
-        logger.trace("$this beginning drawing")
+        logger.trace("{} beginning drawing", this)
         shape.projectionMatrix = camera.combined
 
         shape.begin(ShapeRenderer.ShapeType.Line)
@@ -42,13 +42,12 @@ class SimpleGameStateRenderer : GameStateRenderer {
     }
 
     private fun draw(ship: Ship) {
-        println("Drawing ship")
+        ship.transform.update()
         val pos = ship.transform.posGlobal
         if (camera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
             val transformed = shipTriangle.map {
                 it.cpy().rotate(ship.transform.angleGlobal).add(pos.x, pos.y)
             }
-            println(transformed)
             shape.color = ship.parent.team.color
             shape.polygon(floatArrayOf(
                     transformed[0].x, transformed[0].y,

@@ -51,7 +51,6 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D?
 
     private fun updateSelf() {
         if (dirty) {
-            println("updating $this")
             parent?.let {
                 posGlobal.set(it.posGlobal).add(posLocal.cpy().rotateRad(it.angleGlobal))
                 angleGlobal = it.angleGlobal + angleLocal
@@ -61,6 +60,10 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D?
             }
             dirty = false
         }
+    }
+
+    fun toGlobal(): Transform2D {
+        return Transform2D(posGlobal, angleGlobal, null)
     }
 
     fun setLocalPosition(x: Float, y: Float) {
@@ -87,6 +90,10 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D?
         posLocal.set(trs.posLocal)
         angleLocal = trs.angleLocal
         dirty = true
+    }
+
+    override fun toString(): String {
+        return "Transform($posLocal, $angleLocal, $parent)"
     }
 
     companion object {
