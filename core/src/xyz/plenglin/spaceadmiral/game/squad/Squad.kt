@@ -20,10 +20,7 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
     var formationWidth: Int = template.defaultFormationWidth
 
     init {
-        generateRelativeTransforms().zip(ships).forEach { (trs, ship) ->
-            trs.update()
-            ship.transform.set(trs.toGlobal())
-        }
+        resetShipPositions()
     }
 
     override fun acceptTraverser(traverser: GameStateTraverser) {
@@ -47,6 +44,14 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
         action.future = team.gameInstance.loop.schedule(action.createCoroutine())
     }
 
+    fun resetShipPositions() {
+        generateRelativeTransforms().zip(ships).forEach { (trs, ship) ->
+            trs.update()
+            ship.transform.posLocal.set(trs.posGlobal)
+            ship.transform.angleLocal = trs.angleGlobal
+        }
+    }
+
     fun generateRelativeTransforms(): List<Transform2D> {
         val out = ArrayList<Transform2D>(ships.size)
         val physicalWidth = (formationWidth - 1) * template.spacing
@@ -56,7 +61,7 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
             (0 until formationWidth).forEach { x ->
                 val trs = Transform2D(
                         Vector2(-y * template.spacing, x * template.spacing - physicalWidth / 2),
-                        0f
+                        0f, transform
                 )
                 println(trs)
                 out.add(trs)
@@ -69,7 +74,7 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
         (0 until leftoverWidth).forEach { x ->
             val trs = Transform2D(
                     Vector2(leftoverOffsetY, x * template.spacing - physicalLeftoverWidth / 2),
-                    0f
+                    0f, transform
             )
             println(trs)
             out.add(trs)

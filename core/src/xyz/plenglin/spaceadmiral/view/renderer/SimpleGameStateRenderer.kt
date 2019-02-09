@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.view.renderer
 
 import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
@@ -28,6 +29,11 @@ class SimpleGameStateRenderer : GameStateRenderer {
         logger.trace("{} beginning drawing", this)
         shape.projectionMatrix = camera.combined
 
+        shape.begin(ShapeRenderer.ShapeType.Filled)
+        shape.color = Color.WHITE
+        shape.circle(0f, 0f, 0.1f)
+        shape.end()
+
         shape.begin(ShapeRenderer.ShapeType.Line)
 
         gs.teams.forEach { team ->
@@ -37,7 +43,6 @@ class SimpleGameStateRenderer : GameStateRenderer {
             }
             team.projectiles.forEach(this@SimpleGameStateRenderer::draw)
         }
-
         shape.end()
     }
 
@@ -46,7 +51,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
         val pos = ship.transform.posGlobal
         if (camera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
             val transformed = shipTriangle.map {
-                it.cpy().rotate(ship.transform.angleGlobal).add(pos.x, pos.y)
+                it.cpy().rotateRad(ship.transform.angleGlobal).add(pos)
             }
             shape.color = ship.parent.team.color
             shape.polygon(floatArrayOf(
