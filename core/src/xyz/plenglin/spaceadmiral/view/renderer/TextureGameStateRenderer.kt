@@ -11,7 +11,7 @@ class TextureGameStateRenderer : GameStateRenderer {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun initialize(camera: Camera) {
+    override fun initialize(gameCamera: Camera, uiCamera: Camera) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

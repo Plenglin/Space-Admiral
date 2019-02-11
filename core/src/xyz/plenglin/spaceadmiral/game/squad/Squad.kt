@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.game.squad
 
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.GameObject
 import xyz.plenglin.spaceadmiral.game.GameStateTraverser
@@ -56,14 +57,12 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
         val out = ArrayList<Transform2D>(ships.size)
         val physicalWidth = (formationWidth - 1) * template.spacing
         val mainHeight = ships.size / formationWidth
-        println()
         (0 until mainHeight).forEach { y ->
             (0 until formationWidth).forEach { x ->
                 val trs = Transform2D(
                         Vector2(-y * template.spacing, x * template.spacing - physicalWidth / 2),
                         0f, transform
                 )
-                println(trs)
                 out.add(trs)
             }
         }
@@ -76,9 +75,9 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
                     Vector2(leftoverOffsetY, x * template.spacing - physicalLeftoverWidth / 2),
                     0f, transform
             )
-            println(trs)
             out.add(trs)
         }
         return out
     }
+
 }

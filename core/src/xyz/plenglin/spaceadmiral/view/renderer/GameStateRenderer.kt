@@ -4,6 +4,6 @@ import com.badlogic.gdx.graphics.Camera
 import xyz.plenglin.spaceadmiral.game.GameState
 
 interface GameStateRenderer {
-    fun initialize(camera: Camera)
+    fun initialize(gameCamera: Camera, uiCamera: Camera)
     fun draw(gs: GameState)
 }

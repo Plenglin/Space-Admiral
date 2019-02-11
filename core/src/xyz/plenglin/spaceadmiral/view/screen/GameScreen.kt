@@ -87,7 +87,7 @@ class GameScreen(val client: Client) : Screen {
         batch = SpriteBatch()
 
         gameCamera.position.set(0f, 0f, 1f)
-        gameRenderer.initialize(gameCamera)
+        gameRenderer.initialize(gameCamera, uiCamera)
 
         inputMultiplexer.addProcessor(gameWorldInput)
         Gdx.input.inputProcessor = inputMultiplexer

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.squad.Squad
 
 class SimpleGameStateRenderer : GameStateRenderer {
 
@@ -18,16 +17,18 @@ class SimpleGameStateRenderer : GameStateRenderer {
             Vector2(0.0f, -0.5f)
     )
     lateinit var shape: ShapeRenderer
-    lateinit var camera: Camera
+    lateinit var gameCamera: Camera
+    lateinit var uiCamera: Camera
 
-    override fun initialize(camera: Camera) {
+    override fun initialize(gameCamera: Camera, uiCamera: Camera) {
         shape = ShapeRenderer()
-        this.camera = camera
+        this.gameCamera = gameCamera
+        this.uiCamera = uiCamera
     }
 
     override fun draw(gs: GameState) {
         logger.trace("{} beginning drawing", this)
-        shape.projectionMatrix = camera.combined
+        shape.projectionMatrix = gameCamera.combined
 
         shape.begin(ShapeRenderer.ShapeType.Filled)
         shape.color = Color.WHITE
@@ -49,7 +50,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
     private fun draw(ship: Ship) {
         ship.transform.update()
         val pos = ship.transform.posGlobal
-        if (camera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
+        if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
             val transformed = shipTriangle.map {
                 it.cpy().rotateRad(ship.transform.angleGlobal).add(pos)
             }
@@ -64,7 +65,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
     private fun draw(projectile: Projectile) {
         val pos = projectile.pos
-        if (camera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
+        if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
             shape.color = projectile.team.color
             shape.circle(pos.x, pos.y, 1f)
         }
