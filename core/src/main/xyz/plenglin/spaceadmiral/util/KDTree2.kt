@@ -16,6 +16,9 @@ class KDTree2<T> : Iterable<KDTree2Node<T>> {
         return node
     }
 
+    fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>, Float> {
+        return root.findNearest(pos, filter)
+    }
 }
 
 data class KDTree2Node<T>(
@@ -99,12 +102,12 @@ data class KDTree2Node<T>(
         c1?.let(stack::push)
         while (stack.isNotEmpty()) {
             val node = stack.pop()!!
+            out = pickCloser(node, out)
             if (node.dimension != this.dimension) {
                 node.c0?.let(stack::push)
                 node.c1?.let(stack::push)
             } else {
-                compareCloser(node.c0, node.c1)?.let {
-                    out = compareCloser(it, out)
+                pickCloser(node.c0, node.c1)?.let {
                     stack.push(it)
                 }
             }
@@ -112,7 +115,7 @@ data class KDTree2Node<T>(
         return out
     }
 
-    private fun compareCloser(n1: KDTree2Node<T>?, n2: KDTree2Node<T>?): KDTree2Node<T>? {
+    private fun pickCloser(n1: KDTree2Node<T>?, n2: KDTree2Node<T>?): KDTree2Node<T>? {
         return when {
             n1 == null -> n2
             n2 == null -> n1
@@ -177,7 +180,11 @@ data class KDTree2Node<T>(
     }
 
     override fun toString(): String {
-        return "Node(${if (dimension) "X" else "Y"}: $key, $value, $c0, $c1)"
+        return "KDTree2Node(${if (dimension) "X" else "Y"}: $key, $value, $c0, $c1)"
+    }
+
+    fun toSimplifiedTreeString(): String {
+        return "(${c0?.toSimplifiedTreeString() ?: "_"} <- $value$key -> ${c1?.toSimplifiedTreeString() ?: "_"})"
     }
 
 }
