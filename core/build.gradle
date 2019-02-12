@@ -4,7 +4,7 @@ sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/main" ]
-
+sourceSets.test.java.srcDirs = [ "src/test" ]
 
 eclipse.project {
     name = appName + "-core"
@@ -14,3 +14,21 @@ kotlin {
         coroutines "enable"
     }
 }
+
+
+dependencies {
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+}
+
+test {
+    useJUnit()
+}
+

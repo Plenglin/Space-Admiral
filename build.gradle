@@ -56,20 +56,6 @@ project(":desktop") {
     }
 }
 
-project(":core") {
-    apply plugin: "kotlin"
-
-
-    dependencies {
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
-
-        implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    }
-}
-
 project(":android") {
     apply plugin: "android"
     apply plugin: "kotlin-android"
