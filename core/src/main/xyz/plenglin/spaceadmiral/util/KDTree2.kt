@@ -16,8 +16,12 @@ class KDTree2<T> : Iterable<KDTree2Node<T>> {
         return node
     }
 
-    fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>, Float> {
-        return root.findNearest(pos, filter)
+    fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>, Float>? {
+        val out = root.findNearest(pos, filter)
+        if (out.first == root) {
+            return null
+        }
+        return out
     }
 }
 
@@ -96,7 +100,7 @@ data class KDTree2Node<T>(
          * Implementation details: It performs a depth-first search on the tree. It eliminates
          * possibilities along the way.
          */
-        var stack = LinkedList<KDTree2Node<T>>()
+        val stack = LinkedList<KDTree2Node<T>>()
         var out = c0
         c0?.let(stack::push)
         c1?.let(stack::push)
@@ -132,17 +136,24 @@ data class KDTree2Node<T>(
         }
     }
 
+    /**
+     * Find the nearest node to the given position that satisfies the given predicate.
+     *
+     * Implemented using a DFS
+     */
     fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>, Float> {
         val stack = LinkedList<KDTree2Node<T>>()
         stack.add(this)
-        var nearestR = this.key.dst(pos)
-        var nearestN = this
+        var nearestN = if (this.parent == null) {
+            c0 ?: c1 ?: return this to Float.NaN
+        } else this
+        var nearestR = nearestN.key.dst(pos)
 
         // Perform a DFS through the tree
         while (stack.isNotEmpty()) {
             val node = stack.pop()
             val r = pos.dst(node.key)
-            if (r < nearestR && filter(node)) {  // Is the current node closer?
+            if (r < nearestR && filter(node) && node.parent != null) {  // Is the current node closer?
                 nearestR = r
                 nearestN = node
             }
@@ -183,8 +194,8 @@ data class KDTree2Node<T>(
         return "KDTree2Node(${if (dimension) "X" else "Y"}: $key, $value, $c0, $c1)"
     }
 
-    fun toSimplifiedTreeString(): String {
-        return "(${c0?.toSimplifiedTreeString() ?: "_"} <- $value$key -> ${c1?.toSimplifiedTreeString() ?: "_"})"
+    fun toTreeJson(): String {
+        return """{"key":[${key.x}, ${key.y}],"value":"$value","dim":$dimension,"c0":${c0?.toTreeJson()},"c1":${c1?.toTreeJson()}}"""
     }
 
 }
