@@ -74,17 +74,20 @@ class KDTree2Node<T>(
     }
 
     fun insert(node: KDTree2Node<T>) {
-        if (dimension) {
-            if (node.key.x < key.x) {
-                c0?.insert(node) ?: attachC0(node)
+        val parent = find(node.key)
+        parent.let {
+            if (it.dimension) {
+                if (node.key.x < it.key.x) {
+                    it.attachC0(node)
+                } else {
+                    it.attachC1(node)
+                }
             } else {
-                c1?.insert(node) ?: attachC1(node)
-            }
-        } else {
-            if (node.key.y < key.y) {
-                c0?.insert(node) ?: attachC0(node)
-            } else {
-                c1?.insert(node) ?: attachC1(node)
+                if (node.key.y < it.key.y) {
+                    it.attachC0(node)
+                } else {
+                    it.attachC1(node)
+                }
             }
         }
     }
@@ -141,16 +144,45 @@ class KDTree2Node<T>(
             n1 == null -> n2
             n2 == null -> n1
             dimension -> if (Math.abs(n1.key.x - key.x) < Math.abs(n2.key.x - key.x)) {
-                    n1
-                } else {
-                    n2
-                }
+                n1
+            } else {
+                n2
+            }
             else -> if (Math.abs(n1.key.y - key.y) < Math.abs(n2.key.y - key.y)) {
-                    n1
-                } else {
-                    n2
-                }
+                n1
+            } else {
+                n2
+            }
         }
+    }
+
+    private fun nextChild(pos: Vector2): KDTree2Node<T>? {
+        return if (dimension) {
+            if (pos.x < key.x) {
+                c0
+            } else {
+                c1
+            }
+        } else {
+            if (pos.y < key.y) {
+                c0
+            } else {
+                c1
+            }
+        }
+    }
+
+    /**
+     * Find the smallest region that holds pos.
+     */
+    fun find(pos: Vector2): KDTree2Node<T> {
+        var par = this
+        var node: KDTree2Node<T>? = this
+        while (node != null) {
+            par = node
+            node = node.nextChild(pos)
+        }
+        return par
     }
 
     /**
@@ -213,6 +245,18 @@ class KDTree2Node<T>(
 
     override fun hashCode(): Int {
         return (key.hashCode() * 31) or value.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as KDTree2Node<*>
+
+        if (key != other.key) return false
+        if (value != other.value) return false
+
+        return true
     }
 
 }
