@@ -5,8 +5,11 @@ import xyz.plenglin.spaceadmiral.game.*
 import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.util.Transform2D
+import java.util.*
 
 class Ship(val parent: Squad) : GameObject {
+
+    val id = UUID.randomUUID()
 
     override fun acceptTraverser(traverser: GameStateTraverser) {
         traverser.traverse(this)

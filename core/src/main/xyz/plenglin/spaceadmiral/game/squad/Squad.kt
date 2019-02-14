@@ -14,6 +14,8 @@ import kotlin.collections.ArrayList
 
 class Squad(val template: ShipType, var team: Team) : GameObject {
 
+    val id = UUID.randomUUID()
+
     val ships: MutableList<Ship> = (1..template.squadSize).map { Ship(this) }.toMutableList()
     val actionQueue = LinkedList<SquadAction>()
 

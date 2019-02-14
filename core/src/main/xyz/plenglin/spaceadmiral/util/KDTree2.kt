@@ -6,7 +6,6 @@ import java.util.*
 class KDTree2<T> : Iterable<KDTree2Node<T>> {
     val root = KDTree2Node<T>(Vector2(0f, 0f), null, null, true)
 
-
     override fun iterator(): Iterator<KDTree2Node<T>> = object : Iterator<KDTree2Node<T>> {
         private val stack = LinkedList<KDTree2Node<T>>()
 
@@ -34,13 +33,110 @@ class KDTree2<T> : Iterable<KDTree2Node<T>> {
         return node
     }
 
-    fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>, Float>? {
-        val out = root.findNearest(pos, filter)
-        if (out.first == root) {
-            return null
+    /**
+     * Find the nearest node to the given position that satisfies the given predicate.
+     *
+     * Implemented using a DFS
+     */
+    fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>?, Float> {
+        val stack = LinkedList<KDTree2Node<T>>()
+        root.c0?.let(stack::push)
+        root.c1?.let(stack::push)
+        var nearestN: KDTree2Node<T>? = null
+        var nearestR = Float.POSITIVE_INFINITY
+
+        // Perform a DFS through the tree
+        while (stack.isNotEmpty()) {
+            val node = stack.pop()
+            val r = pos.dst(node.key)
+            if (r < nearestR && filter(node) && node.parent != null) {  // Is the current node closer?
+                nearestR = r
+                nearestN = node
+            }
+            if (node.dimension) {  // x-dimension
+                if (pos.x < node.key.x) {  // Left side
+                    node.c0?.let(stack::push)  // Add left child
+                    if (pos.x + nearestR >= node.key.x) {  // Does our circle touch the left side?
+                        node.c1?.let(stack::push)
+                    }
+                } else {  // Right side
+                    node.c1?.let(stack::push)  // Add right child
+                    if (pos.x - nearestR < node.key.x) {  // Does our circle reach the left side?
+                        node.c0?.let(stack::push)
+                    }
+                }
+            } else {
+                if (pos.y < node.key.y) {  // Bottom side
+                    node.c0?.let(stack::push)  // Add bottom child
+                    if (pos.y + nearestR >= node.key.y) {  // Does our circle reach the top side?
+                        node.c1?.let(stack::push)
+                    }
+                } else {  // Top side
+                    node.c1?.let(stack::push)  // Add top child
+                    if (pos.y - nearestR < node.key.y) {  // Does our circle reach the bottom side?
+                        node.c0?.let(stack::push)
+                    }
+                }
+            }
+        }
+        return nearestN to nearestR
+    }
+
+    fun findInRadius(pos: Vector2, radius: Float, filter: (KDTree2Node<T>) -> Boolean = { true }): List<KDTree2Node<T>> {
+        val stack = LinkedList<KDTree2Node<T>>()
+        root.c0?.let(stack::push)
+        root.c1?.let(stack::push)
+        val out = mutableListOf<KDTree2Node<T>>()
+
+        val x0 = pos.x - radius
+        val x1 = pos.x + radius
+        val y0 = pos.y - radius
+        val y1 = pos.y + radius
+
+        // Perform a DFS through the tree
+        while (stack.isNotEmpty()) {
+            val node = stack.pop()
+            val r = pos.dst(node.key)
+
+            // Add nodes
+            if (r <= radius && filter(node) && node.parent != null) {  // Is the current node closer?
+                out.add(node)
+            }
+
+            // Filter out regions
+            if (node.dimension) {  // x-dimension
+                if (pos.x < node.key.x) {  // Left side
+                    node.c0?.let(stack::push)  // Add left child
+                    if (x1 >= node.key.x) {  // Does our circle touch the left side?
+                        node.c1?.let(stack::push)
+                    }
+                } else {  // Right side
+                    node.c1?.let(stack::push)  // Add right child
+                    if (x0 < node.key.x) {  // Does our circle reach the left side?
+                        node.c0?.let(stack::push)
+                    }
+                }
+            } else {
+                if (pos.y < node.key.y) {  // Bottom side
+                    node.c0?.let(stack::push)  // Add bottom child
+                    if (y1 >= node.key.y) {  // Does our circle reach the top side?
+                        node.c1?.let(stack::push)
+                    }
+                } else {  // Top side
+                    node.c1?.let(stack::push)  // Add top child
+                    if (y0 < node.key.y) {  // Does our circle reach the bottom side?
+                        node.c0?.let(stack::push)
+                    }
+                }
+            }
         }
         return out
     }
+    fun clear() {
+        root.c0 = null
+        root.c1 = null
+    }
+
 }
 
 class KDTree2Node<T>(
@@ -183,56 +279,6 @@ class KDTree2Node<T>(
             node = node.nextChild(pos)
         }
         return par
-    }
-
-    /**
-     * Find the nearest node to the given position that satisfies the given predicate.
-     *
-     * Implemented using a DFS
-     */
-    fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>, Float> {
-        val stack = LinkedList<KDTree2Node<T>>()
-        stack.push(this)
-        var nearestN = if (this.parent == null) {
-            c0 ?: c1 ?: return this to Float.NaN
-        } else this
-        var nearestR = nearestN.key.dst(pos)
-
-        // Perform a DFS through the tree
-        while (stack.isNotEmpty()) {
-            val node = stack.pop()
-            val r = pos.dst(node.key)
-            if (r < nearestR && filter(node) && node.parent != null) {  // Is the current node closer?
-                nearestR = r
-                nearestN = node
-            }
-            if (node.dimension) {  // x-dimension
-                if (pos.x < node.key.x) {  // Left side
-                    node.c0?.let(stack::push)  // Add left child
-                    if (pos.x + nearestR >= node.key.x) {  // Does our circle touch the left side?
-                        node.c1?.let(stack::push)
-                    }
-                } else {  // Right side
-                    node.c1?.let(stack::push)  // Add right child
-                    if (pos.x - nearestR < node.key.x) {  // Does our circle reach the left side?
-                        node.c0?.let(stack::push)
-                    }
-                }
-            } else {
-                if (pos.y < node.key.y) {  // Bottom side
-                    node.c0?.let(stack::push)  // Add bottom child
-                    if (pos.y + nearestR >= node.key.y) {  // Does our circle reach the top side?
-                        node.c1?.let(stack::push)
-                    }
-                } else {  // Top side
-                    node.c1?.let(stack::push)  // Add top child
-                    if (pos.y - nearestR < node.key.y) {  // Does our circle reach the bottom side?
-                        node.c0?.let(stack::push)
-                    }
-                }
-            }
-        }
-        return nearestN to nearestR
     }
 
     override fun toString(): String {
