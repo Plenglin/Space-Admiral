@@ -6,8 +6,26 @@ import java.util.*
 class KDTree2<T> : Iterable<KDTree2Node<T>> {
     val root = KDTree2Node<T>(Vector2(0f, 0f), null, null, true)
 
-    override fun iterator(): Iterator<KDTree2Node<T>> {
-        return root.iterator()
+
+    override fun iterator(): Iterator<KDTree2Node<T>> = object : Iterator<KDTree2Node<T>> {
+        private val stack = LinkedList<KDTree2Node<T>>()
+
+        init {
+            root.c0?.let(stack::push)
+            root.c1?.let(stack::push)
+        }
+
+        override fun hasNext(): Boolean {
+            return stack.isNotEmpty()
+        }
+
+        override fun next(): KDTree2Node<T> {
+            val node = stack.pop()
+            node.c0?.let(stack::push)
+            node.c1?.let(stack::push)
+            return node
+        }
+
     }
 
     fun insert(key: Vector2, value: T): KDTree2Node<T> {
@@ -25,7 +43,7 @@ class KDTree2<T> : Iterable<KDTree2Node<T>> {
     }
 }
 
-data class KDTree2Node<T>(
+class KDTree2Node<T>(
         var key: Vector2,
         var value: T?,
         var parent: KDTree2Node<T>? = null,
@@ -41,8 +59,7 @@ data class KDTree2Node<T>(
         /**
          * Anything in the range of [0, inf)
          */
-        var c1: KDTree2Node<T>? = null)
-    : Iterable<KDTree2Node<T>> {
+        var c1: KDTree2Node<T>? = null) {
 
     private fun attachC0(node: KDTree2Node<T>) {
         c0 = node
@@ -143,7 +160,7 @@ data class KDTree2Node<T>(
      */
     fun findNearest(pos: Vector2, filter: (KDTree2Node<T>) -> Boolean = { true }): Pair<KDTree2Node<T>, Float> {
         val stack = LinkedList<KDTree2Node<T>>()
-        stack.add(this)
+        stack.push(this)
         var nearestN = if (this.parent == null) {
             c0 ?: c1 ?: return this to Float.NaN
         } else this
@@ -159,35 +176,31 @@ data class KDTree2Node<T>(
             }
             if (node.dimension) {  // x-dimension
                 if (pos.x < node.key.x) {  // Left side
-                    node.c0?.let(stack::add)  // Add left child
+                    node.c0?.let(stack::push)  // Add left child
                     if (pos.x + nearestR >= node.key.x) {  // Does our circle touch the left side?
-                        node.c1?.let(stack::add)
+                        node.c1?.let(stack::push)
                     }
                 } else {  // Right side
-                    node.c1?.let(stack::add)  // Add right child
+                    node.c1?.let(stack::push)  // Add right child
                     if (pos.x - nearestR < node.key.x) {  // Does our circle reach the left side?
-                        node.c0?.let(stack::add)
+                        node.c0?.let(stack::push)
                     }
                 }
             } else {
                 if (pos.y < node.key.y) {  // Bottom side
-                    node.c0?.let(stack::add)  // Add bottom child
+                    node.c0?.let(stack::push)  // Add bottom child
                     if (pos.y + nearestR >= node.key.y) {  // Does our circle reach the top side?
-                        node.c1?.let(stack::add)
+                        node.c1?.let(stack::push)
                     }
                 } else {  // Top side
-                    node.c1?.let(stack::add)  // Add top child
+                    node.c1?.let(stack::push)  // Add top child
                     if (pos.y - nearestR < node.key.y) {  // Does our circle reach the bottom side?
-                        node.c0?.let(stack::add)
+                        node.c0?.let(stack::push)
                     }
                 }
             }
         }
         return nearestN to nearestR
-    }
-
-    override fun iterator(): Iterator<KDTree2Node<T>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun toString(): String {
@@ -196,6 +209,10 @@ data class KDTree2Node<T>(
 
     fun toTreeJson(): String {
         return """{"key":[${key.x}, ${key.y}],"value":"$value","dim":$dimension,"c0":${c0?.toTreeJson()},"c1":${c1?.toTreeJson()}}"""
+    }
+
+    override fun hashCode(): Int {
+        return (key.hashCode() * 31) or value.hashCode()
     }
 
 }

@@ -6,6 +6,7 @@ import org.junit.Test
 import xyz.plenglin.spaceadmiral.util.KDTree2
 import xyz.plenglin.spaceadmiral.util.KDTree2Node
 import java.lang.AssertionError
+import java.lang.Exception
 import java.util.*
 
 class KDTreeTest {
@@ -75,6 +76,29 @@ class KDTreeTest {
                 println(tree.root.toTreeJson())
                 throw e
             }
+        }
+    }
+
+    @Test
+    fun testIteration() {
+        val random = Random(213278)
+
+        (1..500).forEach { _ ->
+            val (tree, nodes) = createRandomTree(random, random.nextInt(900) + 100)
+            val nodeSet = nodes.toMutableSet()
+            val nodeList = tree.toList()
+            for (n in nodeList) {
+                try {
+                    assertTrue(nodeSet.remove(n))
+                } catch (e: AssertionError) {
+                    println(n)
+                    println(tree.root.toTreeJson())
+                    println(nodeList)
+                    println(nodeSet)
+                    throw e
+                }
+            }
+            assertTrue(nodeSet.isEmpty())
         }
     }
 
