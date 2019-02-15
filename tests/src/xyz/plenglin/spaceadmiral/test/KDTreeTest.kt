@@ -62,6 +62,86 @@ class KDTreeTest {
     }
 
     @Test
+    fun emptyTreeShouldHaveNoNearest() {
+        val random = Random(321)
+        (1..100).forEach { _ ->
+            val pos = Vector2(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
+            val tree = KDTree2<Int>()
+            assertEquals(null, tree.findNearest(pos).first)
+        }
+    }
+
+    @Test
+    fun testFindWithinSquare() {
+        val random = Random(321)
+        (1..100).forEach { _ ->
+            val (tree, nodes) = createRandomTree(random, random.nextInt(30) + 10)
+            val pos = Vector2(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
+            val rad = random.nextFloat() / 2
+            val inSquare = nodes.filter {
+                Math.abs(it.key.x - pos.x) <= rad && Math.abs(it.key.y - pos.y) <= rad
+            }.toMutableSet()
+            val inSquareOriginal = inSquare.toSet()
+            tree.findInSquare(pos, rad).forEach {
+                try {
+                    assertTrue(inSquare.remove(it))
+                } catch (e: AssertionError) {
+                    println(pos)
+                    println(rad)
+                    println(tree.root.toTreeJson())
+                    println(it.key)
+                    throw e
+                }
+            }
+            try {
+                assertTrue(inSquare.isEmpty())
+            } catch (e: AssertionError) {
+                println(pos)
+                println(rad)
+                println(tree.root.toTreeJson())
+                println(inSquare.map { it.key })
+                println(inSquareOriginal.map { it.key })
+                throw e
+            }
+        }
+    }
+
+    @Test
+    fun testFindWithinCircle() {
+        val random = Random(321)
+        (1..100).forEach { _ ->
+            val (tree, nodes) = createRandomTree(random, random.nextInt(30) + 10)
+            val pos = Vector2(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
+            val rad = random.nextFloat() / 2
+            val inSquare = nodes.filter {
+                pos.dst(it.key) <= rad
+            }.toMutableSet()
+            val inSquareOriginal = inSquare.toSet()
+            tree.findInCircle(pos, rad).forEach {
+                try {
+                    assertTrue(inSquare.remove(it))
+                } catch (e: AssertionError) {
+                    println(pos)
+                    println(rad)
+                    println(tree.root.toTreeJson())
+                    println(it.key)
+                    throw e
+                }
+            }
+            try {
+                assertTrue(inSquare.isEmpty())
+            } catch (e: AssertionError) {
+                println(pos)
+                println(rad)
+                println(tree.root.toTreeJson())
+                println(inSquare.map { it.key })
+                println(inSquareOriginal.map { it.key })
+                throw e
+            }
+        }
+    }
+
+    @Test
     fun testNearest() {
         val random = Random(312124)
 
@@ -70,7 +150,7 @@ class KDTreeTest {
             val pos = Vector2(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
             val trueNearest = nodes.minBy { it.key.dst2(pos) }!!
             try {
-                assertEquals(trueNearest, tree.findNearest(pos)!!.first)
+                assertEquals(trueNearest, tree.findNearest(pos).first)
             } catch (e: AssertionError) {
                 println(pos)
                 println(tree.root.toTreeJson())

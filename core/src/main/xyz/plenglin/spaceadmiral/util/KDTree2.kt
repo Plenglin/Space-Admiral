@@ -45,7 +45,7 @@ class KDTree2<T> : Iterable<KDTree2Node<T>> {
         var nearestN: KDTree2Node<T>? = null
         var nearestR = Float.POSITIVE_INFINITY
 
-        // Perform a DFS through the tree
+        // Perform a modified DFS through the tree
         while (stack.isNotEmpty()) {
             val node = stack.pop()
             val r = pos.dst(node.key)
@@ -56,25 +56,25 @@ class KDTree2<T> : Iterable<KDTree2Node<T>> {
             if (node.dimension) {  // x-dimension
                 if (pos.x < node.key.x) {  // Left side
                     node.c0?.let(stack::push)  // Add left child
-                    if (pos.x + nearestR >= node.key.x) {  // Does our circle touch the left side?
-                        node.c1?.let(stack::push)
+                    if (pos.x + nearestR >= node.key.x) {  // Does our circle touch the right side?
+                        node.c1?.let(stack::push)  // Let in the right child
                     }
                 } else {  // Right side
                     node.c1?.let(stack::push)  // Add right child
                     if (pos.x - nearestR < node.key.x) {  // Does our circle reach the left side?
-                        node.c0?.let(stack::push)
+                        node.c0?.let(stack::push)  // Let in the left child
                     }
                 }
             } else {
                 if (pos.y < node.key.y) {  // Bottom side
                     node.c0?.let(stack::push)  // Add bottom child
                     if (pos.y + nearestR >= node.key.y) {  // Does our circle reach the top side?
-                        node.c1?.let(stack::push)
+                        node.c1?.let(stack::push)  // Let in the top child
                     }
                 } else {  // Top side
                     node.c1?.let(stack::push)  // Add top child
                     if (pos.y - nearestR < node.key.y) {  // Does our circle reach the bottom side?
-                        node.c0?.let(stack::push)
+                        node.c0?.let(stack::push)  // Let in the bottom child
                     }
                 }
             }
@@ -82,56 +82,55 @@ class KDTree2<T> : Iterable<KDTree2Node<T>> {
         return nearestN to nearestR
     }
 
-    fun findInRadius(pos: Vector2, radius: Float, filter: (KDTree2Node<T>) -> Boolean = { true }): List<KDTree2Node<T>> {
+    fun findInRect(x0: Float, x1: Float, y0: Float, y1: Float): Sequence<KDTree2Node<T>> = sequence {
         val stack = LinkedList<KDTree2Node<T>>()
         root.c0?.let(stack::push)
         root.c1?.let(stack::push)
-        val out = mutableListOf<KDTree2Node<T>>()
 
-        val x0 = pos.x - radius
-        val x1 = pos.x + radius
-        val y0 = pos.y - radius
-        val y1 = pos.y + radius
-
-        // Perform a DFS through the tree
+        // Perform a modified DFS through the tree
         while (stack.isNotEmpty()) {
             val node = stack.pop()
-            val r = pos.dst(node.key)
 
             // Add nodes
-            if (r <= radius && filter(node) && node.parent != null) {  // Is the current node closer?
-                out.add(node)
+            if (node.key.x in x0..x1 && node.key.y in y0..y1) {  // Is the current node in the region?
+                yield(node)
             }
 
             // Filter out regions
             if (node.dimension) {  // x-dimension
-                if (pos.x < node.key.x) {  // Left side
-                    node.c0?.let(stack::push)  // Add left child
-                    if (x1 >= node.key.x) {  // Does our circle touch the left side?
-                        node.c1?.let(stack::push)
-                    }
-                } else {  // Right side
-                    node.c1?.let(stack::push)  // Add right child
-                    if (x0 < node.key.x) {  // Does our circle reach the left side?
-                        node.c0?.let(stack::push)
-                    }
+                if (x0 <= node.key.x) {
+                    node.c0?.let(stack::push)  // Add right child
+                }
+                if (node.key.x <= x1) {
+                    node.c1?.let(stack::push)  // Add left child
                 }
             } else {
-                if (pos.y < node.key.y) {  // Bottom side
-                    node.c0?.let(stack::push)  // Add bottom child
-                    if (y1 >= node.key.y) {  // Does our circle reach the top side?
-                        node.c1?.let(stack::push)
-                    }
-                } else {  // Top side
-                    node.c1?.let(stack::push)  // Add top child
-                    if (y0 < node.key.y) {  // Does our circle reach the bottom side?
-                        node.c0?.let(stack::push)
-                    }
+                if (y0 <= node.key.y) {
+                    node.c0?.let(stack::push)  // Add top child
+                }
+                if (node.key.y <= y1) {
+                    node.c1?.let(stack::push)  // Add bottom child
                 }
             }
         }
-        return out
     }
+
+    fun findInCircle(pos: Vector2, radius: Float): Sequence<KDTree2Node<T>> {
+        val r2 = radius * radius
+        return findInSquare(pos, radius)
+                .filter { it.key.dst2(pos) <= r2 }
+    }
+
+    /**
+     * Find all nodes within a square radius of the given position.
+     */
+    fun findInSquare(pos: Vector2, radius: Float): Sequence<KDTree2Node<T>> = findInRect(
+        x0 = pos.x - radius,
+        x1 = pos.x + radius,
+        y0 = pos.y - radius,
+        y1 = pos.y + radius
+    )
+
     fun clear() {
         root.c0 = null
         root.c1 = null
