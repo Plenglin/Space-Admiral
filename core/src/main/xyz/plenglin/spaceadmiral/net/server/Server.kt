@@ -4,12 +4,14 @@ import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.team.Team
+import xyz.plenglin.spaceadmiral.net.data.GameStateDTO
 
 class Server(val players: List<PlayerInterface>) {
 
     val instance = GameInstance()
 
     init {
+        logger.info("Initializing server {}", this)
         players.forEachIndexed { i, pl ->
             pl.attachServer(this)
             val team = Team(instance, COLORS[i])
@@ -19,9 +21,12 @@ class Server(val players: List<PlayerInterface>) {
     }
 
     fun update() {
+        logger.debug("Updating server {}", this)
         instance.update()
+        val gs = GameStateDTO(instance.shipTree, instance.projTree)
         players.forEach {
-            it.sendGameState()
+            logger.debug("Sending data to {}", it)
+            it.sendInitialGameState(gs)
         }
     }
 

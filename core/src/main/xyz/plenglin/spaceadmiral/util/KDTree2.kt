@@ -1,9 +1,10 @@
 package xyz.plenglin.spaceadmiral.util
 
 import com.badlogic.gdx.math.Vector2
+import java.io.Serializable
 import java.util.*
 
-class KDTree2<T> : Iterable<KDTree2Node<T>> {
+class KDTree2<T> : Iterable<KDTree2Node<T>>, Serializable {
     val root = KDTree2Node<T>(Vector2(0f, 0f), null, null, true)
 
     override fun iterator(): Iterator<KDTree2Node<T>> = object : Iterator<KDTree2Node<T>> {
@@ -154,7 +155,7 @@ class KDTree2Node<T>(
         /**
          * Anything in the range of [0, inf)
          */
-        var c1: KDTree2Node<T>? = null) {
+        var c1: KDTree2Node<T>? = null): Serializable {
 
     private fun attachC0(node: KDTree2Node<T>) {
         c0 = node
@@ -303,6 +304,9 @@ class KDTree2Node<T>(
 
         return true
     }
+
+    operator fun component1() = key
+    operator fun component2() = value
 
 }
 

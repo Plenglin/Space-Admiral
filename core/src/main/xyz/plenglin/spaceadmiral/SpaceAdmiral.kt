@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.DummyFighter
 import xyz.plenglin.spaceadmiral.net.client.Client
-import xyz.plenglin.spaceadmiral.net.client.LocalBridge
+import xyz.plenglin.spaceadmiral.net.local.LocalBridge
 import xyz.plenglin.spaceadmiral.net.server.Server
 import xyz.plenglin.spaceadmiral.view.screen.GameScreen
 import kotlin.concurrent.thread

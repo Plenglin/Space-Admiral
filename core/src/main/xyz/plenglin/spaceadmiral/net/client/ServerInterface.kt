@@ -7,4 +7,5 @@ interface ServerInterface {
     val connected: Boolean
 
     fun attachClient(client: Client)
+    fun sendDisconnectToServer()
 }

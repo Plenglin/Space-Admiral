@@ -1,18 +1,15 @@
 package xyz.plenglin.spaceadmiral.game.squad
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import xyz.plenglin.spaceadmiral.game.GameObject
-import xyz.plenglin.spaceadmiral.game.GameStateTraverser
-import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
+import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Squad(val template: ShipType, var team: Team) : GameObject {
+class Squad(val template: ShipType, var team: Team) {
 
     val id = UUID.randomUUID()
 
@@ -24,13 +21,6 @@ class Squad(val template: ShipType, var team: Team) : GameObject {
 
     init {
         resetShipPositions()
-    }
-
-    override fun acceptTraverser(traverser: GameStateTraverser) {
-        traverser.traverse(this)
-        ships.forEach {
-            it.acceptTraverser(traverser)
-        }
     }
 
     fun update() {

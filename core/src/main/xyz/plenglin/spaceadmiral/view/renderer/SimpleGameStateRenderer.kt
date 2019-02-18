@@ -37,12 +37,20 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
         shape.begin(ShapeRenderer.ShapeType.Line)
 
+        /*
         gs.teams.forEach { team ->
             shape.color = team.color
             team.squads.forEach { squad ->
                 squad.ships.forEach(this@SimpleGameStateRenderer::draw)
             }
             team.projectiles.forEach(this@SimpleGameStateRenderer::draw)
+        }*/
+
+        gs.ships.forEach { _, ship ->
+            draw(ship)
+        }
+        gs.projectiles.forEach { _, proj ->
+            draw(proj)
         }
         shape.end()
     }
