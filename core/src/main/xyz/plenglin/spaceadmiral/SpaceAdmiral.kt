@@ -3,7 +3,7 @@ package xyz.plenglin.spaceadmiral
 import com.badlogic.gdx.Game
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.DummyFighter
-import xyz.plenglin.spaceadmiral.net.client.Client
+import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.net.local.LocalBridge
 import xyz.plenglin.spaceadmiral.net.server.Server
 import xyz.plenglin.spaceadmiral.view.screen.GameScreen
@@ -15,7 +15,7 @@ class SpaceAdmiral : Game() {
         logger.info("Creating")
         val localBridge = LocalBridge()
         val server = Server(listOf(localBridge))
-        val screen = GameScreen(Client(localBridge))
+        val screen = GameScreen(GameClient(localBridge))
         thread(start = true, isDaemon = true) {
             while (true) {
                 server.update()

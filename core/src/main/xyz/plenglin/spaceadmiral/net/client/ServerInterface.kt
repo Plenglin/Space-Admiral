@@ -6,6 +6,6 @@ package xyz.plenglin.spaceadmiral.net.client
 interface ServerInterface {
     val connected: Boolean
 
-    fun attachClient(client: Client)
+    fun attachClient(client: GameClient)
     fun sendDisconnectToServer()
 }

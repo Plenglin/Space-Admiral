@@ -7,11 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.net.client.Client
+import xyz.plenglin.spaceadmiral.game.GameInstance
+import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleGameStateRenderer
 
-class GameScreen(val client: Client) : Screen {
+class GameScreen(val client: GameClient) : Screen {
     lateinit var batch: SpriteBatch
 
     lateinit var gameCamera: OrthographicCamera
@@ -22,6 +23,8 @@ class GameScreen(val client: Client) : Screen {
 
     private val gameWorldInput = GameInput()
     private val inputMultiplexer = InputMultiplexer()
+
+    private val gameInstance = GameInstance()
 
     inner class GameInput : InputAdapter() {
         var dx: Int = 0

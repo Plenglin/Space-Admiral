@@ -12,6 +12,8 @@ data class Team(val gameInstance: GameInstance,
                 val projectiles: MutableList<Projectile> = LinkedList(),
                 val squads: MutableList<Squad> = mutableListOf()) {
 
+    val uuid: UUID = UUID.randomUUID()
+
     fun createSquad(template: ShipType): Squad {
         val out = Squad(template, this)
         squads.add(out)

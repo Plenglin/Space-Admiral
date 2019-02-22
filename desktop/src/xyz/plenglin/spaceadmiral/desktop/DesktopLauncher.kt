@@ -10,7 +10,9 @@ import xyz.plenglin.spaceadmiral.util.KDTree2Node
 object DesktopLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
-        val config = LwjglApplicationConfiguration()
-        LwjglApplication(SpaceAdmiral(), config)
+        LwjglApplication(SpaceAdmiral(), LwjglApplicationConfiguration().apply {
+            width = 1280
+            height = 720
+        })
     }
 }

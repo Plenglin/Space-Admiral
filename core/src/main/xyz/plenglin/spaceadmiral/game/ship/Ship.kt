@@ -3,9 +3,8 @@ package xyz.plenglin.spaceadmiral.game.ship
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.Health
 import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
+import xyz.plenglin.spaceadmiral.game.data.ShipDTO
 import xyz.plenglin.spaceadmiral.game.squad.Squad
-import xyz.plenglin.spaceadmiral.net.data.Delta
-import xyz.plenglin.spaceadmiral.net.data.ShipDelta
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.util.*
 
@@ -13,18 +12,23 @@ class Ship(val parent: Squad) {
 
     val uuid: UUID = UUID.randomUUID()
     val transform = Transform2D(Vector2(), 0f)
+
     var currentAction: ShipAction? = null
+    var currentTarget: Ship? = null
 
     var healthInitial = Health(0, 0, 0)
     var health = Health(0, 0, 0)
     var morale = 0
 
+    var hasDelta = false
+
     fun onDeath() {
         parent.ships.remove(this)
+        hasDelta = true
     }
 
-    fun update(): Delta? {
-        var hasDelta = false
+    fun updateInitial() {
+        hasDelta = false
         currentAction?.let {
             hasDelta = it.update()
             if (it.shouldTerminate()) {
@@ -32,11 +36,10 @@ class Ship(val parent: Squad) {
                 currentAction = null
             }
         }
-        return if (hasDelta) {
-            ShipDelta(this)
-        } else {
-            null
-        }
+    }
+
+    fun createDTO(): ShipDTO {
+        return ShipDTO(uuid, transform)
     }
 }
 

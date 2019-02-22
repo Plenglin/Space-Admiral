@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2
 import java.util.*
 
 class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D? = null) {
-    constructor(posLocal: Vector2, angleLocal: Double, parent: Transform2D? = null) : this(posLocal, angleLocal.toFloat(), parent)
     private val children = mutableSetOf<Transform2D>()
 
     var angleLocal = angleLocal
@@ -30,7 +29,13 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D?
             }
         }
 
-    val posGlobal: Vector2 = Vector2()
+    private val _posGlobal: Vector2 = Vector2()
+    val posGlobal: Vector2 get() {
+        if (dirty) {
+            update()
+        }
+        return _posGlobal
+    }
     var angleGlobal: Float = angleLocal
         private set
 
@@ -52,10 +57,10 @@ class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D?
     private fun updateSelf() {
         if (dirty) {
             parent?.let {
-                posGlobal.set(it.posGlobal).add(posLocal.cpy().rotateRad(it.angleGlobal))
+                _posGlobal.set(it._posGlobal).add(posLocal.cpy().rotateRad(it.angleGlobal))
                 angleGlobal = it.angleGlobal + angleLocal
             } ?: kotlin.run {
-                posGlobal.set(posLocal)
+                _posGlobal.set(posLocal)
                 angleGlobal = angleLocal
             }
             dirty = false
