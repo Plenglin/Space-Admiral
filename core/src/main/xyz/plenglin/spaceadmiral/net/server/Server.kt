@@ -13,19 +13,17 @@ class Server(val players: List<PlayerInterface>) {
         logger.info("Initializing server {}", this)
         players.forEachIndexed { i, pl ->
             pl.attachServer(this)
-            val team = Team(instance, COLORS[i])
+            val team = instance.gameState.createTeam(COLORS[i])
             pl.team = team
-            instance.teams.add(team)
         }
     }
 
     fun update() {
         logger.debug("Updating server {}", this)
         instance.update()
-        val gs = instance.createDTO()
         players.forEach {
             logger.debug("Sending data to {}", it)
-            it.sendGameState(gs)
+            it.sendGameState(instance.gameState)
         }
     }
 

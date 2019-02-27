@@ -22,7 +22,7 @@ class SpaceAdmiral : Game() {
                 Thread.sleep(20L)
             }
         }
-        val squad = server.instance.teams[0].createSquad(DummyFighter())
+        val squad = server.instance.gameState.team.values.first().createSquad(DummyFighter())
         squad.transform.angleLocal = 0.1f
         squad.transform.update()
         squad.resetShipPositions()

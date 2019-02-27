@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.server
 
-import xyz.plenglin.spaceadmiral.game.data.GameStateDTO
+import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.team.Team
 
 /**
@@ -11,6 +11,6 @@ interface PlayerInterface {
     var team: Team
 
     fun attachServer(server: Server)
-    fun sendGameState(gs: GameStateDTO)
+    fun sendGameState(gs: GameState)
 
 }

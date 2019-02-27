@@ -37,6 +37,9 @@ class GameInstance : Serializable {
         shipList.forEach {
             shipTree.insert(it.transform.posGlobal, it)
         }*/
+        gameState.ships.forEach { _, s ->
+
+        }
     }
 
 }

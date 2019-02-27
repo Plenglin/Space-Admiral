@@ -2,7 +2,6 @@ package xyz.plenglin.spaceadmiral.game.ship
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.Health
-import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
@@ -13,7 +12,7 @@ class Ship(val parent: Squad) : Serializable {
     val uuid: UUID = UUID.randomUUID()
     val transform = Transform2D(Vector2(), 0f)
 
-    var currentAction: ShipAction? = null
+    //var currentAction: ShipAction? = null
     var currentTarget: Ship? = null
 
     var healthInitial = Health(0, 0, 0)
@@ -25,16 +24,17 @@ class Ship(val parent: Squad) : Serializable {
     }
 
     fun updateInitial() {
-        currentAction?.let {
-            if (it.shouldTerminate()) {
-                it.terminate()
-                currentAction = null
-            }
-        }
+        //currentAction?.let {
+        //    if (it.shouldTerminate()) {
+        //        it.terminate()
+        //        currentAction = null
+        //    }
+        //}
     }
 
 }
 
+/*
 sealed class ShipAction(val ship: Ship) : Serializable {
     lateinit var coroutine: Iterator<Long>
     abstract fun initialize()
@@ -72,4 +72,4 @@ class MoveShipAction(val parent: MoveSquadAction, ship: Ship, val target: Transf
         const val SHIP_EPSILON = 0.01f
     }
 
-}
+}*/
