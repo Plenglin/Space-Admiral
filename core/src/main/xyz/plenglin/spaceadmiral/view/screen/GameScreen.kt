@@ -104,9 +104,7 @@ class GameScreen(val client: GameClient) : Screen {
 
         gameCamera.translate(Vector2(gameWorldInput.dx.toFloat(), gameWorldInput.dy.toFloat()).scl(cameraSpeed * delta * gameCamera.zoom))
         gameCamera.update()
-        client.withGameState {
-            gameRenderer.draw(it)
-        }
+        gameRenderer.draw(client.gameInstance.gameState)
 
         uiStage.draw()
     }

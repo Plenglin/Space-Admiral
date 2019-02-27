@@ -6,27 +6,24 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.Transform2D
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Squad(val template: ShipType, var team: Team) {
-
-    val id = UUID.randomUUID()
+class Squad(val template: ShipType, var team: Team) : Serializable {
 
     val ships: MutableList<Ship> = (1..template.squadSize).map { Ship(this) }.toMutableList()
     val actionQueue = LinkedList<SquadAction>()
 
     val transform = Transform2D(Vector2(), 0f)
     var formationWidth: Int = template.defaultFormationWidth
+    val uuid: UUID = UUID.randomUUID()
 
     init {
         resetShipPositions()
     }
 
     fun update() {
-        if (actionQueue.peek()?.future == null) {
-            nextAction()
-        }
     }
 
     private fun nextAction() {
@@ -34,7 +31,7 @@ class Squad(val template: ShipType, var team: Team) {
             return
         }
         val action = actionQueue.remove()
-        action.future = team.gameInstance.loop.schedule(action.createCoroutine())
+        //action.future = team.gameInstance.loop.schedule(action.createCoroutine())
     }
 
     fun resetShipPositions() {

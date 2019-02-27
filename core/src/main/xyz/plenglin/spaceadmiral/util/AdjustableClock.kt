@@ -1,6 +1,8 @@
 package xyz.plenglin.spaceadmiral.util
 
-class AdjustableClock {
+import java.io.Serializable
+
+class AdjustableClock : Serializable {
     private var lastTimeChange = 0L
     private var timeElapsed = 0.0
     var timeMultiplier = 1.0

@@ -7,22 +7,21 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.util.Coroutine
 import xyz.plenglin.spaceadmiral.util.Future
 import xyz.plenglin.spaceadmiral.util.SleepTrigger
+import java.io.Serializable
 import java.util.*
 
 
-sealed class ETA
+sealed class ETA : Serializable
 
 object Indefinite : ETA()
 
 class Definite(val seconds: Float) : ETA()
 
-sealed class SquadAction(val squad: Squad) {
-    var future: Future? = null
+sealed class SquadAction(val squad: Squad) : Serializable {
     open val isValidAction: Boolean = true
     open val timeLeft: ETA = Indefinite
-    abstract fun createCoroutine(): Coroutine
 }
-
+/*
 class MoveSquadAction(squad: Squad, val target: Transform2D) : SquadAction(squad) {
     val actions = mutableSetOf<MoveShipAction>()
 
@@ -56,4 +55,4 @@ class Attack(squad: Squad, val target: Squad) : SquadAction(squad) {
 
     override val timeLeft: ETA = Indefinite
 
-}
+}*/
