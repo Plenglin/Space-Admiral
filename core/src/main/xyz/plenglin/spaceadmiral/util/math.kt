@@ -3,7 +3,7 @@ package xyz.plenglin.spaceadmiral.util
 import com.badlogic.gdx.math.Vector2
 import java.util.*
 
-class Transform2D(val posLocal: Vector2, angleLocal: Float, parent: Transform2D? = null) {
+class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, parent: Transform2D? = null) {
     private val children = mutableSetOf<Transform2D>()
 
     var angleLocal = angleLocal

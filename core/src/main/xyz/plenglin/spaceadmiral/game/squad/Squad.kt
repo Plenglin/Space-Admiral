@@ -1,22 +1,20 @@
 package xyz.plenglin.spaceadmiral.game.squad
 
-import com.badlogic.gdx.math.Vector2
-import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.team.Team
-import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
 import java.util.*
-import kotlin.collections.ArrayList
 
 class Squad(val template: ShipType, var team: Team) : Serializable {
 
-    val ships: MutableList<Ship> = (1..template.squadSize).map { Ship(this) }.toMutableList()
+    val ships: MutableList<Ship> = (0 until template.squadSize).map { Ship(this, it) }.toMutableList()
     val actionQueue = LinkedList<SquadAction>()
 
-    val transform = Transform2D(Vector2(), 0f)
-    var formationWidth: Int = template.defaultFormationWidth
+    val transform = SquadTransform(
+            count = template.squadSize,
+            spacing = template.spacing,
+            width = template.defaultFormationWidth)
     val uuid: UUID = UUID.randomUUID()
 
     init {
@@ -35,38 +33,11 @@ class Squad(val template: ShipType, var team: Team) : Serializable {
     }
 
     fun resetShipPositions() {
-        generateRelativeTransforms().zip(ships).forEach { (trs, ship) ->
+        transform.generateChildTransforms().zip(ships).forEach { (trs, ship) ->
             trs.update()
             ship.transform.posLocal.set(trs.posGlobal)
             ship.transform.angleLocal = trs.angleGlobal
         }
-    }
-
-    fun generateRelativeTransforms(): List<Transform2D> {
-        val out = ArrayList<Transform2D>(ships.size)
-        val physicalWidth = (formationWidth - 1) * template.spacing
-        val mainHeight = ships.size / formationWidth
-        (0 until mainHeight).forEach { y ->
-            (0 until formationWidth).forEach { x ->
-                val trs = Transform2D(
-                        Vector2(-y * template.spacing, x * template.spacing - physicalWidth / 2),
-                        0f, transform
-                )
-                out.add(trs)
-            }
-        }
-        val leftoverWidth = ships.size % formationWidth
-        val physicalLeftoverWidth = (leftoverWidth - 1) * template.spacing
-        val physicalMainHeight = mainHeight * (template.spacing - 1)
-        val leftoverOffsetY = -physicalMainHeight - mainHeight * template.spacing
-        (0 until leftoverWidth).forEach { x ->
-            val trs = Transform2D(
-                    Vector2(leftoverOffsetY, x * template.spacing - physicalLeftoverWidth / 2),
-                    0f, transform
-            )
-            out.add(trs)
-        }
-        return out
     }
 
 }
