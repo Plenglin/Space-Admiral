@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.util
 
 import com.badlogic.gdx.math.Vector2
+import java.lang.RuntimeException
 import java.util.*
 
 class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, parent: Transform2D? = null) {
@@ -44,7 +45,7 @@ class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, par
             var node: Transform2D? = value
             while (node != null) {
                 if (node == this) {
-                    throw IllegalArgumentException("Recursive transform structure dected!")
+                    throw CircularTransformStructureException(this, node)
                 }
                 node = node.parent
             }
@@ -112,3 +113,7 @@ fun Vector2.multCpx(o: Vector2): Vector2 {
     y = x * o.y + y * o.x
     return this
 }
+
+class CircularTransformStructureException(child: Transform2D, parent: Transform2D) : RuntimeException(
+        "Circular transform structure detected while setting $parent to be the parent of $child"
+)
