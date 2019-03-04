@@ -22,7 +22,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
 
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.0'

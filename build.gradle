@@ -28,6 +28,8 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        slf4jVersion = '1.7.25'
+        logbackVersion = '1.2.3'
     }
 
     repositories {
@@ -51,8 +53,9 @@ project(":desktop") {
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-        implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-        implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile "ch.qos.logback:logback-classic:$logbackVersion"
+        compile "ch.qos.logback:logback-core:$logbackVersion"
     }
 }
 
