@@ -37,14 +37,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
         shape.begin(ShapeRenderer.ShapeType.Line)
 
-        /*
-        gs.teams.forEach { team ->
-            shape.color = team.color
-            team.squads.forEach { squad ->
-                squad.ships.forEach(this@SimpleGameStateRenderer::draw)
-            }
-            team.projectiles.forEach(this@SimpleGameStateRenderer::draw)
-        }*/
+        shape.circle(0f, 0f, 100f)
 
         gs.ships.forEach { _, ship ->
             draw(ship)
@@ -56,6 +49,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
     }
 
     private fun draw(ship: Ship) {
+        logger.trace("rendering {}", ship)
         ship.transform.update()
         val pos = ship.transform.posGlobal
         if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
@@ -72,6 +66,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
     }
 
     private fun draw(projectile: Projectile) {
+        logger.trace("rendering {}", projectile)
         val pos = projectile.pos
         if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
             shape.color = projectile.team?.color ?: Color.WHITE

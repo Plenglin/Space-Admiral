@@ -13,6 +13,9 @@ object DesktopLauncher {
         LwjglApplication(SpaceAdmiral(), LwjglApplicationConfiguration().apply {
             width = 1280
             height = 720
+            // vSyncEnabled = false
+            // foregroundFPS = 0
+            // backgroundFPS = 0
         })
     }
 }

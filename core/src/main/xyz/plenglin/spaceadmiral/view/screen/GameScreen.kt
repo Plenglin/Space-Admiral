@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Stage
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
@@ -81,13 +82,16 @@ class GameScreen(val client: GameClient) : Screen {
     }
 
     override fun show() {
+        logger.info("showing GameScreen")
+
+        batch = SpriteBatch()
+
         gameCamera = OrthographicCamera()
         gameRenderer = SimpleGameStateRenderer()
 
+        gameCamera.position.set(0f, 0f, 0f)
         uiCamera = OrthographicCamera()
         uiStage = Stage()
-
-        batch = SpriteBatch()
 
         gameCamera.position.set(0f, 0f, 1f)
         gameRenderer.initialize(gameCamera, uiCamera)
@@ -97,16 +101,19 @@ class GameScreen(val client: GameClient) : Screen {
     }
 
     override fun render(delta: Float) {
+        logger.debug("rendering GameScreen, FPS = {}", 1 / delta)
         uiStage.act(delta)
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+        logger.debug("camera pos {}", gameCamera.position)
         gameCamera.translate(Vector2(gameWorldInput.dx.toFloat(), gameWorldInput.dy.toFloat()).scl(cameraSpeed * delta * gameCamera.zoom))
         gameCamera.update()
         client.gameState?.let {
+            logger.debug("ships: {}", it.ships)
             gameRenderer.draw(it)
-        }
+        } ?: logger.warn("Did not receive a gamestate, not drawing anything!")
 
         uiStage.draw()
     }

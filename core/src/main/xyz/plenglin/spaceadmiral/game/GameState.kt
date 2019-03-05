@@ -10,14 +10,14 @@ import kotlin.collections.HashMap
 
 class GameState {
 
-    val team = HashMap<UUID, Team>()
+    val teams = HashMap<UUID, Team>()
     val squads = HashMap<UUID, Squad>()
     val ships = HashMap<UUID, Ship>()
     val projectiles = HashMap<UUID, Projectile>()
 
     fun createTeam(color: Color): Team {
         val out = Team(this, color)
-        team[out.uuid] = out
+        teams[out.uuid] = out
         return out
     }
 
