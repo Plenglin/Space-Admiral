@@ -3,7 +3,6 @@ package xyz.plenglin.spaceadmiral.net.server
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
-import xyz.plenglin.spaceadmiral.game.team.Team
 
 class Server(val players: List<PlayerInterface>) {
 

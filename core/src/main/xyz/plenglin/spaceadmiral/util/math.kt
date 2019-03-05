@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.util
 
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import java.lang.RuntimeException
 import java.util.*
@@ -117,3 +118,16 @@ fun Vector2.multCpx(o: Vector2): Vector2 {
 class CircularTransformStructureException(child: Transform2D, parent: Transform2D) : RuntimeException(
         "Circular transform structure detected while setting $parent to be the parent of $child"
 )
+
+data class MinMaxRectangle(val left: Float, val right: Float, val top: Float, val bottom: Float)
+
+data class Capsule2D(val x0: Vector2, val x1: Vector2, val radius: Float) {
+
+    val v by lazy { x1.cpy().sub(x0) }
+    val r by lazy { v.cpy().rotate90(1).setLength(radius) }
+
+    fun contains(x: Vector2): Boolean {
+        TODO()
+    }
+
+}

@@ -18,13 +18,16 @@ class SpaceAdmiral : Game() {
         val screen = GameScreen(GameClient(localBridge))
         thread(start = true, isDaemon = true) {
             while (true) {
+                val start = System.currentTimeMillis()
                 server.update()
-                Thread.sleep(20L)
+                val elapsed = System.currentTimeMillis() - start
+                if (elapsed < UPDATE_PERIOD) {
+                    Thread.sleep(UPDATE_PERIOD - elapsed)
+                }
             }
         }
         val squad = server.instance.gameState.team.values.first().createSquad(DummyFighter())
-        //squad.transform.angleLocal = 0.1f
-        //squad.transform.update()
+        squad.transform.transform.angleLocal = 0.1f
         squad.resetShipPositions()
 
         setScreen(screen)
@@ -38,6 +41,8 @@ class SpaceAdmiral : Game() {
     companion object {
         @JvmStatic
         val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
+
+        const val UPDATE_PERIOD = 20L
     }
 }
 

@@ -74,7 +74,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
     private fun draw(projectile: Projectile) {
         val pos = projectile.pos
         if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
-            shape.color = projectile.team.color
+            shape.color = projectile.team?.color ?: Color.WHITE
             shape.circle(pos.x, pos.y, 1f)
         }
     }

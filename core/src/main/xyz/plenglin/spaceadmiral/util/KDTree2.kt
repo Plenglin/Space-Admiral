@@ -83,6 +83,8 @@ class KDTree2<T> : Iterable<KDTree2Node<T>>, Serializable {
         return nearestN to nearestR
     }
 
+    fun findInRect(rect: MinMaxRectangle) = findInRect(rect.left, rect.right, rect.bottom, rect.top)
+
     fun findInRect(x0: Float, x1: Float, y0: Float, y1: Float): Sequence<KDTree2Node<T>> = sequence {
         val stack = LinkedList<KDTree2Node<T>>()
         root.c0?.let(stack::push)

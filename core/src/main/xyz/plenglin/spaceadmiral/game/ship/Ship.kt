@@ -26,6 +26,7 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
 
     var health = Health(0, 0, 0)
     var morale = 0f
+    val team get() = parent.team
 
     fun onDeath() {
         parent.ships.remove(this)
