@@ -3,6 +3,7 @@ package xyz.plenglin.spaceadmiral.view.screen
 import com.badlogic.gdx.*
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -107,14 +108,26 @@ class GameScreen(val client: GameClient) : Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        logger.debug("camera pos {}", gameCamera.position)
         gameCamera.translate(Vector2(gameWorldInput.dx.toFloat(), gameWorldInput.dy.toFloat()).scl(cameraSpeed * delta * gameCamera.zoom))
         gameCamera.update()
+
         client.gameState?.let {
-            logger.debug("ships: {}", it.ships)
             gameRenderer.draw(it)
         } ?: logger.warn("Did not receive a gamestate, not drawing anything!")
 
+        /*
+        batch.projectionMatrix = uiCamera.combined
+        Texture((gameRenderer as SimpleGameStateRenderer).shipPixmap).let {
+            batch.begin()
+            batch.draw(it, 0f, 0f)
+            batch.end()
+            it.dispose()
+        }
+
+        gameRenderer.getShipAtPoint(Gdx.input.x, Gdx.input.y)?.let {
+            logger.info("Mouse is currently hovering {} {} over ship {}", Gdx.input.x, Gdx.input.y, it)
+        }
+        */
         uiStage.draw()
     }
 
@@ -125,8 +138,10 @@ class GameScreen(val client: GameClient) : Screen {
     }
 
     override fun resize(width: Int, height: Int) {
+        logger.info("Changing to a new resolution: {}x{}", width, height)
         gameCamera.setToOrtho(false)
         uiCamera.setToOrtho(false, width.toFloat(), height.toFloat())
+        gameRenderer.onResize(width, height)
     }
 
     override fun hide() {
