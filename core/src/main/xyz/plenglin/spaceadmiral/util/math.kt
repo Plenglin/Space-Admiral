@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.util
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import java.lang.RuntimeException
 import java.util.*
 
@@ -130,4 +131,12 @@ data class Capsule2D(val x0: Vector2, val x1: Vector2, val radius: Float) {
         TODO()
     }
 
+}
+
+fun lerp(x: Float, v0: Vector2, v1: Vector2): Vector2 {
+    return (v1.cpy().sub(v0)).scl(x).add(v0)
+}
+
+fun lerp(x: Float, v0: Vector3, v1: Vector3): Vector3 {
+    return (v1.cpy().sub(v0)).scl(x).add(v0)
 }
