@@ -105,6 +105,8 @@ class GameScreen(val client: GameClient) : Screen {
         logger.debug("rendering GameScreen, FPS = {}", 1 / delta)
         uiStage.act(delta)
 
+        client.update()
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
@@ -112,6 +114,7 @@ class GameScreen(val client: GameClient) : Screen {
         gameCamera.update()
 
         client.gameState?.let {
+            it.updateTrees()
             gameRenderer.draw(it)
         } ?: logger.warn("Did not receive a gamestate, not drawing anything!")
 

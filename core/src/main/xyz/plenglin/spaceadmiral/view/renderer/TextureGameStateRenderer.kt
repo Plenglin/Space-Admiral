@@ -1,10 +1,8 @@
 package xyz.plenglin.spaceadmiral.view.renderer
 
-import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.OrthographicCamera
 import xyz.plenglin.spaceadmiral.game.GameState
-import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.squad.Squad
 
 class TextureGameStateRenderer : GameStateRenderer {
     override fun getShipAtPoint(x: Int, y: Int): Ship? {
@@ -23,7 +21,7 @@ class TextureGameStateRenderer : GameStateRenderer {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun initialize(gameCamera: Camera, uiCamera: Camera) {
+    override fun initialize(gameCamera: OrthographicCamera, uiCamera: OrthographicCamera) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -85,7 +85,7 @@ class KDTree2<T> : Iterable<KDTree2Node<T>>, Serializable {
 
     fun findInRect(rect: MinMaxRectangle) = findInRect(rect.left, rect.right, rect.bottom, rect.top)
 
-    fun findInRect(x0: Float, x1: Float, y0: Float, y1: Float): Sequence<KDTree2Node<T>> = sequence {
+    fun findInRect(xMin: Float, xMax: Float, yMin: Float, yMax: Float): Sequence<KDTree2Node<T>> = sequence {
         val stack = LinkedList<KDTree2Node<T>>()
         root.c0?.let(stack::push)
         root.c1?.let(stack::push)
@@ -95,23 +95,23 @@ class KDTree2<T> : Iterable<KDTree2Node<T>>, Serializable {
             val node = stack.pop()
 
             // Add nodes
-            if (node.key.x in x0..x1 && node.key.y in y0..y1) {  // Is the current node in the region?
+            if (node.key.x in xMin..xMax && node.key.y in yMin..yMax) {  // Is the current node in the region?
                 yield(node)
             }
 
             // Filter out regions
             if (node.dimension) {  // x-dimension
-                if (x0 <= node.key.x) {
+                if (xMin <= node.key.x) {
                     node.c0?.let(stack::push)  // Add right child
                 }
-                if (node.key.x <= x1) {
+                if (node.key.x <= xMax) {
                     node.c1?.let(stack::push)  // Add left child
                 }
             } else {
-                if (y0 <= node.key.y) {
+                if (yMin <= node.key.y) {
                     node.c0?.let(stack::push)  // Add top child
                 }
-                if (node.key.y <= y1) {
+                if (node.key.y <= yMax) {
                     node.c1?.let(stack::push)  // Add bottom child
                 }
             }
@@ -128,10 +128,10 @@ class KDTree2<T> : Iterable<KDTree2Node<T>>, Serializable {
      * Find all nodes within a square radius of the given position.
      */
     fun findInSquare(pos: Vector2, radius: Float): Sequence<KDTree2Node<T>> = findInRect(
-        x0 = pos.x - radius,
-        x1 = pos.x + radius,
-        y0 = pos.y - radius,
-        y1 = pos.y + radius
+        xMin = pos.x - radius,
+        xMax = pos.x + radius,
+        yMin = pos.y - radius,
+        yMax = pos.y + radius
     )
 
     fun clear() {

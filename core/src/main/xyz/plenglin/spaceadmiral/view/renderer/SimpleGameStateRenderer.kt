@@ -1,10 +1,9 @@
 package xyz.plenglin.spaceadmiral.view.renderer
 
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import org.slf4j.LoggerFactory
@@ -12,7 +11,6 @@ import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import java.util.*
-import kotlin.collections.HashSet
 
 class SimpleGameStateRenderer : GameStateRenderer {
 
@@ -22,22 +20,29 @@ class SimpleGameStateRenderer : GameStateRenderer {
             Vector2(0.0f, -0.5f)
     )
     lateinit var shape: ShapeRenderer
-    lateinit var gameCamera: Camera
-    lateinit var uiCamera: Camera
+    lateinit var gameCamera: OrthographicCamera
+    lateinit var uiCamera: OrthographicCamera
     var shipPixmap: Pixmap? = null
 
     private val pixelToShip = HashMap<Int, Ship>()
     private var nextShipColor = 1
     private var height: Int = 0
 
-    override fun initialize(gameCamera: Camera, uiCamera: Camera) {
+    override fun initialize(gameCamera: OrthographicCamera, uiCamera: OrthographicCamera) {
         shape = ShapeRenderer()
         this.gameCamera = gameCamera
         this.uiCamera = uiCamera
     }
 
     override fun draw(gs: GameState) {
-        logger.trace("{} beginning drawing", this)
+        val clippingPoints = gameCamera.frustum.planePoints
+        val xs = clippingPoints.map { it.x }.toList()
+        val ys = clippingPoints.map { it.y }.toList()
+        val xMin = xs.min()!!
+        val xMax = xs.max()!!
+        val yMin = ys.min()!!
+        val yMax = ys.max()!!
+        logger.debug("{} drawing with limits: x=[{}, {}] y=[{}, {}]", this, xMin, xMax, yMin, yMax)
 
         nextShipColor = 0xff0000
         pixelToShip.clear()
@@ -53,11 +58,11 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
         shape.begin(ShapeRenderer.ShapeType.Line)
 
-        gs.ships.forEach { _, ship ->
-            draw(ship)
+        gs.shipTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, ship) ->
+            draw(ship!!)
         }
-        gs.projectiles.forEach { _, proj ->
-            draw(proj)
+        gs.projectileTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, proj) ->
+            draw(proj!!)
         }
         shape.end()
     }
@@ -84,7 +89,6 @@ class SimpleGameStateRenderer : GameStateRenderer {
                 pixelToShip[nextShipColor] = ship
                 val screenPos = gameCamera.project(pos3d)
                 val radius = (gameCamera.combined.scaleX * 720).toInt()
-                logger.debug("{} {}", radius, pos3d)
                 val x = screenPos.x.toInt()
                 val y = screenPos.y.toInt()
                 it.setColor(nextShipColor)
