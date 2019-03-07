@@ -1,12 +1,14 @@
 package xyz.plenglin.spaceadmiral.view.ui
 
 import com.badlogic.gdx.InputProcessor
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 
 class SquadSelectionInputProcessor(val ui: GameUI, val renderer: GameStateRenderer) : InputProcessor {
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val ship = renderer.getShipAtScreenPos(screenX, screenY)
+        logger.debug("Clicked at {} {}, corresponding to {}", screenX, screenY, ship)
         if (ship != null && ui.selectedSquad == null) {
             ui.onShipSelected(ship)
             return true
@@ -23,4 +25,8 @@ class SquadSelectionInputProcessor(val ui: GameUI, val renderer: GameStateRender
     override fun keyUp(keycode: Int): Boolean = false
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean = false
     override fun keyDown(keycode: Int): Boolean = false
+
+    companion object {
+        @JvmStatic private val logger = LoggerFactory.getLogger(SquadSelectionInputProcessor::class.java)
+    }
 }

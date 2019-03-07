@@ -92,7 +92,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
                 val x = screenPos.x.toInt()
                 val y = screenPos.y.toInt()
                 it.setColor(nextShipColor)
-                it.fillCircle(x, y, Math.max(MIN_SHIP_RADIUS, radius))
+                it.fillCircle(x, y, Math.max(MIN_SHIP_CLICK_RADIUS, radius))
                 nextShipColor += 1
             }
         }
@@ -128,10 +128,9 @@ class SimpleGameStateRenderer : GameStateRenderer {
     }
 
     companion object {
-        @JvmStatic
-        private val logger = LoggerFactory.getLogger(SimpleGameStateRenderer::class.java)
+        @JvmStatic private val logger = LoggerFactory.getLogger(SimpleGameStateRenderer::class.java)
 
-        const val MIN_SHIP_RADIUS = 5
+        const val MIN_SHIP_CLICK_RADIUS = 5
     }
 
 }
