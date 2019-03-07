@@ -121,7 +121,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
         shipPixmap?.dispose()
     }
 
-    override fun getShipAtPoint(x: Int, y: Int): Ship? {
+    override fun getShipAtScreenPos(x: Int, y: Int): Ship? {
         val pixel = shipPixmap?.getPixel(x, height - y) ?: return null
         logger.debug("Querying {} {}: {}", x, y, pixel)
         return pixelToShip[pixel]

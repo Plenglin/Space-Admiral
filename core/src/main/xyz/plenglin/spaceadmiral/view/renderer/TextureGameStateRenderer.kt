@@ -5,7 +5,7 @@ import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 
 class TextureGameStateRenderer : GameStateRenderer {
-    override fun getShipAtPoint(x: Int, y: Int): Ship? {
+    override fun getShipAtScreenPos(x: Int, y: Int): Ship? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -182,23 +182,3 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 
-## Gradle
-
-.gradle
-gradle-app.setting
-build/
-
-## OS Specific
-.DS_Store
-
-android/
-core/
-desktop/
-gradle/
-html/
-ios/
-/build.gradle
-gradle.properties
-gradlew*
-settings.gradle
-

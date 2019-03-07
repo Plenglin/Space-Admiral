@@ -9,5 +9,5 @@ interface GameStateRenderer : Disposable {
     fun initialize(gameCamera: OrthographicCamera, uiCamera: OrthographicCamera)
     fun draw(gs: GameState)
     fun onResize(width: Int, height: Int)
-    fun getShipAtPoint(x: Int, y: Int): Ship?
+    fun getShipAtScreenPos(x: Int, y: Int): Ship?
 }

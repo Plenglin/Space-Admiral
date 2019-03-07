@@ -1,82 +1,58 @@
 package xyz.plenglin.spaceadmiral.view.screen
 
-import com.badlogic.gdx.*
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.Stage
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleGameStateRenderer
-import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraControllerInput
+import xyz.plenglin.spaceadmiral.view.ui.GameUI
+import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
 
 class GameScreen(val client: GameClient) : Screen {
-    lateinit var batch: SpriteBatch
+    val batch: SpriteBatch = SpriteBatch()
 
-    lateinit var gameCamera: OrthographicCamera
-    lateinit var gameRenderer: GameStateRenderer
+    val gameCamera: OrthographicCamera = OrthographicCamera()
+    val gameRenderer: GameStateRenderer = SimpleGameStateRenderer()
+    val uiCamera: OrthographicCamera = OrthographicCamera()
 
-    lateinit var uiCamera: OrthographicCamera
-    lateinit var uiStage: Stage
+    val ui: GameUI = GameUI(client, uiCamera)
 
-    private lateinit var cameraControllerInput: SmoothCameraControllerInput
     private val inputMultiplexer = InputMultiplexer()
-
-    private val gameInstance = GameInstance()
+    private val cameraController: SmoothCameraInputProcessor = SmoothCameraInputProcessor(ui, uiCamera)
 
     override fun show() {
         logger.info("showing GameScreen")
 
-        batch = SpriteBatch()
-
-        gameCamera = OrthographicCamera()
-        gameRenderer = SimpleGameStateRenderer()
-
         gameCamera.position.set(0f, 0f, 0f)
-        uiCamera = OrthographicCamera()
-        uiStage = Stage()
 
         gameCamera.position.set(0f, 0f, 1f)
         gameRenderer.initialize(gameCamera, uiCamera)
-        cameraControllerInput = SmoothCameraControllerInput(gameCamera)
 
-        inputMultiplexer.addProcessor(cameraControllerInput)
+        inputMultiplexer.addProcessor(cameraController)
         Gdx.input.inputProcessor = inputMultiplexer
     }
 
     override fun render(delta: Float) {
         logger.debug("rendering GameScreen, FPS = {}", 1 / delta)
-        uiStage.act(delta)
 
         client.update()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        cameraControllerInput.update(delta)
+        cameraController.update(delta)
 
         client.gameState?.let {
             it.updateTrees()
             gameRenderer.draw(it)
-        } ?: logger.warn("Did not receive a gamestate, not drawing anything!")
+        } ?: logger.warn("Did not receive a game state from client, not drawing anything!")
 
-        /*
-        batch.projectionMatrix = uiCamera.combined
-        Texture((gameRenderer as SimpleGameStateRenderer).shipPixmap).let {
-            batch.begin()
-            batch.draw(it, 0f, 0f)
-            batch.end()
-            it.dispose()
-        }
-
-        gameRenderer.getShipAtPoint(Gdx.input.x, Gdx.input.y)?.let {
-            logger.info("Mouse is currently hovering {} {} over ship {}", Gdx.input.x, Gdx.input.y, it)
-        }
-        */
-        uiStage.draw()
+        ui.render(delta)
     }
 
     override fun pause() {
@@ -89,9 +65,11 @@ class GameScreen(val client: GameClient) : Screen {
 
     override fun resize(width: Int, height: Int) {
         logger.info("Changing to a new resolution: {}x{}", width, height)
-        cameraControllerInput.resize(width, height)
+        cameraController.resize(width, height)
         uiCamera.setToOrtho(false, width.toFloat(), height.toFloat())
+        uiCamera.update()
         gameRenderer.onResize(width, height)
+        ui.resize(width, height)
     }
 
     override fun hide() {
@@ -101,6 +79,8 @@ class GameScreen(val client: GameClient) : Screen {
     override fun dispose() {
         logger.info("Disposing")
         batch.dispose()
+        ui.dispose()
+        Gdx.input.inputProcessor = null
     }
 
     companion object {
