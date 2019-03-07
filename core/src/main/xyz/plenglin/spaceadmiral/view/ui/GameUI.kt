@@ -9,19 +9,29 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.net.client.GameClient
 
-class GameUI(val client: GameClient, val camera: OrthographicCamera) : Disposable {
+class GameUI(val client: GameClient, camera: OrthographicCamera) : Disposable {
     private val viewport = ScreenViewport(camera)
-    private val stage: Stage = Stage(viewport)
+    val stage: Stage = Stage(viewport)
 
-    var selectedSquad: Squad? = null
+    val selectedSquads: MutableSet<Squad> = HashSet()
 
     init {
 
     }
 
-    fun onShipSelected(ship: Ship?) {
-        selectedSquad = ship?.parent
-        logger.info("Ship {} selected, corresponding to squad {}", ship, selectedSquad)
+    fun onShipSelected(ship: Ship?, ctrl: Boolean) {
+        if (ship == null) {
+            logger.info("Ship null selected, clearing squad selection")
+            selectedSquads.clear()
+            return
+        }
+        logger.info("Ship {} selected, corresponding to squad {}", ship, selectedSquads)
+        if (!ctrl) {
+            logger.debug("Control was not held, clearing selection")
+            selectedSquads.clear()
+        }
+        logger.debug("Adding squad")
+        selectedSquads.add(ship.parent)
     }
 
     fun render(delta: Float) {

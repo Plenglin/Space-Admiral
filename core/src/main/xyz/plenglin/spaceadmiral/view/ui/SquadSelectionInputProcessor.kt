@@ -4,12 +4,15 @@ import com.badlogic.gdx.InputProcessor
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 
-class SquadSelectionInputProcessor(val ui: GameUI, val renderer: GameStateRenderer) : InputProcessor {
+class SquadSelectionInputProcessor(
+        private val ui: GameUI,
+        private val renderer: GameStateRenderer)
+    : InputProcessor {
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val ship = renderer.getShipAtScreenPos(screenX, screenY)
         logger.debug("Clicked at {} {}, corresponding to {}", screenX, screenY, ship)
-        if (ship != null && ui.selectedSquad == null) {
+        if (ship != null && ui.selectedSquads == null) {
             ui.onShipSelected(ship)
             return true
         } else {

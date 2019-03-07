@@ -6,12 +6,19 @@ import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.net.client.ServerInterface
 import xyz.plenglin.spaceadmiral.net.server.PlayerInterface
 import xyz.plenglin.spaceadmiral.net.server.Server
+import java.util.*
 
 class LocalBridge : ServerInterface, PlayerInterface {
-    override lateinit var team: Team
     lateinit var client: GameClient
     lateinit var server: Server
     override val connected: Boolean = true
+
+    override var clientTeam: UUID? = null
+    override var team: Team? = null
+        set(value) {
+            field = value
+            clientTeam = value.uuid
+        }
 
     override fun sendGameState(gs: GameState) {
         client.gameState = gs

@@ -26,7 +26,7 @@ class GameScreen(private val client: GameClient) : Screen {
 
     private val inputCameraPosition: SmoothCameraInputProcessor = SmoothCameraInputProcessor(gameCamera)
     private val inputSquadSelection: SquadSelectionInputProcessor = SquadSelectionInputProcessor(ui, gameRenderer)
-    private val inputMultiplexer = InputMultiplexer(inputCameraPosition, inputSquadSelection)
+    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSquadSelection)
 
     init {
         logger.info("Initializing GameScreen")
