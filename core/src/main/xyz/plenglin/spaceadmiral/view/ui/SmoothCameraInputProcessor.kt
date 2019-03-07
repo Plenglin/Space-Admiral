@@ -9,20 +9,18 @@ import xyz.plenglin.spaceadmiral.util.getMousePos3
 import xyz.plenglin.spaceadmiral.view.screen.GameScreen
 
 class SmoothCameraInputProcessor(
-        val ui: GameUI,
         val camera: OrthographicCamera,
         val dampening: Float = 0.75f,
         val zoomRate: Float = 1.5f)
     : InputProcessor {
     private val targetCamera = OrthographicCamera()
-    var dx: Int = 0
-    var dy: Int = 0
+    private var dx: Int = 0
+    private var dy: Int = 0
 
     private var width: Int = 0
     private var height: Int = 0
 
     init {
-        camera.setToOrtho(false)
         targetCamera.apply {
             position.set(camera.position)
             direction.set(camera.direction)
@@ -88,10 +86,10 @@ class SmoothCameraInputProcessor(
 
         targetCamera.translate(trs)
 
-        camera.zoom = dampening * camera.zoom + (1 - dampening) * targetCamera.zoom
-        camera.position.scl(dampening).mulAdd(targetCamera.position, 1 - dampening)
-        //camera.zoom = targetCamera.zoom
-        //camera.position.set(targetCamera.position)
+        //camera.zoom = dampening * camera.zoom + (1 - dampening) * targetCamera.zoom
+        //camera.position.scl(dampening).mulAdd(targetCamera.position, 1 - dampening)
+        camera.zoom = targetCamera.zoom
+        camera.position.set(targetCamera.position)
         camera.update()
     }
 

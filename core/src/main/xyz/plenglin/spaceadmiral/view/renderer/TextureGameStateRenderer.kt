@@ -13,7 +13,7 @@ class TextureGameStateRenderer : GameStateRenderer {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onResize(width: Int, height: Int) {
+    override fun resize(width: Int, height: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

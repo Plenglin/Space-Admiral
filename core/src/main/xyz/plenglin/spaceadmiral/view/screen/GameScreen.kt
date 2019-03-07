@@ -12,40 +12,43 @@ import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleGameStateRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.SquadSelectionInputProcessor
 
-class GameScreen(val client: GameClient) : Screen {
-    val batch: SpriteBatch = SpriteBatch()
+class GameScreen(private val client: GameClient) : Screen {
+    private val batch: SpriteBatch = SpriteBatch()
 
-    val gameCamera: OrthographicCamera = OrthographicCamera()
-    val gameRenderer: GameStateRenderer = SimpleGameStateRenderer()
-    val uiCamera: OrthographicCamera = OrthographicCamera()
+    private val gameCamera: OrthographicCamera = OrthographicCamera()
+    private val uiCamera: OrthographicCamera = OrthographicCamera()
 
-    val ui: GameUI = GameUI(client, uiCamera)
+    private val gameRenderer: GameStateRenderer = SimpleGameStateRenderer()
 
-    private val inputMultiplexer = InputMultiplexer()
-    private val cameraController: SmoothCameraInputProcessor = SmoothCameraInputProcessor(ui, uiCamera)
+    private val ui: GameUI = GameUI(client, uiCamera)
+
+    private val inputCameraPosition: SmoothCameraInputProcessor = SmoothCameraInputProcessor(gameCamera)
+    private val inputSquadSelection: SquadSelectionInputProcessor = SquadSelectionInputProcessor(ui, gameRenderer)
+    private val inputMultiplexer = InputMultiplexer(inputCameraPosition, inputSquadSelection)
+
+    init {
+        logger.info("Initializing GameScreen")
+        gameCamera.position.set(0f, 0f, 0f)
+        gameCamera.setToOrtho(false)
+    }
 
     override fun show() {
         logger.info("showing GameScreen")
-
-        gameCamera.position.set(0f, 0f, 0f)
-
-        gameCamera.position.set(0f, 0f, 1f)
-        gameRenderer.initialize(gameCamera, uiCamera)
-
-        inputMultiplexer.addProcessor(cameraController)
         Gdx.input.inputProcessor = inputMultiplexer
+        gameRenderer.initialize(gameCamera, uiCamera)
     }
 
     override fun render(delta: Float) {
-        logger.debug("rendering GameScreen, FPS = {}", 1 / delta)
+        logger.debug("GameScreen performing a render, FPS = {}", 1 / delta)
 
         client.update()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        cameraController.update(delta)
+        inputCameraPosition.update(delta)
 
         client.gameState?.let {
             it.updateTrees()
@@ -65,10 +68,10 @@ class GameScreen(val client: GameClient) : Screen {
 
     override fun resize(width: Int, height: Int) {
         logger.info("Changing to a new resolution: {}x{}", width, height)
-        cameraController.resize(width, height)
-        uiCamera.setToOrtho(false, width.toFloat(), height.toFloat())
-        uiCamera.update()
-        gameRenderer.onResize(width, height)
+        inputCameraPosition.resize(width, height)
+
+        //uiCamera.setToOrtho(false, width.toFloat(), height.toFloat())
+        gameRenderer.resize(width, height)
         ui.resize(width, height)
     }
 

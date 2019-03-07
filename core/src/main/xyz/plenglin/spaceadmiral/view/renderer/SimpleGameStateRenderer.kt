@@ -51,9 +51,9 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
         shape.projectionMatrix = gameCamera.combined
 
-        shape.begin(ShapeRenderer.ShapeType.Filled)
+        shape.begin(ShapeRenderer.ShapeType.Line)
         shape.color = Color.WHITE
-        shape.circle(0f, 0f, 0.1f)
+        shape.circle(0f, 0f, 100f)
         shape.end()
 
         shape.begin(ShapeRenderer.ShapeType.Line)
@@ -107,7 +107,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
         }
     }
 
-    override fun onResize(width: Int, height: Int) {
+    override fun resize(width: Int, height: Int) {
         logger.info("Resized! Creating new ship pixmap of resolution {}x{}", width, height)
         shipPixmap?.dispose()
         shipPixmap = Pixmap(width, height, Pixmap.Format.RGBA8888).apply {
