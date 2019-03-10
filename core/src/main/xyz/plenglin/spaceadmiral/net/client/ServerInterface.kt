@@ -7,7 +7,7 @@ import java.util.*
  */
 interface ServerInterface {
     val connected: Boolean
-    val clientTeam: UUID?
+    val clientTeam: UUID
 
     fun attachClient(client: GameClient)
     fun sendDisconnectToServer()

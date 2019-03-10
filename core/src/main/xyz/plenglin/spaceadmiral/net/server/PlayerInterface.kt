@@ -8,7 +8,7 @@ import xyz.plenglin.spaceadmiral.game.team.Team
  */
 interface PlayerInterface {
     val connected: Boolean
-    var team: Team?
+    var team: Team
 
     fun attachServer(server: Server)
     fun sendGameState(gs: GameState)

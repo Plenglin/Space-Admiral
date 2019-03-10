@@ -4,9 +4,11 @@ import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.util.Transform2D
 
 data class SquadTransform(val transform: Transform2D = Transform2D(), var width: Int, var spacing: Float, var count: Int) {
+    val physicalWidth: Float get() = (width - 1) * spacing
+
     fun generateChildTransforms(): List<Transform2D> {
         val out = ArrayList<Transform2D>(count)
-        val physicalWidth = (width - 1) * spacing
+        val physicalWidth = physicalWidth
         val mainHeight = count / width
         (0 until mainHeight).forEach { y ->
             (0 until width).forEach { x ->
@@ -29,5 +31,16 @@ data class SquadTransform(val transform: Transform2D = Transform2D(), var width:
             out.add(trs)
         }
         return out
+    }
+
+    companion object {
+        @JvmStatic
+        fun createP2P(left: Vector2, right: Vector2, spacing: Float, count: Int): SquadTransform {
+            val pos = left.cpy().add(right).scl(0.5)
+            val diff = left.cpy().sub(right)
+            val width = (diff.len() / spacing).toInt()
+            val facing = diff.rotate90(1)
+            return SquadTransform(Transform2D(pos, facing.angleRad()), width, spacing, count)
+        }
     }
 }

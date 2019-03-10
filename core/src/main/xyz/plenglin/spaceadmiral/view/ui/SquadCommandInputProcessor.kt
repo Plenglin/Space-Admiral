@@ -5,11 +5,11 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
+import xyz.plenglin.spaceadmiral.util.Transform2D
 import xyz.plenglin.spaceadmiral.util.unproject2
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 
@@ -18,7 +18,11 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
     var state: CommandState? = null
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        val selectedSquad = ui.selectedSquads ?: return false
+        val selectedSquad = ui.selectedSquads
+        if (selectedSquad.isEmpty()) {
+            logger.debug("No squads selected, ignoring input event")
+            return false
+        }
 
         when (button) {
             Input.Buttons.RIGHT -> {
@@ -28,7 +32,7 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
                 val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent
                 if (target != null && !selectedSquad.contains(target) && target.team != ui.client.team) {
                     logger.info("Creating an attack command for {} to attack {}", selectedSquad, target)
-                    state = CommandState.Attack(target)
+                    state = CommandState.Attack(ui.selectedSquads, target)
                     return true
                 }
 
@@ -71,9 +75,9 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
                 val target: SquadTransform = if (state.dragged) {
                     logger.info("Generating simple squad target transform")
                     //val newTransform = state.recipient.transform.transform.
-                    val destination = gameCamera.unproject(Vector3(screenX.toFloat(), screenY.toFloat(), 0f))
-                    val delta = destination.sub(recipient.transform.transform.posGlobal)
-                    recipient.transform.copy(transform = )
+                    val destination = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
+                    val delta = destination(recipient.transform.transform.posGlobal)
+                    recipient.transform.copy(transform = Transform2D(destination, delta))
                 } else {
                     logger.info("Generating simple squad target transform")
                     SquadTransform()
@@ -105,10 +109,10 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
     override fun keyUp(keycode: Int): Boolean = false
 
     sealed class CommandState {
-        abstract val recipient: Squad
+        abstract val recipient: Set<Squad>
 
-        data class MoveToTransform(override val recipient: Squad, val start: Vector2, var end: Vector2? = null, var dragged: Boolean = false) : CommandState()
-        data class Attack(override val recipient: Squad, val target: Squad) : CommandState()
+        data class MoveToTransform(override val recipient: Set<Squad>, val start: Vector2, var end: Vector2? = null, var dragged: Boolean = false) : CommandState()
+        data class Attack(override val recipient: Set<Squad>, val target: Squad) : CommandState()
     }
 
     companion object {

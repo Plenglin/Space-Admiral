@@ -13,10 +13,14 @@ class LocalBridge : ServerInterface, PlayerInterface {
     lateinit var server: Server
     override val connected: Boolean = true
 
-    override var clientTeam: UUID? = null
-    override var team: Team? = null
+    override lateinit var clientTeam: UUID
+        private set
+
+    private var _team: Team? = null
+    override var team: Team
+        get() = _team!!
         set(value) {
-            field = value
+            _team = value
             clientTeam = value.uuid
         }
 
