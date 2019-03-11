@@ -3,6 +3,7 @@ package xyz.plenglin.spaceadmiral.net.server
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
+import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 
 class Server(val players: List<PlayerInterface>) {
 
@@ -24,6 +25,22 @@ class Server(val players: List<PlayerInterface>) {
             logger.debug("Sending data to {}", it)
             it.sendGameState(instance.gameState)
         }
+    }
+
+    fun onActionReceived(client: PlayerInterface, squadAction: SquadAction) {
+        logger.info("Client {} sent action {}", client, squadAction)
+        val id = squadAction.squad.uuid
+        val squad = instance.gameState.squads[id]
+        if (squad == null) {
+            logger.error("Squad with id {} no longer exists!", id)
+            return
+        }
+        if (squadAction.teamIsAllowed(client.team)) {
+            logger.warn("{} (team {}) is not allowed to perform {}!", client, client.team, squadAction)
+            return
+        }
+        logger.debug("Permitting action {}")
+        squad.actionQueue.add(squadAction)
     }
 
     companion object {

@@ -3,6 +3,7 @@ package xyz.plenglin.spaceadmiral.game.squad
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
+import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.io.Serializable
@@ -14,12 +15,14 @@ object Indefinite : ETA()
 
 class Definite(val seconds: Float) : ETA()
 
-abstract class SquadAction(val squad: Squad, val next: SquadAction? = null) : Serializable, State {
+abstract class SquadAction(val squad: Squad) : Serializable, State {
     val timeLeft: ETA get() = Indefinite
 
     private var isFinished = false
 
     abstract fun getShipAction(ship: Ship): ShipAction?
+
+    open fun teamIsAllowed(team: Team): Boolean = team == squad.team
 
     override fun interrupt() {
         squad.ships.forEach { it.state = null }

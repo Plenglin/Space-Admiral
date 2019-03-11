@@ -63,33 +63,37 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
 
         logger.debug("Finalizing state {}", state)
         this.state = null
-        val recipient = state.recipient
+        val recipients = state.recipients
 
         if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            logger.info("Clearing action queue of {} (shift not held)", recipient)
-            recipient.actionQueue.clear()
+            logger.info("Clearing action queue of {} (shift not held)", recipients)
+            recipients.forEach {
+                it.actionQueue.clear()
+            }
         }
 
         return when (state) {
             is CommandState.MoveToTransform -> {
                 val target: SquadTransform = if (state.dragged) {
                     logger.info("Generating simple squad target transform")
-                    //val newTransform = state.recipient.transform.transform.
+                    //val newTransform = state.recipients.transform.transform.
                     val destination = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
-                    val delta = destination(recipient.transform.transform.posGlobal)
-                    recipient.transform.copy(transform = Transform2D(destination, delta))
+                    recipients.forEach {
+                        val delta = destination.sub(it.transform.transform.posGlobal)
+                        //it.transform.copy(transform = Transform2D(destination, delta))
+                    }
                 } else {
                     logger.info("Generating simple squad target transform")
                     SquadTransform()
                 }
-                recipient.actionQueue.add(MoveSquadAction(recipient, target))
+                recipients.actionQueue.add(MoveSquadAction(recipients, target))
                 true
             }
             is CommandState.Attack -> {
                 val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent
                 if (state.target != target) {
-                    logger.info("Cancelling ")
-                    true
+                    logger.info("Cancelling {} because we ended on a different target", state)
+                    return true
                 }
                 true
             }
@@ -97,10 +101,26 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
     }
 
     override fun keyDown(keycode: Int): Boolean {
-        state ?: return false
-        logger.info("Cancelling current state {}", state)
-        this.state = null
-        return true
+        when (keycode) {
+            Input.Keys.ESCAPE -> {
+                state ?: return false
+                logger.info("Received ESCAPE, cancelling current action builder {}", state)
+                this.state = null
+                return true
+            }
+            Input.Keys.X -> {
+                if (ui.selectedSquads.isEmpty()) {
+                    logger.info("Cannot cancel if squads not selected")
+                    return false
+                }
+                logger.info("Clearing action queue for {}", ui.selectedSquads)
+                ui.selectedSquads.forEach {
+                    it.actionQueue.clear()
+                }
+                return true
+            }
+        }
+
     }
 
     override fun mouseMoved(screenX: Int, screenY: Int): Boolean = false
@@ -109,10 +129,10 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
     override fun keyUp(keycode: Int): Boolean = false
 
     sealed class CommandState {
-        abstract val recipient: Set<Squad>
+        abstract val recipients: Set<Squad>
 
-        data class MoveToTransform(override val recipient: Set<Squad>, val start: Vector2, var end: Vector2? = null, var dragged: Boolean = false) : CommandState()
-        data class Attack(override val recipient: Set<Squad>, val target: Squad) : CommandState()
+        data class MoveToTransform(override val recipients: Set<Squad>, val start: Vector2, var end: Vector2? = null, var dragged: Boolean = false) : CommandState()
+        data class Attack(override val recipients: Set<Squad>, val target: Squad) : CommandState()
     }
 
     companion object {

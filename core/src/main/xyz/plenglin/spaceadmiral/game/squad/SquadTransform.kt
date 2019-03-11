@@ -36,7 +36,7 @@ data class SquadTransform(val transform: Transform2D = Transform2D(), var width:
     companion object {
         @JvmStatic
         fun createP2P(left: Vector2, right: Vector2, spacing: Float, count: Int): SquadTransform {
-            val pos = left.cpy().add(right).scl(0.5)
+            val pos = left.cpy().add(right).scl(0.5f)  // Midpoint of left and right
             val diff = left.cpy().sub(right)
             val width = (diff.len() / spacing).toInt()
             val facing = diff.rotate90(1)

@@ -6,10 +6,11 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.KDTree2
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.HashMap
 
-class GameState {
+class GameState : Serializable {
 
     val teams = HashMap<UUID, Team>()
     val squads = HashMap<UUID, Squad>()
