@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
-import xyz.plenglin.spaceadmiral.util.Transform2D
 import xyz.plenglin.spaceadmiral.util.unproject2
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 
@@ -75,15 +74,11 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
         return when (state) {
             is CommandState.MoveToTransform -> {
                 val target: SquadTransform = if (state.dragged) {
-                    logger.info("Generating simple squad target transform")
+                    logger.info("Generating simple squad recipient transform")
                     //val newTransform = state.recipients.transform.transform.
                     val destination = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
-                    recipients.forEach {
-                        val delta = destination.sub(it.transform.transform.posGlobal)
-                        //it.transform.copy(transform = Transform2D(destination, delta))
-                    }
                 } else {
-                    logger.info("Generating simple squad target transform")
+                    logger.info("Generating simple squad recipient transform")
                     SquadTransform()
                 }
                 recipients.actionQueue.add(MoveSquadAction(recipients, target))
@@ -92,7 +87,7 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
             is CommandState.Attack -> {
                 val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent
                 if (state.target != target) {
-                    logger.info("Cancelling {} because we ended on a different target", state)
+                    logger.info("Cancelling {} because we ended on a different recipient", state)
                     return true
                 }
                 true

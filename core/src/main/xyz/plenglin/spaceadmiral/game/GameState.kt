@@ -28,13 +28,14 @@ class GameState : Serializable {
 
     fun updateTrees() {
         shipTree.clear()
+        projectileTree.clear()
+
         val ship = ships.values.toMutableList()
-        ship.shuffle()
+        ship.shuffle()  // Jesus take the wheel and make us efficient
         ship.forEach {
             shipTree.insert(it.transform.posGlobal, it)
         }
 
-        projectileTree.clear()
         val projectile = projectiles.values.toMutableList()
         projectile.shuffle()
         projectile.forEach {

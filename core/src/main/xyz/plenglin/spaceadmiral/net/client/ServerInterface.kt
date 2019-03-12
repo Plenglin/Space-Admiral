@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.client
 
-import xyz.plenglin.spaceadmiral.game.squad.SquadAction
+import xyz.plenglin.spaceadmiral.net.io.Command
 import java.util.*
 
 /**
@@ -11,8 +11,7 @@ interface ServerInterface {
     val clientTeam: UUID
 
     fun attachClient(client: GameClient)
-    fun sendSquadAction(action: SquadAction)
-    fun clearSquadActionQueue(squad: UUID)
+    fun sendCommandToServer(command: Command)
 
     fun sendDisconnectToServer()
 }

@@ -15,6 +15,7 @@ object Indefinite : ETA()
 
 class Definite(val seconds: Float) : ETA()
 
+
 abstract class SquadAction(val squad: Squad) : Serializable, State {
     val timeLeft: ETA get() = Indefinite
 

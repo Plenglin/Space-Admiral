@@ -1,10 +1,10 @@
 package xyz.plenglin.spaceadmiral.net.local
 
 import xyz.plenglin.spaceadmiral.game.GameState
-import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.net.client.ServerInterface
+import xyz.plenglin.spaceadmiral.net.io.Command
 import xyz.plenglin.spaceadmiral.net.server.PlayerInterface
 import xyz.plenglin.spaceadmiral.net.server.Server
 import java.util.*
@@ -37,12 +37,8 @@ class LocalBridge : ServerInterface, PlayerInterface {
         this.server = server
     }
 
-    override fun sendSquadAction(action: SquadAction) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-    
-    override fun clearSquadActionQueue(squad: UUID) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun sendCommandToServer(command: Command) {
+        server.onCommandReceived(this, command)
     }
 
     override fun sendDisconnectToServer() {

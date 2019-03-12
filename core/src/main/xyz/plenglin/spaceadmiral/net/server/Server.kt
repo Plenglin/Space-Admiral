@@ -3,11 +3,13 @@ package xyz.plenglin.spaceadmiral.net.server
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
-import xyz.plenglin.spaceadmiral.game.squad.SquadAction
+import xyz.plenglin.spaceadmiral.net.io.Command
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.LinkedBlockingQueue
 
-class Server(val players: List<PlayerInterface>) {
+class Server(val players: List<PlayerInterface>, val instance: GameInstance = GameInstance()) {
 
-    val instance = GameInstance()
+    private val commands: BlockingQueue<Pair<PlayerInterface, Command>> = LinkedBlockingQueue()
 
     init {
         logger.info("Initializing server {}", this)
@@ -20,27 +22,30 @@ class Server(val players: List<PlayerInterface>) {
 
     fun update() {
         logger.debug("Updating server {}", this)
+
+        val commands = mutableListOf<Pair<PlayerInterface, Command>>()
+        this.commands.drainTo(commands)
+        commands.forEach { (sender, cmd) ->
+            logger.info("Received command {} from {}", cmd, sender)
+            if (cmd.isPermitted(sender)) {
+                logger.info("Permitting command {} from {}", cmd, sender)
+                cmd.applyCommand(instance)
+            } else {
+                logger.warn("{} is not allowed to send {}!", sender, cmd)
+            }
+        }
+
         instance.update()
         players.forEach {
             logger.debug("Sending data to {}", it)
             it.sendGameState(instance.gameState)
         }
+
     }
 
-    fun onActionReceived(client: PlayerInterface, squadAction: SquadAction) {
-        logger.info("Client {} sent action {}", client, squadAction)
-        val id = squadAction.squad.uuid
-        val squad = instance.gameState.squads[id]
-        if (squad == null) {
-            logger.error("Squad with id {} no longer exists!", id)
-            return
-        }
-        if (squadAction.teamIsAllowed(client.team)) {
-            logger.warn("{} (team {}) is not allowed to perform {}!", client, client.team, squadAction)
-            return
-        }
-        logger.debug("Permitting action {}")
-        squad.actionQueue.add(squadAction)
+    fun onCommandReceived(client: PlayerInterface, command: Command) {
+        logger.info("Client {} sent squad command {}", client, command)
+        commands.add(client to command)
     }
 
     companion object {
