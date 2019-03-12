@@ -21,21 +21,10 @@ class GameClient(private val server: ServerInterface) {
         server.attachClient(this)
     }
 
-    inline operator fun <reified T> get(uuid: UUID): Ref<T> = when (T::class.java) {
-        Ship::class.java -> ShipRef(uuid, this) as Ref<T>
-        Projectile::class.java -> ProjectileRef(uuid, this) as Ref<T>
-        Team::class.java -> TeamRef(uuid, this) as Ref<T>
-        Squad::class.java -> SquadRef(uuid, this) as Ref<T>
-        else -> throw IllegalArgumentException("${T::class.java} is not supported!")
-    }
-
-    inline operator fun <reified T> invoke(uuid: UUID): T = when (T::class.java) {
-        Ship::class.java -> gameState?.ships?.get(uuid) as T
-        Projectile::class.java -> gameState?.projectiles?.get(uuid) as T
-        Team::class.java -> gameState?.teams?.get(uuid) as T
-        Squad::class.java -> gameState?.squads?.get(uuid) as T
-        else -> throw IllegalArgumentException("${T::class.java} is not supported!")
-    }
+    fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
+    fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
+    fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
+    fun getSquad(uuid: UUID): SquadRef = SquadRef(uuid, this)
 
     fun update() {
 

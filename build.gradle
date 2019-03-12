@@ -41,24 +41,6 @@ allprojects {
     }
 }
 
-project(":desktop") {
-    apply plugin: "kotlin"
-
-
-    dependencies {
-        implementation project(":core")
-        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
-        compile "ch.qos.logback:logback-classic:$logbackVersion"
-        compile "ch.qos.logback:logback-core:$logbackVersion"
-    }
-}
-
 project(":android") {
     apply plugin: "android"
     apply plugin: "kotlin-android"

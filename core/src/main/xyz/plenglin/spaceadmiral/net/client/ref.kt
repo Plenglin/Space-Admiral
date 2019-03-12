@@ -7,23 +7,26 @@ import xyz.plenglin.spaceadmiral.game.team.Team
 import java.util.*
 
 sealed class Ref<T>(val uuid: UUID, val client: GameClient) {
-    operator fun invoke(): T? = get
-    abstract val get: T?
+    operator fun invoke(): T? = getObject
+    abstract val getObject: T?
 }
 
 class SquadRef(uuid: UUID, client: GameClient) : Ref<Squad>(uuid, client) {
-    override val get: Squad? get() = client.gameState?.squads?.get(uuid)
+    override val getObject: Squad? get() = client.gameState?.squads?.get(uuid)
+    val parent: TeamRef? by lazy { getObject?.let { TeamRef(it.team.uuid, client) } }
 }
 
 class TeamRef(uuid: UUID, client: GameClient) : Ref<Team>(uuid, client) {
-    override val get: Team? get() = client.gameState?.teams?.get(uuid)
+    override val getObject: Team? get() = client.gameState?.teams?.get(uuid)
 }
 
 class ShipRef(uuid: UUID, client: GameClient) : Ref<Ship>(uuid, client) {
-    override val get: Ship? get() = client.gameState?.ships?.get(uuid)
+    override val getObject: Ship? get() = client.gameState?.ships?.get(uuid)
+    val parent: SquadRef? by lazy { getObject?.let { SquadRef(it.parent.uuid, client) } }
 }
 
 class ProjectileRef(uuid: UUID, client: GameClient) : Ref<Projectile>(uuid, client) {
-    override val get: Projectile? get() = client.gameState?.projectiles?.get(uuid)
+    override val getObject: Projectile? get() = client.gameState?.projectiles?.get(uuid)
+    val parent: TeamRef? by lazy { getObject?.team?.let { TeamRef(it.uuid, client) } }
 }
 

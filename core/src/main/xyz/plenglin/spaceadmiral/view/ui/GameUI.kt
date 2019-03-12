@@ -8,18 +8,21 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.net.client.GameClient
+import xyz.plenglin.spaceadmiral.net.client.Ref
+import xyz.plenglin.spaceadmiral.net.client.ShipRef
+import xyz.plenglin.spaceadmiral.net.client.SquadRef
 
 class GameUI(val client: GameClient, camera: OrthographicCamera) : Disposable {
     private val viewport = ScreenViewport(camera)
     val stage: Stage = Stage(viewport)
 
-    val selectedSquads: MutableSet<Squad> = HashSet()
+    val selectedSquads: MutableSet<SquadRef> = HashSet()
 
     init {
 
     }
 
-    fun onShipSelected(ship: Ship?, ctrl: Boolean) {
+    fun onShipSelected(ship: ShipRef?, ctrl: Boolean) {
         if (ship == null) {
             logger.info("Ship null selected, clearing squad selection")
             selectedSquads.clear()
@@ -31,7 +34,7 @@ class GameUI(val client: GameClient, camera: OrthographicCamera) : Disposable {
             selectedSquads.clear()
         }
         logger.debug("Adding squad")
-        selectedSquads.add(ship.parent)
+        selectedSquads.add(ship.parent!!)
     }
 
     fun render(delta: Float) {
