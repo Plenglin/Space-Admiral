@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleGameStateRenderer
+import xyz.plenglin.spaceadmiral.view.renderer.SquadCommandInputHighlighter
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.SquadCommandInputProcessor
@@ -28,7 +29,7 @@ class GameScreen(private val client: GameClient) : Screen {
     private val inputSquadCommand = SquadCommandInputProcessor(ui, client, gameCamera, gameRenderer)
     private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition)
 
-    private val squadCommandHighlighter = SquadCommandHighlighter(inputSquadCommand)
+    private val squadCommandHighlighter = SquadCommandInputHighlighter(inputSquadCommand)
 
     init {
         logger.info("Initializing GameScreen")
@@ -39,7 +40,9 @@ class GameScreen(private val client: GameClient) : Screen {
     override fun show() {
         logger.info("showing GameScreen")
         Gdx.input.inputProcessor = inputMultiplexer
+
         gameRenderer.initialize(gameCamera, uiCamera)
+        squadCommandHighlighter.initialize(gameCamera, uiCamera)
     }
 
     override fun render(delta: Float) {
@@ -53,7 +56,7 @@ class GameScreen(private val client: GameClient) : Screen {
         inputCameraPosition.update(delta)
         gameCamera.update()
 
-
+        squadCommandHighlighter.render(delta)
         client.gameState?.let {
             it.updateTrees()
             gameRenderer.draw(it)
@@ -73,6 +76,7 @@ class GameScreen(private val client: GameClient) : Screen {
     override fun resize(width: Int, height: Int) {
         logger.info("Changing to a new resolution: {}x{}", width, height)
         inputCameraPosition.resize(width, height)
+        squadCommandHighlighter.resize(width, height)
 
         //uiCamera.setToOrtho(false, width.toFloat(), height.toFloat())
         gameRenderer.resize(width, height)

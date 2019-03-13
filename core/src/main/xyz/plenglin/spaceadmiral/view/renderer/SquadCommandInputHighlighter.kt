@@ -1,11 +1,12 @@
+package xyz.plenglin.spaceadmiral.view.renderer
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import xyz.plenglin.spaceadmiral.view.renderer.RendererLayer
 import xyz.plenglin.spaceadmiral.view.ui.MoveToTransform
 import xyz.plenglin.spaceadmiral.view.ui.SquadCommandInputProcessor
 
-class SquadCommandHighlighter(private val input: SquadCommandInputProcessor) : RendererLayer {
+class SquadCommandInputHighlighter(private val input: SquadCommandInputProcessor) : RendererLayer {
     private val shape = ShapeRenderer()
     private lateinit var camera: OrthographicCamera
 
@@ -42,5 +43,4 @@ class SquadCommandHighlighter(private val input: SquadCommandInputProcessor) : R
     override fun dispose() {
         shape.dispose()
     }
-
 }
