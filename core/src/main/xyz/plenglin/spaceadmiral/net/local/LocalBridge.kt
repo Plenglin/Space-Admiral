@@ -4,7 +4,7 @@ import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.net.client.ServerInterface
-import xyz.plenglin.spaceadmiral.net.io.Command
+import xyz.plenglin.spaceadmiral.net.io.ClientCommand
 import xyz.plenglin.spaceadmiral.net.server.PlayerInterface
 import xyz.plenglin.spaceadmiral.net.server.Server
 import java.util.*
@@ -37,7 +37,7 @@ class LocalBridge : ServerInterface, PlayerInterface {
         this.server = server
     }
 
-    override fun sendCommandToServer(command: Command) {
+    override fun sendCommandToServer(command: ClientCommand) {
         server.onCommandReceived(this, command)
     }
 

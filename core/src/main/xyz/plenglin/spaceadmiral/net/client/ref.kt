@@ -16,6 +16,8 @@ class SquadRef(uuid: UUID, client: GameClient) : Ref<Squad>(uuid, client) {
     val parent: TeamRef? by lazy { getObject?.let { TeamRef(it.team.uuid, client) } }
 }
 
+fun Squad.toRef(client: GameClient) = SquadRef(uuid, client)
+
 class TeamRef(uuid: UUID, client: GameClient) : Ref<Team>(uuid, client) {
     override val getObject: Team? get() = client.gameState?.teams?.get(uuid)
 }

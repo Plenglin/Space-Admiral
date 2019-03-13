@@ -3,13 +3,14 @@ package xyz.plenglin.spaceadmiral.net.server
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
-import xyz.plenglin.spaceadmiral.net.io.Command
+import xyz.plenglin.spaceadmiral.net.io.ClientCommand
+import xyz.plenglin.spaceadmiral.net.io.CommandResult
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 class Server(val players: List<PlayerInterface>, val instance: GameInstance = GameInstance()) {
 
-    private val commands: BlockingQueue<Pair<PlayerInterface, Command>> = LinkedBlockingQueue()
+    private val commands: BlockingQueue<Pair<PlayerInterface, ClientCommand>> = LinkedBlockingQueue()
 
     init {
         logger.info("Initializing server {}", this)
@@ -23,18 +24,23 @@ class Server(val players: List<PlayerInterface>, val instance: GameInstance = Ga
     fun update() {
         logger.debug("Updating server {}", this)
 
-        val commands = mutableListOf<Pair<PlayerInterface, Command>>()
+        val commands = mutableListOf<Pair<PlayerInterface, ClientCommand>>()
         this.commands.drainTo(commands)
         commands.forEach { (sender, cmd) ->
             logger.info("Received command {} from {}", cmd, sender)
-            if (cmd.isPermitted(sender)) {
-                logger.info("Permitting command {} from {}", cmd, sender)
-                cmd.applyCommand(instance)
-            } else {
-                logger.warn("{} is not allowed to send {}!", sender, cmd)
+            val result = cmd.applyCommand(sender, instance)
+
+            when (result) {
+                is CommandResult.Success -> {
+                    logger.debug("Command {} successfully executed", cmd)
+                }
+                is CommandResult.Fail -> {
+                    logger.warn("Command {} failed! Reason: {}", cmd, result.reason)
+                }
             }
         }
 
+        logger.debug("Updating GameInstance")
         instance.update()
         players.forEach {
             logger.debug("Sending data to {}", it)
@@ -43,7 +49,7 @@ class Server(val players: List<PlayerInterface>, val instance: GameInstance = Ga
 
     }
 
-    fun onCommandReceived(client: PlayerInterface, command: Command) {
+    fun onCommandReceived(client: PlayerInterface, command: ClientCommand) {
         logger.info("Client {} sent squad command {}", client, command)
         commands.add(client to command)
     }

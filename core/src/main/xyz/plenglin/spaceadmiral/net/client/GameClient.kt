@@ -1,11 +1,7 @@
 package xyz.plenglin.spaceadmiral.net.client
 
 import xyz.plenglin.spaceadmiral.game.GameState
-import xyz.plenglin.spaceadmiral.game.projectile.Projectile
-import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.squad.Squad
-import xyz.plenglin.spaceadmiral.game.team.Team
-import java.lang.IllegalArgumentException
+import xyz.plenglin.spaceadmiral.net.io.ClientCommand
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -28,6 +24,10 @@ class GameClient(private val server: ServerInterface) {
 
     fun update() {
 
+    }
+
+    fun sendCommand(cmd: ClientCommand) {
+        server.sendCommandToServer(cmd)
     }
 }
 

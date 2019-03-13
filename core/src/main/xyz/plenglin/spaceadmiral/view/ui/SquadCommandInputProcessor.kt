@@ -6,13 +6,20 @@ import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
-import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
+import xyz.plenglin.spaceadmiral.net.client.GameClient
+import xyz.plenglin.spaceadmiral.net.client.SquadRef
+import xyz.plenglin.spaceadmiral.net.client.toRef
+import xyz.plenglin.spaceadmiral.net.io.ClearSquadActionQueueCommand
+import xyz.plenglin.spaceadmiral.net.io.MoveSquadCommand
 import xyz.plenglin.spaceadmiral.util.unproject2
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 
-class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCamera, val renderer: GameStateRenderer) : InputProcessor {
+class SquadCommandInputProcessor(
+        val ui: GameUI,
+        val client: GameClient,
+        val gameCamera: OrthographicCamera,
+        val renderer: GameStateRenderer) : InputProcessor {
 
     var state: CommandState? = null
 
@@ -67,29 +74,33 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
         if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             logger.info("Clearing action queue of {} (shift not held)", recipients)
             recipients.forEach {
-                it.actionQueue.clear()
+                client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
             }
         }
 
         return when (state) {
             is CommandState.MoveToTransform -> {
-                val target: SquadTransform = if (state.dragged) {
-                    logger.info("Generating simple squad recipient transform")
-                    //val newTransform = state.recipients.transform.transform.
-                    val destination = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
-                } else {
-                    logger.info("Generating simple squad recipient transform")
-                    SquadTransform()
+                recipients.forEach {
+                    val target: SquadTransform = if (state.dragged) {
+                        logger.info("Generating simple squad recipient transform")
+                        //val newTransform = state.recipients.transform.transform.
+                        val destination = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
+                        SquadTransform()
+                    } else {
+                        logger.info("Generating simple squad recipient transform")
+                        SquadTransform()
+                    }
+                    client.sendCommand(MoveSquadCommand(it.uuid, target))
                 }
-                recipients.actionQueue.add(MoveSquadAction(recipients, target))
                 true
             }
             is CommandState.Attack -> {
-                val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent
+                val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent?.toRef(client)
                 if (state.target != target) {
-                    logger.info("Cancelling {} because we ended on a different recipient", state)
+                    logger.info("Cancelling {} because we ended on a different target", state)
                     return true
                 }
+                // TODO client.sendCommand(Att)
                 true
             }
         }
@@ -99,18 +110,18 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
         when (keycode) {
             Input.Keys.ESCAPE -> {
                 state ?: return false
-                logger.info("Received ESCAPE, cancelling current action builder {}", state)
+                logger.info("Received CLEAR SELECTION, cancelling current action builder {}", state)
                 this.state = null
                 return true
             }
-            Input.Keys.X -> {
+            Input.Keys.H -> {
                 if (ui.selectedSquads.isEmpty()) {
-                    logger.info("Cannot cancel if squads not selected")
+                    logger.debug("Received CLEAR QUEUE, no squads selected, deferring this event")
                     return false
                 }
-                logger.info("Clearing action queue for {}", ui.selectedSquads)
+                logger.info("Received HALT, clearing action queue for {}", ui.selectedSquads)
                 ui.selectedSquads.forEach {
-                    it.actionQueue.clear()
+                    client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
                 }
                 return true
             }
@@ -124,10 +135,10 @@ class SquadCommandInputProcessor(val ui: GameUI, val gameCamera: OrthographicCam
     override fun keyUp(keycode: Int): Boolean = false
 
     sealed class CommandState {
-        abstract val recipients: Set<Squad>
+        abstract val recipients: Set<SquadRef>
 
-        data class MoveToTransform(override val recipients: Set<Squad>, val start: Vector2, var end: Vector2? = null, var dragged: Boolean = false) : CommandState()
-        data class Attack(override val recipients: Set<Squad>, val target: Squad) : CommandState()
+        data class MoveToTransform(override val recipients: Set<SquadRef>, val start: Vector2, var end: Vector2? = null, var dragged: Boolean = false) : CommandState()
+        data class Attack(override val recipients: Set<SquadRef>, val target: SquadRef) : CommandState()
     }
 
     companion object {
