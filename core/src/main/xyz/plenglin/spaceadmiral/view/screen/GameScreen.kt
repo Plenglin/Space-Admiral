@@ -12,7 +12,7 @@ import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleGameStateRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
-import xyz.plenglin.spaceadmiral.view.ui.SquadSelectionInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.SquadCommandInputProcessor
 
 class GameScreen(private val client: GameClient) : Screen {
     private val batch: SpriteBatch = SpriteBatch()
@@ -25,8 +25,10 @@ class GameScreen(private val client: GameClient) : Screen {
     private val ui: GameUI = GameUI(client, uiCamera)
 
     private val inputCameraPosition: SmoothCameraInputProcessor = SmoothCameraInputProcessor(gameCamera)
-    private val inputSquadSelection: SquadSelectionInputProcessor = SquadSelectionInputProcessor(ui, gameRenderer)
-    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSquadSelection)
+    private val inputSquadCommand = SquadCommandInputProcessor(ui, client, gameCamera, gameRenderer)
+    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition)
+
+    private val squadCommandHighlighter = SquadCommandHighlighter(inputSquadCommand)
 
     init {
         logger.info("Initializing GameScreen")
@@ -49,6 +51,8 @@ class GameScreen(private val client: GameClient) : Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         inputCameraPosition.update(delta)
+        gameCamera.update()
+
 
         client.gameState?.let {
             it.updateTrees()

@@ -90,7 +90,6 @@ class SmoothCameraInputProcessor(
         //camera.position.scl(dampening).mulAdd(targetCamera.position, 1 - dampening)
         camera.zoom = targetCamera.zoom
         camera.position.set(targetCamera.position)
-        camera.update()
     }
 
     fun resize(width: Int, height: Int) {

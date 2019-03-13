@@ -24,4 +24,12 @@ data class Team(val parent: GameState,
         out.ships.forEach { parent.ships[it.uuid] = it }
         return out
     }
+
+    fun isAlliedWith(other: UUID): Boolean {
+        return this.uuid == other
+    }
+
+    fun isAlliedWith(other: Team): Boolean {
+        return this.uuid == other.uuid
+    }
 }
