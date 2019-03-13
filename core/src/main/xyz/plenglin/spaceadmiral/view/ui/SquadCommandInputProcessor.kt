@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.client.GameClient
-import xyz.plenglin.spaceadmiral.net.client.SquadRef
 import xyz.plenglin.spaceadmiral.net.client.toRef
 import xyz.plenglin.spaceadmiral.net.io.ClearSquadActionQueueCommand
 import xyz.plenglin.spaceadmiral.net.io.MoveSquadCommand
@@ -38,14 +37,14 @@ class SquadCommandInputProcessor(
                 val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent
                 if (target != null && !selectedSquad.contains(target) && target.team != ui.client.team) {
                     logger.info("Creating an attack command for {} to attack {}", selectedSquad, target)
-                    state = CommandState.Attack(ui.selectedSquads, target)
+                    state = Attack(ui.selectedSquads, target)
                     return true
                 }
 
                 // Perform a move
                 logger.info("Creating a move command for {}", selectedSquad)
                 val mousePos = gameCamera.unproject2(Vector2(screenX.toFloat(), screenY.toFloat()))
-                state = CommandState.MoveToTransform(selectedSquad, mousePos)
+                state = MoveToTransform(selectedSquad, mousePos)
                 return true
             }
         }
@@ -54,7 +53,7 @@ class SquadCommandInputProcessor(
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
         val state = state
         when (state) {
-            is CommandState.MoveToTransform -> {
+            is MoveToTransform -> {
                 //logger.debug("Creating a move command for {}", selectedSquad)
                 state.dragged = true
                 state.end = Vector2(screenX.toFloat(), screenY.toFloat())
@@ -79,12 +78,12 @@ class SquadCommandInputProcessor(
         }
 
         return when (state) {
-            is CommandState.MoveToTransform -> {
+            is MoveToTransform -> {
                 recipients.forEach {
+                    val destination = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
                     val target: SquadTransform = if (state.dragged) {
-                        logger.info("Generating simple squad recipient transform")
+                        logger.info("Generating dragged squad recipient transform")
                         //val newTransform = state.recipients.transform.transform.
-                        val destination = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
                         SquadTransform()
                     } else {
                         logger.info("Generating simple squad recipient transform")
@@ -94,7 +93,7 @@ class SquadCommandInputProcessor(
                 }
                 true
             }
-            is CommandState.Attack -> {
+            is Attack -> {
                 val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent?.toRef(client)
                 if (state.target != target) {
                     logger.info("Cancelling {} because we ended on a different target", state)
@@ -126,7 +125,7 @@ class SquadCommandInputProcessor(
                 return true
             }
         }
-
+        return false
     }
 
     override fun mouseMoved(screenX: Int, screenY: Int): Boolean = false
@@ -134,12 +133,6 @@ class SquadCommandInputProcessor(
     override fun scrolled(amount: Int): Boolean = false
     override fun keyUp(keycode: Int): Boolean = false
 
-    sealed class CommandState {
-        abstract val recipients: Set<SquadRef>
-
-        data class MoveToTransform(override val recipients: Set<SquadRef>, val start: Vector2, var end: Vector2? = null, var dragged: Boolean = false) : CommandState()
-        data class Attack(override val recipients: Set<SquadRef>, val target: SquadRef) : CommandState()
-    }
 
     companion object {
         @JvmStatic private val logger = LoggerFactory.getLogger(SquadSelectionInputProcessor::class.java)

@@ -6,9 +6,26 @@ import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.team.Team
 import java.util.*
 
-sealed class Ref<T>(val uuid: UUID, val client: GameClient) {
+sealed class Ref<T>(val uuid: UUID, val client: GameClient) : Comparable<Ref<T>> {
     operator fun invoke(): T? = getObject
     abstract val getObject: T?
+
+    override fun hashCode() = uuid.hashCode()
+    override fun compareTo(other: Ref<T>): Int {
+        return uuid.compareTo(other.uuid)
+    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Ref<*>
+
+        if (uuid != other.uuid) return false
+        if (client != other.client) return false
+        if (getObject != other.getObject) return false
+
+        return true
+    }
 }
 
 class SquadRef(uuid: UUID, client: GameClient) : Ref<Squad>(uuid, client) {

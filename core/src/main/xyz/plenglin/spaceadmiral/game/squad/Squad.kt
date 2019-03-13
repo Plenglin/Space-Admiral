@@ -6,8 +6,7 @@ import xyz.plenglin.spaceadmiral.game.team.Team
 import java.io.Serializable
 import java.util.*
 
-class Squad(val template: ShipType, var team: Team) : Serializable {
-
+class Squad(val template: ShipType, var team: Team, var index: Int) : Serializable {
     val ships: MutableList<Ship> = (0 until template.squadSize).map { Ship(this, it) }.toMutableList()
     val actionQueue = LinkedList<SquadAction>()
 
