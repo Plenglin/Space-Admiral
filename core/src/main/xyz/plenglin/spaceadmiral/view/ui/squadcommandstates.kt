@@ -59,8 +59,8 @@ data class MoveToTransform(
     fun generateDraggedTransform(): Map<SquadRef, SquadTransform> {
         val squads = recipients.sortedBy { it()!!.index }
         val delta = end.cpy().sub(start)
-        val perSquadDelta = delta.cpy().scl(0.5f / squads.size)
-        val perSquadWidth = perSquadDelta.len()
+        val perSquadStep = delta.cpy().scl(1f / squads.size)
+        val perSquadWidth = perSquadStep.len()
         val facing: Float = delta.angleRad() + Math.PI.toFloat() / 2
 
         return squads.mapIndexed { index, squadRef ->
@@ -69,7 +69,7 @@ data class MoveToTransform(
             val widthCount = (perSquadWidth / template.spacing).toInt()
 
             squadRef to SquadTransform(
-                    Transform2D(start.cpy().mulAdd(perSquadDelta, index + 0.5f), facing),
+                    Transform2D(start.cpy().mulAdd(perSquadStep, index + 0.5f), facing),
                     widthCount,
                     template.spacing,
                     squad.ships.size

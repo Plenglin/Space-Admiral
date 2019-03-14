@@ -23,30 +23,12 @@ class SquadCommandInputProcessor(
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val recipients = ui.selectedSquads
-        if (recipients.isEmpty()) {
-            logger.debug("No squads selected, deferring input event")
-            return false
-        }
 
         val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent
 
         when (button) {
-            Input.Buttons.LEFT -> {
-                logger.debug("Received a left click at {} {}")
-                if (target == null) {
-                    logger.info("Did not actually click on a ship, deferring input event")
-                    return false
-                }
-                if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-                    logger.info("Shift not pressed, clearing selection")
-                    ui.selectedSquads.clear()
-                }
-                logger.info("Adding {} to selection", target)
-                ui.selectedSquads.add(target.toRef(client))
-                return true
-            }
             Input.Buttons.RIGHT -> {
-                logger.debug("Received a right click at {} {}")
+                logger.debug("Received a right click at {} {}. Potential recipients {}", recipients)
 
                 if (recipients.isEmpty()) {
                     logger.debug("No squads are selected, deferring input event")
@@ -73,9 +55,10 @@ class SquadCommandInputProcessor(
         val state = state
         when (state) {
             is MoveToTransform -> {
-                //logger.debug("Creating a move command for {}", selectedSquad)
-                state.dragged = true
-                state.end = Vector2(screenX.toFloat(), screenY.toFloat())
+                logger.info("Dragging {}, position {} {}", state, screenX, screenY)
+                state.end = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
+
+                state.dragged = state.end.cpy().sub(state.start).len2() > 10
                 return true
             }
         }
