@@ -25,7 +25,6 @@ data class MoveSquadCommand(val recipient: UUID, val target: SquadTransform) : C
         recipient.actionQueue.add(MoveSquadAction(recipient, target))
         return CommandResult.Success
     }
-
 }
 
 data class AttackSquadCommand(val recipient: UUID, val target: UUID) : ClientCommand {

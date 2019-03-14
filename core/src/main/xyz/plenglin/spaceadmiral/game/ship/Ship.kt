@@ -2,8 +2,8 @@ package xyz.plenglin.spaceadmiral.game.ship
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.Health
-import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import xyz.plenglin.spaceadmiral.util.Transform2D
@@ -38,8 +38,4 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
 
 }
 
-abstract class ShipAction(val parent: SquadAction, val ship: Ship) : Serializable, State {
-    override fun terminate(): State? {
-        return parent.AwaitSquadAction(ship)
-    }
-}
+abstract class ShipAction(val parent: SquadAction, val ship: Ship) : Serializable, State

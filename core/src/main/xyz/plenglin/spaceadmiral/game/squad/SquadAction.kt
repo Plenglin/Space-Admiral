@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.game.squad
 
 import com.badlogic.gdx.math.Vector2
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
 import xyz.plenglin.spaceadmiral.game.team.Team
@@ -28,26 +29,6 @@ abstract class SquadAction(val squad: Squad) : Serializable, State {
     override fun interrupt() {
         squad.ships.forEach { it.state = null }
     }
-
-    inner class AwaitSquadAction(ship: Ship) : ShipAction(this, ship) {
-        override fun initialize(parent: StateScheduler) {
-        }
-
-        override fun update() {
-        }
-
-        override fun shouldTerminate(): Boolean {
-            return isFinished
-        }
-
-        override fun interrupt() {
-        }
-
-        override fun terminate(): State? {
-            return null
-        }
-
-    }
 }
 
 class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad) {
@@ -57,7 +38,10 @@ class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad)
     override fun getShipAction(ship: Ship): ShipAction? = MoveShipAction(ship)
 
     override fun initialize(parent: StateScheduler) {
-
+        logger.info("Initializing move action for {}", squad)
+        squad.ships.forEach {
+            it.state = MoveShipAction(it)
+        }
     }
 
     override fun update() {
@@ -80,6 +64,7 @@ class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad)
         }
 
         override fun update() {
+            logger.debug("Moving {}", ship)
             error = target.posGlobal.cpy().sub(ship.transform.posGlobal)
             val delta = error.setLength(ship.parent.template.speed)
             ship.transform.angleLocal = delta.angle()
@@ -96,7 +81,7 @@ class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad)
 
         override fun terminate(): State? {
             onShipFinished(ship)
-            return super.terminate()
+            return null
         }
 
     }
@@ -106,7 +91,8 @@ class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad)
     }
 
     companion object {
-        const val EPSILON = 0.01f
+        const val EPSILON = 0.001f
+        private val logger = LoggerFactory.getLogger(MoveSquadAction::class.java)
     }
 
 }

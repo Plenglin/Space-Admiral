@@ -13,6 +13,14 @@ class GameInstance : Serializable {
         logger.debug("update {}", step)
         gameState.updateTrees()
 
+        gameState.squads.forEach { _, squad ->
+            squad.update()
+        }
+
+        gameState.ships.forEach { _, ship ->
+            ship.update()
+        }
+
         gameState.projectiles.forEach { _, p ->
             val capsule = p.getDetonationCapsule()
             val hit = gameState.shipTree.findInRect(p.getDetectionBoundingBox())

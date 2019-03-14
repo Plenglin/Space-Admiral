@@ -30,9 +30,15 @@ interface State {
 }
 
 class StateScheduler {
+    /**
+     * The state that is running right now
+     */
     var currentState: State? = null
         private set
 
+    /**
+     * The state that will run when [currentState] finishes
+     */
     var defaultState: State? = null
         set(value) {
             field = value
@@ -41,6 +47,9 @@ class StateScheduler {
             }
         }
 
+    /**
+     * Replace [currentState] with [nextState] next time [update] is called.
+     */
     var nextState: State? = null
 
     private var wasInitialized = false
