@@ -1,6 +1,8 @@
 package xyz.plenglin.spaceadmiral.view.renderer
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import org.slf4j.LoggerFactory
@@ -19,14 +21,16 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val input: Sq
     override fun render(delta: Float) {
         shape.projectionMatrix = camera.combined
 
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
 
         if (ui.selectedSquads.isNotEmpty()) {
-            shape.color = Color.YELLOW
+            shape.color = COLOR_SELECTION
             shape.begin(ShapeRenderer.ShapeType.Filled)
             ui.selectedSquads.forEach { squad ->
-                val pos = squad()!!.transform.generateChildTransforms().forEach { trs ->
-                    val pos = trs.posGlobal
-                    shape.circle(pos.x, pos.y, 0.5f)
+                squad()!!.ships.forEach { ship ->
+                    val pos = ship.transform.posGlobal
+                    shape.circle(pos.x, pos.y, 0.5f, 10)
                 }
             }
             shape.end()
@@ -36,19 +40,21 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val input: Sq
         when (state) {
             is MoveToTransform -> {
                 if (state.dragged) {
-                    shape.color = Color.RED
+                    shape.color = COLOR_COMMAND
                     shape.begin(ShapeRenderer.ShapeType.Filled)
                     state.generateDraggedTransform().forEach { _, st ->
                         val transforms = st.generateChildTransforms()
                         transforms.forEach { trs ->
                             val pos = trs.posGlobal
-                            shape.circle(pos.x, pos.y, 0.5f)
+                            shape.circle(pos.x, pos.y, 0.5f, 10)
                         }
                     }
                     shape.end()
                 }
             }
         }
+
+        Gdx.gl.glDisable(GL20.GL_BLEND)
 
     }
 
@@ -60,6 +66,10 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val input: Sq
     }
 
     private companion object {
+        @JvmStatic
+        private val COLOR_SELECTION = Color(1f, 1f, 0f, 0.25f)
+        @JvmStatic
+        private val COLOR_COMMAND = Color(1f, 0f, 0f, 0.25f)
         @JvmStatic
         private val logger = LoggerFactory.getLogger(SquadCommandInputHighlighter::class.java)
     }

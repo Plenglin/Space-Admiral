@@ -15,9 +15,9 @@ import java.util.*
 class SimpleGameStateRenderer : GameStateRenderer {
 
     private val shipTriangle = listOf(
-            Vector2(1.0f, 0.0f),
-            Vector2(0.0f, 0.5f),
-            Vector2(0.0f, -0.5f)
+            Vector2(0.25f, 0.0f),
+            Vector2(-0.25f, 0.1f),
+            Vector2(-0.25f, -0.1f)
     )
     lateinit var shape: ShapeRenderer
     lateinit var gameCamera: OrthographicCamera
