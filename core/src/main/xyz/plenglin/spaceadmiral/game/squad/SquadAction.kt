@@ -64,15 +64,25 @@ class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad)
         }
 
         override fun update() {
+            if (arrived) {
+                return
+            }
             logger.debug("Moving {}", ship)
             error = target.posGlobal.cpy().sub(ship.transform.posGlobal)
-            val delta = error.setLength(ship.parent.template.speed)
+            val speed = ship.parent.template.speed
+            if (error.len2() < speed * speed) {
+                arrived = true
+                ship.transform.setLocalPosition(target.posGlobal)
+                ship.transform.angleLocal = target.angleGlobal
+                return
+            }
+            val delta = error.setLength(speed)
             ship.transform.angleLocal = delta.angle()
-            ship.transform.posGlobal.add(delta)
+            ship.transform.setLocalPosition(delta.add(ship.transform.posGlobal))
         }
 
         override fun shouldTerminate(): Boolean {
-            return error.len2() < EPSILON
+            return arrived
         }
 
         override fun interrupt() {
@@ -91,7 +101,6 @@ class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad)
     }
 
     companion object {
-        const val EPSILON = 0.001f
         private val logger = LoggerFactory.getLogger(MoveSquadAction::class.java)
     }
 
