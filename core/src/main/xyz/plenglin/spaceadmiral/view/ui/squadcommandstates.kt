@@ -31,11 +31,13 @@ data class MoveToTransform(
         val squadRefs = recipients.sortedBy { it()!!.index }
         val squadObjects = squadRefs.map { it()!! }
         val totalWidth: Float by lazy { recipients.map { it.getObject!!.transform.physicalWidth }.sum() }
-        val centerOfMass = squadObjects
-                .map { it.transform.transform.posGlobal.cpy() }
-                .reduce { acc, vector2 -> acc.add(vector2) }
-                .scl(1f / squadRefs.size)
-        val displacement = end.cpy().sub(centerOfMass)
+
+        val selectionCentroid = Vector2(0f, 0f)
+        squadObjects.forEach { selectionCentroid.add(it.transform.transform.posGlobal) }
+        selectionCentroid.scl(1f / squadRefs.size)
+
+        val displacement = start.cpy().sub(selectionCentroid)
+        println("foobar" + displacement.toString())
         val facing = displacement.angleRad()
 
         val step = displacement.cpy().rotate90(-1).nor()

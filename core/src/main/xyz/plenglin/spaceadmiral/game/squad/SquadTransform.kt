@@ -33,6 +33,13 @@ data class SquadTransform(val transform: Transform2D = Transform2D(), var width:
         return out
     }
 
+    fun set(target: SquadTransform) {
+        transform.set(target.transform)
+        width = target.width
+        spacing = target.spacing
+        count = target.count
+    }
+
     companion object {
         @JvmStatic
         fun createP2P(left: Vector2, right: Vector2, spacing: Float, count: Int): SquadTransform {

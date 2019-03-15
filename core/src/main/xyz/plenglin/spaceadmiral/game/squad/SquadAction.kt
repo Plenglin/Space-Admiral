@@ -31,7 +31,7 @@ abstract class SquadAction(val squad: Squad) : Serializable, State {
     }
 }
 
-class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad) {
+class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(squad) {
     private val transforms = target.generateChildTransforms()
     private val shipsEnRoute = squad.ships.toHashSet()
 
@@ -42,6 +42,7 @@ class MoveSquadAction(squad: Squad, target: SquadTransform) : SquadAction(squad)
         squad.ships.forEach {
             it.state = MoveShipAction(it)
         }
+        squad.transform.set(target)
     }
 
     override fun update() {
