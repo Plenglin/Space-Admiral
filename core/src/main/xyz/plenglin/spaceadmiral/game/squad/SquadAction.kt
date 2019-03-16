@@ -8,6 +8,7 @@ import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.io.Serializable
+import java.util.*
 
 
 sealed class ETA : Serializable
@@ -27,21 +28,23 @@ abstract class SquadAction(val squad: Squad) : Serializable, State {
     open fun teamIsAllowed(team: Team): Boolean = team == squad.team
 
     override fun interrupt() {
-        squad.ships.forEach { it.state = null }
+        squad.ships.forEach { it.stateScheduler.interrupt() }
     }
 }
 
 class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(squad) {
     private val transforms = target.generateChildTransforms()
-    private val shipsEnRoute = squad.ships.toHashSet()
+    private val shipsEnRoute = HashSet<Ship>()
 
     override fun getShipAction(ship: Ship): ShipAction? = MoveShipAction(ship)
 
     override fun initialize(parent: StateScheduler) {
-        logger.info("Initializing move action for {}", squad)
+        logger.info("Initializing move action {}", this)
         squad.ships.forEach {
-            it.state = MoveShipAction(it)
+            it.stateScheduler.nextState = MoveShipAction(it)
         }
+        shipsEnRoute.clear()
+        shipsEnRoute.addAll(squad.ships)
         squad.transform.set(target)
     }
 
@@ -49,59 +52,66 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
 
     }
 
-    override fun shouldTerminate(): Boolean = shipsEnRoute.isEmpty()
+    override fun shouldTerminate(): Boolean {
+        logger.debug("ships still moving over: {}", shipsEnRoute)
+        return shipsEnRoute.isEmpty()
+    }
 
     override fun terminate(): State? {
+        logger.info("Terminating move action {}", this)
         return null
     }
 
+    private fun onShipFinished(ship: Ship) {
+        logger.debug("Ship finished moving to destination: {}", ship)
+        if (!shipsEnRoute.remove(ship)) {
+            logger.error("Ship {} was not managed by this {}!", ship, this)
+        }
+    }
+
     inner class MoveShipAction(ship: Ship) : ShipAction(this@MoveSquadAction, ship) {
-        private var arrived = false
         private var error = Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
         private val target = transforms[ship.transformIndex]
+        private val speed = ship.parent.template.speed
+        private val epsilon2 = ship.parent.template.speed * ship.parent.template.speed
 
         override fun initialize(parent: StateScheduler) {
             ship.transform.angleLocal = target.posGlobal.angle(ship.transform.posGlobal)
         }
 
         override fun update() {
-            if (arrived) {
-                return
-            }
-            logger.debug("Moving {}", ship)
             error = target.posGlobal.cpy().sub(ship.transform.posGlobal)
-            val speed = ship.parent.template.speed
-            if (error.len2() < speed * speed) {
-                arrived = true
-                ship.transform.setLocalPosition(target.posGlobal)
-                ship.transform.angleLocal = target.angleGlobal
-                return
-            }
-            val delta = error.setLength(speed)
-            ship.transform.angleLocal = delta.angle()
-            ship.transform.setLocalPosition(delta.add(ship.transform.posGlobal))
+            val delta = error.cpy().setLength(speed)
+            ship.transform.angleLocal = delta.angleRad()
+            ship.transform.setLocalPosition(delta.cpy().add(ship.transform.posGlobal))
+            logger.debug("Moving {} at {} to {} (error={})", ship, ship.transform.posGlobal, target.posGlobal, error.len())
         }
 
         override fun shouldTerminate(): Boolean {
-            return arrived
+            return error.len2() < epsilon2
         }
 
         override fun interrupt() {
+            logger.debug("Interrupting ship move for {}", this)
             onShipFinished(ship)
         }
 
         override fun terminate(): State? {
+            logger.debug("Terminating ship move for {}", this)
             onShipFinished(ship)
+            ship.transform.setLocalPosition(target.posGlobal)
+            ship.transform.angleLocal = target.angleGlobal
             return null
         }
 
     }
 
-    private fun onShipFinished(ship: Ship) {
-        shipsEnRoute.remove(ship)
+    override fun toString(): String {
+        return "SquadAction($squad, $target)"
     }
 
-    companion object {
+    private companion object {
+        @JvmStatic
         private val logger = LoggerFactory.getLogger(MoveSquadAction::class.java)
     }
 

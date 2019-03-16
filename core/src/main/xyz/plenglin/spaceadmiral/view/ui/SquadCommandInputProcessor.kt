@@ -77,6 +77,8 @@ class SquadCommandInputProcessor(
             recipients.forEach {
                 client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
             }
+        } else {
+            logger.info("Will not clear action queues of {} (shift held)", recipients)
         }
 
         return when (state) {

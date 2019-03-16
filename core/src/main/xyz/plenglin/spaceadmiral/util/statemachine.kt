@@ -31,13 +31,13 @@ interface State {
 
 class StateScheduler {
     /**
-     * The state that is running right now
+     * The state that is running right now.
      */
     var currentState: State? = null
         private set
 
     /**
-     * The state that will run when [currentState] finishes
+     * The state that will run when [currentState] finishes.
      */
     var defaultState: State? = null
         set(value) {
@@ -53,6 +53,11 @@ class StateScheduler {
     var nextState: State? = null
 
     private var wasInitialized = false
+    private var shouldChangeState = false
+
+    fun interrupt() {
+        shouldChangeState = true
+    }
 
     /**
      * Update this state machine.
@@ -60,28 +65,29 @@ class StateScheduler {
      */
     fun update(): Boolean {
         // We have a new state
-        nextState?.let { next ->
-            val current = currentState
-            if (current == null) {  // We are not overriding
-            } else {  // We are overriding
-                current.interrupt()
-            }
+        val next = nextState
+        if (next != null || shouldChangeState) {
+            currentState?.interrupt()
             currentState = next
             nextState = null
             wasInitialized = false
         }
 
         // Update the current state
+        var terminated = false
         currentState?.let {
             if (!wasInitialized) {
                 it.initialize(this)
+                wasInitialized = true
             }
             it.update()
             if (it.shouldTerminate()) {
-                currentState = null
+                terminated = true
                 nextState = it.terminate() ?: defaultState
-                return true
             }
+        }
+        if (terminated) {
+            currentState = null
         }
         return false
     }

@@ -16,13 +16,7 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     val uuid: UUID = UUID.randomUUID()
     val transform = Transform2D(Vector2(), 0f)
 
-    @Transient
-    private val stateScheduler = StateScheduler()
-    var state: ShipAction?
-        get() = stateScheduler.currentState as ShipAction?
-        set(value) {
-            stateScheduler.nextState = value
-        }
+    val stateScheduler = StateScheduler()
 
     var health = Health(0, 0, 0)
     var morale = 0f

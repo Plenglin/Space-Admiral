@@ -12,7 +12,7 @@ class Squad(val template: ShipType, var team: Team, var index: Int) : Serializab
     val ships: MutableList<Ship> = (0 until template.squadSize).map { Ship(this, it) }.toMutableList()
     val actionQueue: Queue<SquadAction> = LinkedList()
 
-    val stateScheduler = StateScheduler()
+    private val stateScheduler = StateScheduler()
 
     val transform = SquadTransform(
             count = template.squadSize,
@@ -25,7 +25,9 @@ class Squad(val template: ShipType, var team: Team, var index: Int) : Serializab
     }
 
     fun update() {
-        stateScheduler.update()
+        if (stateScheduler.update()) {
+            logger.debug("{} statescheduler ended something", this)
+        }
         if (stateScheduler.currentState == null && actionQueue.peek() != null) {
             val nextState = actionQueue.remove()
             stateScheduler.nextState = nextState

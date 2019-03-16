@@ -8,5 +8,4 @@ class DummyFighter : ShipType {
     override val speed: Float = 0.5f
     override val spacing: Float = 1f
     override val defaultFormationWidth: Int = 9
-
 }
