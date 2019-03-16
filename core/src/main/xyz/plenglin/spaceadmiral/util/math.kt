@@ -3,7 +3,6 @@ package xyz.plenglin.spaceadmiral.util
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import java.lang.RuntimeException
 import java.util.*
 
 class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, parent: Transform2D? = null) {
@@ -120,7 +119,41 @@ class CircularTransformStructureException(child: Transform2D, parent: Transform2
         "Circular transform structure detected while setting $parent to be the parent of $child"
 )
 
-data class MinMaxRectangle(val left: Float, val right: Float, val top: Float, val bottom: Float)
+data class MinMaxRectangle(val left: Float, val right: Float, val top: Float, val bottom: Float) {
+    fun toGdxRect(): Rectangle {
+        return Rectangle(left, bottom, right - left, top - bottom)
+    }
+    fun expanded(x: Float, y: Float): MinMaxRectangle {
+        return MinMaxRectangle(left - x, right + x, top + y, bottom - y)
+    }
+    fun expanded(r: Float): MinMaxRectangle {
+        return expanded(r, r)
+    }
+}
+
+fun minMaxLimits(x0: Float, x1: Float, y0: Float, y1: Float): MinMaxRectangle {
+    val left: Float
+    val right: Float
+    val bottom: Float
+    val top: Float
+
+    if (x0 < x1) {
+        left = x0
+        right = x1
+    } else {
+        left = x1
+        right = x0
+    }
+    if (y0 < y1) {
+        bottom = y0
+        top = y1
+    } else {
+        bottom = y1
+        top = y0
+    }
+
+    return MinMaxRectangle(left, right, top, bottom)
+}
 
 data class Capsule2D(val x0: Vector2, val x1: Vector2, val radius: Float) {
 

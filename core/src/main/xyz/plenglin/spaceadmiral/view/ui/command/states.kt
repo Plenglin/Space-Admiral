@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.view.ui
+package xyz.plenglin.spaceadmiral.view.ui.command
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
@@ -37,7 +37,6 @@ data class MoveToTransform(
         selectionCentroid.scl(1f / squadRefs.size)
 
         val displacement = start.cpy().sub(selectionCentroid)
-        println("foobar" + displacement.toString())
         val facing = displacement.angleRad()
 
         val step = displacement.cpy().rotate90(-1).nor()

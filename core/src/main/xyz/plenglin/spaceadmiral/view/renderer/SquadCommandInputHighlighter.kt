@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
-import xyz.plenglin.spaceadmiral.view.ui.MoveToTransform
-import xyz.plenglin.spaceadmiral.view.ui.SquadCommandInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.command.MoveToTransform
+import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandInputProcessor
 
 class SquadCommandInputHighlighter(private val ui: GameUI, private val input: SquadCommandInputProcessor) : RendererLayer {
     private val shape = ShapeRenderer()

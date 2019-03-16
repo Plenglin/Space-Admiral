@@ -13,8 +13,8 @@ import xyz.plenglin.spaceadmiral.view.renderer.SimpleGameStateRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SquadCommandInputHighlighter
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
-import xyz.plenglin.spaceadmiral.view.ui.SquadCommandInputProcessor
-import xyz.plenglin.spaceadmiral.view.ui.SquadSelectionInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.selection.SquadSelectionInputProcessor
 
 class GameScreen(private val client: GameClient) : Screen {
     private val batch: SpriteBatch = SpriteBatch()
@@ -28,7 +28,7 @@ class GameScreen(private val client: GameClient) : Screen {
 
     private val inputCameraPosition: SmoothCameraInputProcessor = SmoothCameraInputProcessor(gameCamera)
     private val inputSquadCommand = SquadCommandInputProcessor(ui, client, gameCamera, gameRenderer)
-    private val inputSquadSelect = SquadSelectionInputProcessor(ui, client, gameRenderer)
+    private val inputSquadSelect = SquadSelectionInputProcessor(ui, gameCamera, client, gameRenderer)
     private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSquadCommand, inputSquadSelect)
 
     private val squadCommandHighlighter = SquadCommandInputHighlighter(ui, inputSquadCommand)

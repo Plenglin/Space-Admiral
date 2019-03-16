@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.view.ui
+package xyz.plenglin.spaceadmiral.view.ui.command
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -12,6 +12,7 @@ import xyz.plenglin.spaceadmiral.net.io.ClearSquadActionQueueCommand
 import xyz.plenglin.spaceadmiral.net.io.MoveSquadCommand
 import xyz.plenglin.spaceadmiral.util.unproject2
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
+import xyz.plenglin.spaceadmiral.view.ui.GameUI
 
 class SquadCommandInputProcessor(
         val ui: GameUI,
