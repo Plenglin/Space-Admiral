@@ -53,7 +53,7 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
     }
 
     override fun shouldTerminate(): Boolean {
-        logger.debug("ships still moving over: {}", shipsEnRoute)
+        logger.trace("ships still moving over: {}", shipsEnRoute)
         return shipsEnRoute.isEmpty()
     }
 
@@ -63,7 +63,7 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
     }
 
     private fun onShipFinished(ship: Ship) {
-        logger.debug("Ship finished moving to destination: {}", ship)
+        logger.trace("Ship finished moving to destination: {}", ship)
         if (!shipsEnRoute.remove(ship)) {
             logger.error("Ship {} was not managed by this {}!", ship, this)
         }
@@ -84,7 +84,7 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
             val delta = error.cpy().setLength(speed)
             ship.transform.angleLocal = delta.angleRad()
             ship.transform.setLocalPosition(delta.cpy().add(ship.transform.posGlobal))
-            logger.debug("Moving {} at {} to {} (error={})", ship, ship.transform.posGlobal, target.posGlobal, error.len())
+            logger.trace("Moving {} at {} to {} (error={})", ship, ship.transform.posGlobal, target.posGlobal, error.len())
         }
 
         override fun shouldTerminate(): Boolean {
@@ -92,7 +92,7 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
         }
 
         override fun interrupt() {
-            logger.debug("Interrupting ship move for {}", this)
+            logger.trace("Interrupting ship move for {}", this)
             onShipFinished(ship)
         }
 

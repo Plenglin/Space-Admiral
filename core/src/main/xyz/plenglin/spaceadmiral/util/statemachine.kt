@@ -72,6 +72,7 @@ class StateScheduler {
             nextState = null
             wasInitialized = false
         }
+        shouldChangeState = false
 
         // Update the current state
         var terminated = false

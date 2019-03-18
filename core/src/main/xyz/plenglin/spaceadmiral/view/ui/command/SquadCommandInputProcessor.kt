@@ -69,7 +69,7 @@ class SquadCommandInputProcessor(
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val state = state ?: return false
 
-        logger.debug("Finalizing state {}", state)
+        logger.info("Finalizing state {}", state)
         this.state = null
         val recipients = state.recipients
 

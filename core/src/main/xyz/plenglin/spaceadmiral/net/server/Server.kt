@@ -32,7 +32,7 @@ class Server(val players: List<PlayerInterface>, val instance: GameInstance = Ga
 
             when (result) {
                 is CommandResult.Success -> {
-                    logger.debug("Command {} successfully executed", cmd)
+                    logger.info("Command {} successfully executed", cmd)
                 }
                 is CommandResult.Fail -> {
                     logger.warn("Command {} failed! Reason: {}", cmd, result.reason)

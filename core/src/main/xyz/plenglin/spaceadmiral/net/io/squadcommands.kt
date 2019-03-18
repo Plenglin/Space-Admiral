@@ -12,10 +12,39 @@ data class ClearSquadActionQueueCommand(val recipient: UUID) : ClientCommand {
         if (sender.team.uuid != recipient.team.uuid) return CommandResult.SquadPermissions(sender, recipient)
 
         recipient.actionQueue.clear()
+        recipient.stateScheduler.interrupt()
+        return CommandResult.Success
+    }
+}
+
+/*
+abstract class SquadActionCommand(val recipient: UUID) : ClientCommand {
+    var shouldClearActionQueue: Boolean = true
+
+    abstract fun createAction(sender: PlayerInterface, instance: GameInstance, recipient: Squad): SquadAction
+
+    open fun checkPermissions(recipient: Squad): CommandResult {
+        val recipient = instance.gameState.squads[recipient] ?: return CommandResult.InvalidData("No recipient $recipient!")
+        if (sender.team.uuid != recipient.team.uuid) return CommandResult.SquadPermissions(sender, recipient)
+
         return CommandResult.Success
     }
 
+    override fun applyCommand(sender: PlayerInterface, instance: GameInstance): CommandResult {
+        val recipient = instance.gameState.squads[recipient] ?: return CommandResult.InvalidData("No recipient $recipient!")
+        val result = checkPermissions(recipient)
+        if (result == CommandResult.Success) {
+            val action = createAction(sender, instance, recipient)
+            if (shouldClearActionQueue) {
+                recipient.actionQueue.clear()
+                recipient.stateScheduler.interrupt()
+            }
+            recipient.actionQueue.add(action)
+        }
+        return result
+    }
 }
+*/
 
 data class MoveSquadCommand(val recipient: UUID, val target: SquadTransform) : ClientCommand {
     override fun applyCommand(sender: PlayerInterface, instance: GameInstance): CommandResult {

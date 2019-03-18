@@ -12,7 +12,7 @@ class Squad(val template: ShipType, var team: Team, var index: Int) : Serializab
     val ships: MutableList<Ship> = (0 until template.squadSize).map { Ship(this, it) }.toMutableList()
     val actionQueue: Queue<SquadAction> = LinkedList()
 
-    private val stateScheduler = StateScheduler()
+    val stateScheduler = StateScheduler()
 
     val transform = SquadTransform(
             count = template.squadSize,
