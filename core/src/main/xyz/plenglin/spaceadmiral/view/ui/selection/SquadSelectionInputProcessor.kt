@@ -18,7 +18,7 @@ class SquadSelectionInputProcessor(
         private val renderer: GameStateRenderer)
     : InputProcessor {
 
-    private var state: SelectionState? = null
+    var state: SelectionState? = null
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         if (button != Input.Buttons.LEFT) return false
@@ -54,11 +54,7 @@ class SquadSelectionInputProcessor(
 
         if (state.dragged) {
             logger.info("Selection was dragged, interpreting as selection box")
-            val selected = client.gameState!!.shipTree.findInRect(state.getSelectionBox())
-                    .map { (_, s) ->
-                        client.getSquad(s!!.parent.uuid)
-                    }
-                    .toSet()
+            val selected = state.getSelectedSquads(client.gameState!!.shipTree).map { client.getSquad(it.uuid) }
             ui.selectedSquads.addAll(selected)
         } else {
             val ship = renderer.getShipAtScreenPos(screenX, screenY)

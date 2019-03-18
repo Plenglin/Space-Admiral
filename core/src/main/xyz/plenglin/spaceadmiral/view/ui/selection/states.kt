@@ -1,6 +1,9 @@
 package xyz.plenglin.spaceadmiral.view.ui.selection
 
 import com.badlogic.gdx.math.Vector2
+import xyz.plenglin.spaceadmiral.game.ship.Ship
+import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.util.KDTree2
 import xyz.plenglin.spaceadmiral.util.MinMaxRectangle
 import xyz.plenglin.spaceadmiral.util.minMaxLimits
 
@@ -8,6 +11,14 @@ data class SelectionState(val start: Vector2, val end: Vector2 = start.cpy(), va
 
     fun getSelectionBox(): MinMaxRectangle {
         return minMaxLimits(start.x, end.x, start.y, end.y)
+    }
+
+    fun getSelectedSquads(tree: KDTree2<Ship>): Set<Squad> {
+        return tree.findInRect(getSelectionBox())
+                .map { (_, s) ->
+                    s!!.parent
+                }
+                .toSet()
     }
 
 }

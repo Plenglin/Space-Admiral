@@ -31,7 +31,7 @@ class GameScreen(private val client: GameClient) : Screen {
     private val inputSquadSelect = SquadSelectionInputProcessor(ui, gameCamera, client, gameRenderer)
     private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSquadCommand, inputSquadSelect)
 
-    private val squadCommandHighlighter = SquadCommandInputHighlighter(ui, inputSquadCommand)
+    private val squadCommandHighlighter = SquadCommandInputHighlighter(ui, client, inputSquadSelect, inputSquadCommand)
 
     init {
         logger.info("Initializing GameScreen")

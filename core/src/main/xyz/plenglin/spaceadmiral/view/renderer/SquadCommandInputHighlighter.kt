@@ -6,11 +6,15 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.net.client.GameClient
+import xyz.plenglin.spaceadmiral.util.rect
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.command.MoveToTransform
 import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.selection.SquadSelectionInputProcessor
 
-class SquadCommandInputHighlighter(private val ui: GameUI, private val input: SquadCommandInputProcessor) : RendererLayer {
+class SquadCommandInputHighlighter(private val ui: GameUI, private val client: GameClient, private val selector: SquadSelectionInputProcessor, private val input: SquadCommandInputProcessor) : RendererLayer {
     private val shape = ShapeRenderer()
     private lateinit var camera: OrthographicCamera
 
@@ -28,10 +32,7 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val input: Sq
             shape.color = COLOR_SELECTION
             shape.begin(ShapeRenderer.ShapeType.Filled)
             ui.selectedSquads.forEach { squad ->
-                squad()!!.ships.forEach { ship ->
-                    val pos = ship.transform.posGlobal
-                    shape.circle(pos.x, pos.y, 0.5f, 10)
-                }
+                shape.highlightSquad(squad()!!)
             }
             shape.end()
         }
@@ -54,8 +55,36 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val input: Sq
             }
         }
 
+        selector.state?.let { selectionState ->
+            if (!selectionState.dragged) return@let
+            val rect = selectionState.getSelectionBox().toGdxRect()
+
+            shape.color = COLOR_SELECTION
+            shape.begin(ShapeRenderer.ShapeType.Filled)
+
+            selectionState.getSelectedSquads(client.gameState!!.shipTree).forEach { squad ->
+                shape.highlightSquad(squad)
+            }
+
+            shape.rect(rect)
+            shape.end()
+
+            shape.begin(ShapeRenderer.ShapeType.Line)
+            shape.rect(rect)
+
+            shape.end()
+        }
+
+
         Gdx.gl.glDisable(GL20.GL_BLEND)
 
+    }
+
+    private fun ShapeRenderer.highlightSquad(squad: Squad) {
+        squad.ships.forEach { ship ->
+            val pos = ship.transform.posGlobal
+            shape.circle(pos.x, pos.y, 0.5f, 10)
+        }
     }
 
     override fun resize(width: Int, height: Int) {
