@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.game.squad
 
+import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
@@ -19,6 +20,14 @@ class Squad(val template: ShipType, var team: Team, var index: Int) : Serializab
             spacing = template.spacing,
             width = template.defaultFormationWidth)
     val uuid: UUID = UUID.randomUUID()
+    val centerOfMass: Vector2 get() {
+        val out = Vector2(0f, 0f)
+        ships.forEach {
+            out.add(it.transform.posGlobal)
+        }
+        out.scl(1f / ships.size)
+        return out
+    }
 
     init {
         resetShipPositions()

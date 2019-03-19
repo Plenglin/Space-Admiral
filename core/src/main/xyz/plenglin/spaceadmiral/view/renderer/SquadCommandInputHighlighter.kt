@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.net.client.GameClient
 import xyz.plenglin.spaceadmiral.util.rect
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
@@ -32,7 +34,7 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
             shape.color = COLOR_SELECTION
             shape.begin(ShapeRenderer.ShapeType.Filled)
             ui.selectedSquads.forEach { squad ->
-                shape.highlightSquad(squad()!!)
+                drawSelectedSquad(squad()!!)
             }
             shape.end()
         }
@@ -80,10 +82,30 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
 
     }
 
+    private fun drawSelectedSquad(squad: Squad) {
+        shape.highlightSquad(squad)
+        val state = (squad.stateScheduler.currentState ?: return) as SquadAction
+        var prev: SquadAction? = null
+        val actions = squad.actionQueue.toMutableList()
+        actions.add(0, state)
+        println(actions)
+
+        for (action in actions) {
+            when (action) {
+                is MoveSquadAction -> {
+                    val start = prev?.expectedEndPos ?: squad.centerOfMass
+                    println("$action, $start, $prev")
+                    shape.line(start, action.expectedEndPos)
+                }
+            }
+            prev = action
+        }
+    }
+
     private fun ShapeRenderer.highlightSquad(squad: Squad) {
         squad.ships.forEach { ship ->
             val pos = ship.transform.posGlobal
-            shape.circle(pos.x, pos.y, 0.5f, 10)
+            circle(pos.x, pos.y, 0.5f, 10)
         }
     }
 

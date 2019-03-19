@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
-import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.io.Serializable
@@ -22,10 +21,10 @@ abstract class SquadAction(val squad: Squad) : Serializable, State {
     val timeLeft: ETA get() = Indefinite
 
     private var isFinished = false
+    open val expectedEndPos get() = squad.transform.transform.posGlobal
 
     abstract fun getShipAction(ship: Ship): ShipAction?
 
-    open fun teamIsAllowed(team: Team): Boolean = team == squad.team
 
     override fun interrupt() {
         squad.ships.forEach { it.stateScheduler.interrupt() }
@@ -35,6 +34,7 @@ abstract class SquadAction(val squad: Squad) : Serializable, State {
 class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(squad) {
     private val transforms = target.generateChildTransforms()
     private val shipsEnRoute = HashSet<Ship>()
+    override val expectedEndPos: Vector2 get() = target.transform.posGlobal
 
     override fun getShipAction(ship: Ship): ShipAction? = MoveShipAction(ship)
 

@@ -10,7 +10,7 @@ import xyz.plenglin.spaceadmiral.view.screen.GameScreen
 
 class SmoothCameraInputProcessor(
         val camera: OrthographicCamera,
-        val dampening: Float = 0.75f,
+        val dampening: Float = 0.9f,
         val zoomRate: Float = 1.5f)
     : InputProcessor {
     private val targetCamera = OrthographicCamera()
