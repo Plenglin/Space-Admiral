@@ -103,6 +103,10 @@ class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, par
         return "Transform($posLocal, $angleLocal, $parent)"
     }
 
+    fun clone(): Transform2D {
+        return Transform2D(posLocal, angleLocal, parent)
+    }
+
     companion object {
         @JvmStatic
         val ZERO = Transform2D(Vector2.Zero, 0f)
@@ -116,7 +120,7 @@ fun Vector2.multCpx(o: Vector2): Vector2 {
 }
 
 class CircularTransformStructureException(child: Transform2D, parent: Transform2D) : RuntimeException(
-        "Circular transform structure detected while setting $parent to be the parent of $child"
+        "Circular transform structure detected while setting $parent to be the ship of $child"
 )
 
 data class MinMaxRectangle(val left: Float, val right: Float, val top: Float, val bottom: Float) {

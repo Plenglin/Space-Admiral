@@ -3,6 +3,7 @@ package xyz.plenglin.spaceadmiral.game
 import com.badlogic.gdx.graphics.Color
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
+import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.KDTree2
@@ -16,6 +17,8 @@ class GameState : Serializable {
     val squads = HashMap<UUID, Squad>()
     val ships = HashMap<UUID, Ship>()
     val projectiles = HashMap<UUID, Projectile>()
+
+    val recentFiringEvents: MutableList<FiringEvent> = mutableListOf()
 
     @Transient val shipTree = KDTree2<Ship>()
     @Transient val projectileTree = KDTree2<Projectile>()
