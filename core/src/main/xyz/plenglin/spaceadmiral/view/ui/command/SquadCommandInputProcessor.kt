@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.toRef
+import xyz.plenglin.spaceadmiral.net.game.io.AttackSquadCommand
 import xyz.plenglin.spaceadmiral.net.game.io.ClearSquadActionQueueCommand
 import xyz.plenglin.spaceadmiral.net.game.io.MoveSquadCommand
 import xyz.plenglin.spaceadmiral.util.unproject2
@@ -36,7 +37,7 @@ class SquadCommandInputProcessor(
                     return false
                 }
 
-                if (target != null && target.team.isAlliedWith(ui.client.team)) {
+                if (target != null && !target.team.isAlliedWith(ui.client.team)) {
                     logger.info("Creating an attack command for {} to attack {}", recipients, target)
                     state = Attack(ui.selectedSquads, target.toRef(client))
                     return true
@@ -104,7 +105,9 @@ class SquadCommandInputProcessor(
                     logger.info("Cancelling {} because we ended on a different target", state)
                     return true
                 }
-                // TODO client.sendCommand(Att)
+                recipients.forEach {
+                    client.sendCommand(AttackSquadCommand(it.uuid, target.uuid))
+                }
                 true
             }
         }

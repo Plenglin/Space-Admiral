@@ -88,13 +88,11 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
         var prev: SquadAction? = null
         val actions = squad.actionQueue.toMutableList()
         actions.add(0, state)
-        println(actions)
 
         for (action in actions) {
             when (action) {
                 is MoveSquadAction -> {
                     val start = prev?.expectedEndPos ?: squad.centerOfMass
-                    println("$action, $start, $prev")
                     shape.line(start, action.expectedEndPos)
                 }
             }

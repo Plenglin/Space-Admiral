@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.DummyFighter
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
+import xyz.plenglin.spaceadmiral.net.game.local.GameDummyPlayer
 import xyz.plenglin.spaceadmiral.net.game.local.GameLocalBridge
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
 import xyz.plenglin.spaceadmiral.view.screen.GameScreen
@@ -15,8 +16,9 @@ class SpaceAdmiral : Game() {
     override fun create() {
         logger.info("Creating")
         val localBridge = GameLocalBridge(UUID.randomUUID())
+        val dummy = GameDummyPlayer(UUID.randomUUID())
 
-        val server = GameServer(listOf(localBridge))
+        val server = GameServer(listOf(localBridge, dummy))
         val screen = GameScreen(GameClient(localBridge))
         thread(start = true, isDaemon = true) {
             while (true) {
@@ -29,15 +31,25 @@ class SpaceAdmiral : Game() {
             }
         }
 
-        val squad1 = server.instance.gameState.teams.values.first().createSquad(DummyFighter())
-        squad1.transform.transform.angleLocal = 0.1f
-        squad1.transform.transform.setLocalPosition(0f, 0f)
-        squad1.resetShipPositions()
+        val teams = server.instance.gameState.teams
+        val t1 = teams[localBridge.team]!!
+        val t2 = teams[dummy.team]!!
 
-        val squad2 = server.instance.gameState.teams.values.first().createSquad(DummyFighter())
-        squad2.transform.transform.angleLocal = 0.1f
-        squad2.transform.transform.setLocalPosition(10f, 0f)
-        squad2.resetShipPositions()
+        val squad1 = t1.createSquad(DummyFighter()).apply {
+            transform.transform.angleLocal = 0.1f
+            transform.transform.setLocalPosition(0f, 0f)
+            resetShipPositions()
+        }
+
+        val squad2 = t1.createSquad(DummyFighter()).apply {
+            transform.transform.setLocalPosition(10f, 0f)
+            resetShipPositions()
+        }
+
+        val squad3 = t2.createSquad(DummyFighter()).apply {
+            transform.transform.setLocalPosition(10f, 20f)
+            resetShipPositions()
+        }
 
         setScreen(screen)
     }
