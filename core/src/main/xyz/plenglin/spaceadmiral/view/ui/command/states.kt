@@ -2,7 +2,7 @@ package xyz.plenglin.spaceadmiral.view.ui.command
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
-import xyz.plenglin.spaceadmiral.net.client.SquadRef
+import xyz.plenglin.spaceadmiral.net.game.client.SquadRef
 import xyz.plenglin.spaceadmiral.util.Transform2D
 
 sealed class CommandState {

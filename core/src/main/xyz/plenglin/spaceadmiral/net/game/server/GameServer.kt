@@ -1,30 +1,30 @@
-package xyz.plenglin.spaceadmiral.net.server
+package xyz.plenglin.spaceadmiral.net.game.server
 
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
-import xyz.plenglin.spaceadmiral.net.io.ClientCommand
-import xyz.plenglin.spaceadmiral.net.io.CommandResult
+import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.CommandResult
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-class Server(val players: List<PlayerInterface>, val instance: GameInstance = GameInstance()) {
+class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameInstance = GameInstance()) {
 
-    private val commands: BlockingQueue<Pair<PlayerInterface, ClientCommand>> = LinkedBlockingQueue()
+    private val commands: BlockingQueue<Pair<GamePlayerInterface, ClientCommand>> = LinkedBlockingQueue()
+    val players: List<GamePlayerInterface>
 
     init {
         logger.info("Initializing server {}", this)
-        players.forEachIndexed { i, pl ->
-            pl.attachServer(this)
-            val team = instance.gameState.createTeam(COLORS[i])
-            pl.team = team
+        this.players = players.mapIndexed { i, pl ->
+            val team = instance.gameState.createTeam(COLORS[i], uuid = pl.team)
+            pl.createPlayerInterface(team, this)
         }
     }
 
     fun update() {
         logger.debug("Updating server {}", this)
 
-        val commands = mutableListOf<Pair<PlayerInterface, ClientCommand>>()
+        val commands = mutableListOf<Pair<GamePlayerInterface, ClientCommand>>()
         this.commands.drainTo(commands)
         commands.forEach { (sender, cmd) ->
             logger.info("Received command {} from {}", cmd, sender)
@@ -49,14 +49,14 @@ class Server(val players: List<PlayerInterface>, val instance: GameInstance = Ga
 
     }
 
-    fun onCommandReceived(client: PlayerInterface, command: ClientCommand) {
+    fun onCommandReceived(client: GamePlayerInterface, command: ClientCommand) {
         logger.info("Client {} sent squad command {}", client, command)
         commands.add(client to command)
     }
 
     companion object {
         @JvmStatic
-        val logger = LoggerFactory.getLogger(Server::class.java)
+        val logger = LoggerFactory.getLogger(GameServer::class.java)
 
         @JvmStatic
         val COLORS = listOf<Color>(

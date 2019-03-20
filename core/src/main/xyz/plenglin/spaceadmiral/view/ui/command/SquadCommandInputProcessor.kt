@@ -6,10 +6,10 @@ import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.net.client.GameClient
-import xyz.plenglin.spaceadmiral.net.client.toRef
-import xyz.plenglin.spaceadmiral.net.io.ClearSquadActionQueueCommand
-import xyz.plenglin.spaceadmiral.net.io.MoveSquadCommand
+import xyz.plenglin.spaceadmiral.net.game.client.GameClient
+import xyz.plenglin.spaceadmiral.net.game.client.toRef
+import xyz.plenglin.spaceadmiral.net.game.io.ClearSquadActionQueueCommand
+import xyz.plenglin.spaceadmiral.net.game.io.MoveSquadCommand
 import xyz.plenglin.spaceadmiral.util.unproject2
 import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI

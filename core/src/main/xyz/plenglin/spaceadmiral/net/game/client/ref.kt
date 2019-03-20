@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.net.client
+package xyz.plenglin.spaceadmiral.net.game.client
 
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship

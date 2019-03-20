@@ -5,12 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.squad.Squad
-import xyz.plenglin.spaceadmiral.net.client.GameClient
-import xyz.plenglin.spaceadmiral.net.client.Ref
-import xyz.plenglin.spaceadmiral.net.client.ShipRef
-import xyz.plenglin.spaceadmiral.net.client.SquadRef
+import xyz.plenglin.spaceadmiral.net.game.client.GameClient
+import xyz.plenglin.spaceadmiral.net.game.client.ShipRef
+import xyz.plenglin.spaceadmiral.net.game.client.SquadRef
 
 class GameUI(val client: GameClient, camera: OrthographicCamera) : Disposable {
     private val viewport = ScreenViewport(camera)

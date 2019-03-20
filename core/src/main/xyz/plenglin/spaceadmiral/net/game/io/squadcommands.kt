@@ -1,13 +1,13 @@
-package xyz.plenglin.spaceadmiral.net.io
+package xyz.plenglin.spaceadmiral.net.game.io
 
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
-import xyz.plenglin.spaceadmiral.net.server.PlayerInterface
+import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import java.util.*
 
 data class ClearSquadActionQueueCommand(val recipient: UUID) : ClientCommand {
-    override fun applyCommand(sender: PlayerInterface, instance: GameInstance): CommandResult {
+    override fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult {
         val recipient = instance.gameState.squads[recipient] ?: return CommandResult.InvalidData("No recipient $recipient!")
         if (sender.team.uuid != recipient.team.uuid) return CommandResult.SquadPermissions(sender, recipient)
 
@@ -21,7 +21,7 @@ data class ClearSquadActionQueueCommand(val recipient: UUID) : ClientCommand {
 abstract class SquadActionCommand(val recipient: UUID) : ClientCommand {
     var shouldClearActionQueue: Boolean = true
 
-    abstract fun createAction(sender: PlayerInterface, instance: GameInstance, recipient: Squad): SquadAction
+    abstract fun createAction(sender: GamePlayerInterface, instance: GameInstance, recipient: Squad): SquadAction
 
     open fun checkPermissions(recipient: Squad): CommandResult {
         val recipient = instance.gameState.squads[recipient] ?: return CommandResult.InvalidData("No recipient $recipient!")
@@ -30,7 +30,7 @@ abstract class SquadActionCommand(val recipient: UUID) : ClientCommand {
         return CommandResult.Success
     }
 
-    override fun applyCommand(sender: PlayerInterface, instance: GameInstance): CommandResult {
+    override fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult {
         val recipient = instance.gameState.squads[recipient] ?: return CommandResult.InvalidData("No recipient $recipient!")
         val result = checkPermissions(recipient)
         if (result == CommandResult.Success) {
@@ -47,7 +47,7 @@ abstract class SquadActionCommand(val recipient: UUID) : ClientCommand {
 */
 
 data class MoveSquadCommand(val recipient: UUID, val target: SquadTransform) : ClientCommand {
-    override fun applyCommand(sender: PlayerInterface, instance: GameInstance): CommandResult {
+    override fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult {
         val recipient = instance.gameState.squads[recipient] ?: return CommandResult.InvalidData("No recipient $recipient!")
         if (sender.team.uuid != recipient.team.uuid) return CommandResult.SquadPermissions(sender, recipient)
 
@@ -57,7 +57,7 @@ data class MoveSquadCommand(val recipient: UUID, val target: SquadTransform) : C
 }
 
 data class AttackSquadCommand(val recipient: UUID, val target: UUID) : ClientCommand {
-    override fun applyCommand(sender: PlayerInterface, instance: GameInstance): CommandResult {
+    override fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult {
         val recipient = instance.gameState.squads[recipient] ?: return CommandResult.InvalidData("No recipient $recipient!")
         val target = instance.gameState.squads[target] ?: return CommandResult.InvalidData("No target $recipient!")
         if (sender.team.uuid != recipient.team.uuid) return CommandResult.SquadPermissions(sender, recipient)

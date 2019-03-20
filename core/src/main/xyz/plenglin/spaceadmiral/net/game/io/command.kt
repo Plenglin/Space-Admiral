@@ -1,8 +1,8 @@
-package xyz.plenglin.spaceadmiral.net.io
+package xyz.plenglin.spaceadmiral.net.game.io
 
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.squad.Squad
-import xyz.plenglin.spaceadmiral.net.server.PlayerInterface
+import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import java.io.Serializable
 
 sealed class CommandResult {
@@ -13,7 +13,7 @@ sealed class CommandResult {
     class InvalidData(reason: String) : Fail(reason) {
         override fun toString(): String = "InvalidData($reason)"
     }
-    data class SquadPermissions(val sender: PlayerInterface, val recipient: Squad) : Fail("User $sender is not allowed to send commands to $recipient!")
+    data class SquadPermissions(val sender: GamePlayerInterface, val recipient: Squad) : Fail("User $sender is not allowed to send commands to $recipient!")
 }
 
 
@@ -29,5 +29,5 @@ interface ClientCommand : Serializable {
      * @param instance the [GameInstance] to apply it on
      * @return the result
      */
-    fun applyCommand(sender: PlayerInterface, instance: GameInstance): CommandResult
+    fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult
 }

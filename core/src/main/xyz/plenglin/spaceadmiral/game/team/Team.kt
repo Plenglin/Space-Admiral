@@ -10,11 +10,11 @@ import java.util.*
 
 data class Team(val parent: GameState,
                 val color: Color,
+                val uuid: UUID = UUID.randomUUID(),
                 val projectiles: MutableList<Projectile> = LinkedList(),
                 val squads: MutableList<Squad> = mutableListOf()) : Serializable {
 
     private var nextSquadIndex = 0
-    val uuid: UUID = UUID.randomUUID()
 
     fun createSquad(template: ShipType): Squad {
         val out = Squad(template, this, nextSquadIndex)
