@@ -8,15 +8,16 @@ import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import kotlin.random.Random
 
-class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targetSquad: Squad, orbitDistance: Float) : ShipAction(parent, ship) {
+class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targetSquad: Squad, private val orbitDistance: Float) : ShipAction(parent, ship) {
 
     private lateinit var target: Ship
     private var perp = 1
-    private val orbit2 = orbitDistance * orbitDistance
+    private var orbit2 = 0f
 
     private fun reselectTarget() {
         target = targetSquad.ships.random()
         perp = if (Random.nextBoolean()) 1 else -1
+        orbit2 = orbitDistance
     }
 
     override fun initialize(parent: StateScheduler) {
@@ -29,13 +30,8 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
 
         val tangent = radius.cpy().rotate90(perp)
 
-        if (r2 < orbit2) {
-            ship.velocity.set(radius).add(tangent).setLength(ship.template.speed)
-        } else {
-            val error = (Math.sqrt(orbit2.toDouble()) - Math.sqrt(r2.toDouble())).toFloat()
-            ship.velocity.set(radius).scl(error).add(tangent).setLength(ship.template.speed)
-        }
-
+        val error = -(Math.sqrt(r2.toDouble()) - Math.sqrt(orbit2.toDouble())).toFloat()
+        ship.velocity.set(radius).scl(error).add(tangent).setLength(ship.template.speed)
 
         //ship.velocity.set(radius).add(radius, r2 - ).setLength(ship.template.speed))
     }

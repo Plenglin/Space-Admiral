@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.squad.AttackSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadAction
@@ -90,9 +91,14 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
         actions.add(0, state)
 
         for (action in actions) {
+            val start = prev?.expectedEndPos ?: squad.centerOfMass
             when (action) {
                 is MoveSquadAction -> {
-                    val start = prev?.expectedEndPos ?: squad.centerOfMass
+                    shape.color = COLOR_MOVE
+                    shape.line(start, action.expectedEndPos)
+                }
+                is AttackSquadAction -> {
+                    shape.color = COLOR_ATTACK
                     shape.line(start, action.expectedEndPos)
                 }
             }
@@ -103,7 +109,7 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
     private fun ShapeRenderer.highlightSquad(squad: Squad) {
         squad.ships.forEach { ship ->
             val pos = ship.transform.posGlobal
-            circle(pos.x, pos.y, squad.template.displayScale * 0.5f, 10)
+            circle(pos.x, pos.y, squad.template.displayScale * 0.4f, 10)
         }
     }
 
@@ -116,9 +122,13 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
 
     private companion object {
         @JvmStatic
-        private val COLOR_SELECTION = Color(1f, 1f, 0f, 0.25f)
+        private val COLOR_SELECTION = Color(1f, 1f, 0f, 0.2f)
         @JvmStatic
-        private val COLOR_COMMAND = Color(1f, 0f, 0f, 0.25f)
+        private val COLOR_COMMAND = Color(1f, 0f, 0f, 0.4f)
+        @JvmStatic
+        private val COLOR_ATTACK = Color(1f, 0f, 0f, 0.4f)
+        @JvmStatic
+        private val COLOR_MOVE = Color(0f, 1f, 1f, 0.4f)
         @JvmStatic
         private val logger = LoggerFactory.getLogger(SquadCommandInputHighlighter::class.java)
     }

@@ -13,7 +13,7 @@ class AttackSquadAction(squad: Squad, val target: Squad) : SquadAction(squad) {
     override fun initialize(parent: StateScheduler) {
         logger.info("Initializing attack action {}", this)
         squad.ships.forEach {
-            it.stateScheduler.nextState = OrbitalSwarmAttack(this, it, target, 5f)
+            it.stateScheduler.nextState = OrbitalSwarmAttack(this, it, target, 10f)
         }
     }
 
