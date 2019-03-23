@@ -1,7 +1,5 @@
 package xyz.plenglin.spaceadmiral.game.squad
 
-import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.ship.ShipAction
 import xyz.plenglin.spaceadmiral.util.State
 import java.io.Serializable
 
@@ -18,8 +16,6 @@ abstract class SquadAction(val squad: Squad) : Serializable, State {
 
     private var isFinished = false
     open val expectedEndPos get() = squad.transform.transform.posGlobal
-
-    abstract fun getShipAction(ship: Ship): ShipAction?
 
 
     override fun interrupt() {

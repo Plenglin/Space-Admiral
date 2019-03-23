@@ -72,10 +72,12 @@ class SimpleGameStateRenderer : GameStateRenderer {
         ship.transform.update()
         val pos = ship.transform.posGlobal
         val pos3d = Vector3(pos.x, pos.y, 0f)
+        val scale = ship.template.displayScale
+
         if (gameCamera.frustum.pointInFrustum(pos3d)) {
             // Draw the ship in the world
             val transformed = shipTriangle.map {
-                it.cpy().rotateRad(ship.transform.angleGlobal).add(pos)
+                it.cpy().scl(scale).rotateRad(ship.transform.angleGlobal).add(pos)
             }
             shape.color = ship.parent.team.color
             shape.polygon(floatArrayOf(
@@ -92,7 +94,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
                 val x = screenPos.x.toInt()
                 val y = screenPos.y.toInt()
                 it.setColor(nextShipColor)
-                it.fillCircle(x, y, Math.max(MIN_SHIP_CLICK_RADIUS, radius))
+                it.fillCircle(x, y, (Math.max(MIN_SHIP_CLICK_RADIUS, radius) * scale).toInt())
                 nextShipColor += 1
             }
         }

@@ -103,7 +103,7 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
     private fun ShapeRenderer.highlightSquad(squad: Squad) {
         squad.ships.forEach { ship ->
             val pos = ship.transform.posGlobal
-            circle(pos.x, pos.y, 0.5f, 10)
+            circle(pos.x, pos.y, squad.template.displayScale * 0.5f, 10)
         }
     }
 

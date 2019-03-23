@@ -7,6 +7,8 @@ interface ShipType {
     val armor: Int
     val shield: Int
 
+    val displayScale: Float
+
     val squadSize: Int
 
     /**

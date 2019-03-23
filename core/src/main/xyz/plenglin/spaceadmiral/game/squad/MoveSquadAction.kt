@@ -13,8 +13,6 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
     private val shipsEnRoute = HashSet<Ship>()
     override val expectedEndPos: Vector2 get() = target.transform.posGlobal
 
-    override fun getShipAction(ship: Ship): ShipAction? = MoveShipAction(ship)
-
     override fun initialize(parent: StateScheduler) {
         logger.info("Initializing move action {}", this)
         squad.ships.forEach {

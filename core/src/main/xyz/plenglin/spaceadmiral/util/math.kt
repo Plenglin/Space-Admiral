@@ -113,6 +113,9 @@ class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, par
     }
 }
 
+const val fPI = Math.PI.toFloat()
+const val fTAU = fPI * 2
+
 fun Vector2.multCpx(o: Vector2): Vector2 {
     x = x * o.x - y * o.y
     y = x * o.y + y * o.x
