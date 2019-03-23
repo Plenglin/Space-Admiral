@@ -46,11 +46,12 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
         }
     }
 
+    private val speed = squad.template.speed
+    private val epsilon2 = squad.template.speed * squad.template.speed
+
     inner class MoveShipAction(ship: Ship) : ShipAction(this@MoveSquadAction, ship) {
         private var error = Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
         private val target = transforms[ship.transformIndex]
-        private val speed = ship.parent.template.speed
-        private val epsilon2 = ship.parent.template.speed * ship.parent.template.speed
 
         override fun initialize(parent: StateScheduler) {
             ship.transform.angleLocal = target.posGlobal.angle(ship.transform.posGlobal)
@@ -59,8 +60,7 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
         override fun update() {
             error = target.posGlobal.cpy().sub(ship.transform.posGlobal)
             val delta = error.cpy().setLength(speed)
-            ship.transform.angleLocal = delta.angleRad()
-            ship.transform.setLocalPosition(delta.cpy().add(ship.transform.posGlobal))
+            ship.velocity.set(delta)
             logger.trace("Moving {} at {} to {} (error={})", ship, ship.transform.posGlobal, target.posGlobal, error.len())
         }
 
@@ -76,6 +76,7 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
         override fun terminate(): State? {
             logger.debug("Terminating ship move for {}", this)
             onShipFinished(ship)
+            ship.velocity.set(0f, 0f)
             ship.transform.setLocalPosition(target.posGlobal)
             ship.transform.angleLocal = target.angleGlobal
             return null

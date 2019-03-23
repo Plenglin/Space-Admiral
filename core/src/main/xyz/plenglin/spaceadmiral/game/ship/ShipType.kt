@@ -16,5 +16,5 @@ interface ShipType {
     val spacing: Float
     val defaultFormationWidth: Int
 
-    val turrets: MutableList<WeaponMountType>
+    val turrets: List<WeaponMountType>
 }

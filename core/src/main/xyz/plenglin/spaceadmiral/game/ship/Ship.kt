@@ -24,6 +24,8 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     val template get() = parent.template
 
     val turrets = template
+    val velocity = Vector2()
+
     init {
 
     }
@@ -34,6 +36,10 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
 
     fun update() {
         stateScheduler.update()
+        transform.posLocal.add(velocity)
+        if (velocity.len2() != 0f) {
+            transform.angleLocal = velocity.angleRad()
+        }
     }
 
 }
