@@ -4,8 +4,8 @@ import java.io.Serializable
 
 data class WeaponType(
         val firingType: FiringType,
-        val chargePeriod: Float,
-        val cooldownPeriod: Float,
+        val windupTime: Int,
+        val cooldownPeriod: Int,
         val maxRange: Float
 ) : Serializable {
 
@@ -15,5 +15,6 @@ data class WeaponType(
 }
 
 class Weapon internal constructor(val parent: WeaponType) : Serializable {
-
+    var lastFired = 0
+    var beganFiring = 0
 }

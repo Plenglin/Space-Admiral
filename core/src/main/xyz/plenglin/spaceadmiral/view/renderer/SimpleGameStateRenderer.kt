@@ -52,8 +52,10 @@ class SimpleGameStateRenderer : GameStateRenderer {
         shape.projectionMatrix = gameCamera.combined
 
         shape.begin(ShapeRenderer.ShapeType.Line)
-        shape.color = Color.WHITE
-        shape.circle(0f, 0f, 100f)
+        shape.color = RADIAL_DIST_COLOR
+        listOf(50f, 100f, 150f, 200f).forEach {
+            shape.circle(0f, 0f, it, 50)
+        }
         shape.end()
 
         shape.begin(ShapeRenderer.ShapeType.Line)
@@ -129,8 +131,12 @@ class SimpleGameStateRenderer : GameStateRenderer {
         return pixelToShip[pixel]
     }
 
-    companion object {
-        @JvmStatic private val logger = LoggerFactory.getLogger(SimpleGameStateRenderer::class.java)
+    private companion object {
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(SimpleGameStateRenderer::class.java)
+
+        @JvmStatic
+        val RADIAL_DIST_COLOR = Color(0.2f, 0.2f, 0.2f, 1f)
 
         const val MIN_SHIP_CLICK_RADIUS = 5
     }

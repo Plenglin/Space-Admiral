@@ -31,7 +31,7 @@ class SquadSelectionInputProcessor(
             logger.info("Control was held, will not clear selection")
         }
 
-        state = SelectionState(gameCamera.unproject2(screenX.toFloat(), screenY.toFloat()))
+        state = SelectionState(ui.client.team, gameCamera.unproject2(screenX.toFloat(), screenY.toFloat()))
         return true
     }
 

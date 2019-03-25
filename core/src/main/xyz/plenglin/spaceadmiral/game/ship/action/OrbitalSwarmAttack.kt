@@ -17,7 +17,8 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
     private fun reselectTarget() {
         target = targetSquad.ships.random()
         perp = if (Random.nextBoolean()) 1 else -1
-        orbit2 = orbitDistance
+        orbit2 = orbitDistance + (Random.nextFloat() + Random.nextFloat() + Random.nextFloat()) - 1.5f
+        orbit2 *= orbit2
     }
 
     override fun initialize(parent: StateScheduler) {
@@ -31,7 +32,7 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
         val tangent = radius.cpy().rotate90(perp)
 
         val error = -(Math.sqrt(r2.toDouble()) - Math.sqrt(orbit2.toDouble())).toFloat()
-        ship.velocity.set(radius).scl(error).add(tangent).setLength(ship.template.speed)
+        ship.velocity.set(radius).scl(error * 0.25f).add(tangent).setLength(ship.template.speed)
 
         //ship.velocity.set(radius).add(radius, r2 - ).setLength(ship.template.speed))
     }

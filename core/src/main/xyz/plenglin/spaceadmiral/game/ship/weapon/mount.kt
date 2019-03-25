@@ -28,6 +28,10 @@ class WeaponMount(val template: WeaponMountType, val ship: Ship) : Serializable 
         this.parent = ship.transform
     }
     var enabled: Boolean = true
+    var lastFired = 0
+    fun fire() {
+
+    }
 }
 
 enum class MountType : Serializable {
