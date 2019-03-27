@@ -1,6 +1,5 @@
 package xyz.plenglin.spaceadmiral.net.game.local
 
-import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterfaceFactory
@@ -12,7 +11,7 @@ class GameDummyPlayer(override val team: UUID) : GamePlayerInterfaceFactory {
     private inner class PlayerInterface(override val team: Team) : GamePlayerInterface {
         override val connected: Boolean = true
 
-        override fun sendGameState(gs: GameState) {
+        override fun sendGameState(gs: ByteArray) {
 
         }
     }

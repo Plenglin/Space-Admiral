@@ -22,6 +22,7 @@ class GameState : Serializable {
 
     @Transient val shipTree = KDTree2<Ship>()
     @Transient val projectileTree = KDTree2<Projectile>()
+    var time: Long = 0L
 
     fun createTeam(color: Color, uuid: UUID = UUID.randomUUID()): Team {
         val out = Team(this, color, uuid = uuid)

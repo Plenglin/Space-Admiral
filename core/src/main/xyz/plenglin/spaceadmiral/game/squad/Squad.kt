@@ -14,6 +14,7 @@ class Squad(val template: ShipType, var team: Team, var index: Int) : Serializab
     val actionQueue: Queue<SquadAction> = LinkedList()
 
     val stateScheduler = StateScheduler()
+    val gameState get() = team.gameState
 
     val transform = SquadTransform(
             count = template.squadSize,

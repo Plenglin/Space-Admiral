@@ -1,6 +1,5 @@
 package xyz.plenglin.spaceadmiral.net.game.server
 
-import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.team.Team
 
 /**
@@ -10,6 +9,6 @@ interface GamePlayerInterface {
     val connected: Boolean
     val team: Team
 
-    fun sendGameState(gs: GameState)
+    fun sendGameState(gs: ByteArray)
 
 }

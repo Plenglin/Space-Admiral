@@ -22,28 +22,41 @@ data class WeaponMountTemplate(
          * How far from the target it can begin firing at
          */
         val firingLimit: Float = 0f
-) : Serializable
+) : Serializable {
+    fun createMount(ship: Ship): WeaponMount {
+        return WeaponMount(this, ship)
+    }
+}
 
-class WeaponMount(val template: WeaponMountTemplate, val ship: Ship) : Serializable {
+class WeaponMount internal constructor(template: WeaponMountTemplate, val ship: Ship) : Serializable {
+    val gameState: GameState get() = ship.gameState
     val transform: Transform2D = template.transform.clone().apply {
         this.parent = ship.transform
     }
-    val weapon = template.weapon?.createWeapon()
+    val weapon: Weapon? = template.weapon?.createWeapon()
     var enabled: Boolean = true
+    var target: Ship? = null
 
-    private fun fire(gs: GameState, target: Ship) {
-        if (weapon == null) {
-            return
+    private fun fire(target: Ship) {
+        weapon?.let {
+            it.parent.firingType.fireFrom(gameState, this, target)
+            it.onFire(gameState.time)
         }
-        /*if (weapon.canFire(gs.time)) {
-            weapon.parent.firingType.fireFrom(gs, this, target)
-            weapon.onFire()
-        }*/
     }
 
-    fun update(gs: GameState, target: Ship?) {
-        if (target != null) {
-            fire(gs, target)
+    private fun canFire(target: Ship): Boolean {
+        if (!enabled) return false
+        if (weapon == null) return false
+        if (!weapon.canFire(gameState.time)) return false
+
+        val dst2 = weapon.parent.maxRange.let { it * it }
+        return target.transform.posGlobal.dst2(this.transform.posGlobal) <= dst2
+    }
+
+    fun update() {
+        val target = target
+        if (target != null && canFire(target)) {
+            fire(target)
         }
     }
 }

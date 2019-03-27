@@ -12,6 +12,10 @@ import java.util.*
 
 class Ship(val parent: Squad, val number: Int) : Serializable {
 
+    val team get() = parent.team
+    val gameState get() = team.gameState
+    val template get() = parent.template
+
     var transformIndex = number
     val uuid: UUID = UUID.randomUUID()
     val transform = Transform2D(Vector2(), 0f)
@@ -20,10 +24,8 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
 
     var health = Health(0, 0, 0)
     var morale = 0f
-    val team get() = parent.team
-    val template get() = parent.template
 
-    val turrets = template
+    val turrets = template.turrets.map { it.createMount(this) }
     val velocity = Vector2()
 
     init {
@@ -39,6 +41,9 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
         transform.posLocal.add(velocity)
         if (velocity.len2() != 0f) {
             transform.angleLocal = velocity.angleRad()
+        }
+        turrets.forEach {
+            it.update()
         }
     }
 

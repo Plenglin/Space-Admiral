@@ -19,6 +19,9 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
         perp = if (Random.nextBoolean()) 1 else -1
         orbit2 = orbitDistance + (Random.nextFloat() + Random.nextFloat() + Random.nextFloat()) - 1.5f
         orbit2 *= orbit2
+        ship.turrets.forEach {
+            it.target = target
+        }
     }
 
     override fun initialize(parent: StateScheduler) {
@@ -34,6 +37,8 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
         val error = -(Math.sqrt(r2.toDouble()) - Math.sqrt(orbit2.toDouble())).toFloat()
         ship.velocity.set(radius).scl(error * 0.25f).add(tangent).setLength(ship.template.speed)
 
+
+
         //ship.velocity.set(radius).add(radius, r2 - ).setLength(ship.template.speed))
     }
 
@@ -46,6 +51,9 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
     }
 
     override fun terminate(): State? {
+        ship.turrets.forEach {
+            it.target = null
+        }
         return null
     }
 

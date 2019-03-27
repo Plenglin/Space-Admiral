@@ -7,10 +7,9 @@ class GameInstance : Serializable {
     val gameState = GameState()
     //val clock = AdjustableClock()
     //val loop = EventLoop(clock)
-    var step: Long = 0L
 
     fun update() {
-        logger.debug("update {}", step)
+        logger.debug("update {}", gameState.time)
 
         gameState.firingEvents.clear()
         gameState.updateTrees()
@@ -37,7 +36,7 @@ class GameInstance : Serializable {
             }
         }
 
-        step++
+        gameState.time++
     }
 
     companion object {

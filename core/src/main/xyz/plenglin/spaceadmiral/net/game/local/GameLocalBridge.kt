@@ -9,6 +9,8 @@ import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterfaceFactory
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
+import java.io.ByteArrayInputStream
+import java.io.ObjectInputStream
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -22,9 +24,11 @@ class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, Gam
     private inner class ServerSide(override val team: Team, val server: GameServer) : GamePlayerInterface {
         override val connected: Boolean get() = clientSide != null
 
-        override fun sendGameState(gs: GameState) {
+        override fun sendGameState(gs: ByteArray) {
             clientSide?.let {
-                it.client.gameState = gs
+                val bis = ByteArrayInputStream(gs)
+                val ois = ObjectInputStream(bis)
+                it.client.gameState = ois.readObject() as GameState
             }
         }
 

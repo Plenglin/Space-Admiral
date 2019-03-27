@@ -8,7 +8,7 @@ import xyz.plenglin.spaceadmiral.game.squad.Squad
 import java.io.Serializable
 import java.util.*
 
-data class Team(val parent: GameState,
+data class Team(val gameState: GameState,
                 val color: Color,
                 val uuid: UUID = UUID.randomUUID(),
                 val projectiles: MutableList<Projectile> = LinkedList(),
@@ -20,8 +20,8 @@ data class Team(val parent: GameState,
         val out = Squad(template, this, nextSquadIndex)
         nextSquadIndex++
         squads.add(out)
-        parent.squads[out.uuid] = out
-        out.ships.forEach { parent.ships[it.uuid] = it }
+        gameState.squads[out.uuid] = out
+        out.ships.forEach { gameState.ships[it.uuid] = it }
         return out
     }
 

@@ -4,7 +4,6 @@ import java.io.Serializable
 
 data class WeaponType(
         val firingType: FiringType,
-        val windupTime: Int,
         val cooldownPeriod: Int,
         val maxRange: Float
 ) : Serializable {
@@ -15,17 +14,13 @@ data class WeaponType(
 }
 
 class Weapon internal constructor(val parent: WeaponType) : Serializable {
-    var lastFired = Long.MIN_VALUE
+    var nextFiring = Long.MIN_VALUE
 
-    fun update() {
-
+    fun onFire(time: Long) {
+        nextFiring = time + parent.cooldownPeriod
     }
 
-    fun onFire() {
-        //nextFiring = parent.cooldownPeriod.toLong()
-    }
-
-    fun canFire(step: Long): Boolean {
-        return true
+    fun canFire(time: Long): Boolean {
+        return time >= nextFiring
     }
 }

@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.CommandResult
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -12,6 +14,9 @@ class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameIn
 
     private val commands: BlockingQueue<Pair<GamePlayerInterface, ClientCommand>> = LinkedBlockingQueue()
     val players: List<GamePlayerInterface>
+
+    private val bos = ByteArrayOutputStream()
+    private val oos = ObjectOutputStream(bos)
 
     init {
         logger.info("Initializing server {}", this)
@@ -42,9 +47,13 @@ class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameIn
 
         logger.debug("Updating GameInstance")
         instance.update()
+
+        bos.reset()
+        oos.writeObject(instance.gameState)
+        val serialized = bos.toByteArray()
         players.forEach {
             logger.debug("Sending data to {}", it)
-            it.sendGameState(instance.gameState)
+            it.sendGameState(serialized)
         }
 
     }
