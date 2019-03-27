@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
+import xyz.plenglin.spaceadmiral.net.game.client.SquadRef
 import xyz.plenglin.spaceadmiral.net.game.client.toRef
 import xyz.plenglin.spaceadmiral.net.game.io.AttackSquadCommand
 import xyz.plenglin.spaceadmiral.net.game.io.ClearSquadActionQueueCommand
@@ -74,15 +75,6 @@ class SquadCommandInputProcessor(
         this.state = null
         val recipients = state.recipients
 
-        if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            logger.info("Clearing action queue of {} (shift not held)", recipients)
-            recipients.forEach {
-                client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
-            }
-        } else {
-            logger.info("Will not clear action queues of {} (shift held)", recipients)
-        }
-
         return when (state) {
             is MoveToTransform -> {
                 state.end = gameCamera.unproject2(screenX.toFloat(), screenY.toFloat())
@@ -94,6 +86,7 @@ class SquadCommandInputProcessor(
                     state.generateSimpleTransform()
                 }
 
+                clearActionQueue(recipients)
                 targets.forEach { (squad, end) ->
                     client.sendCommand(MoveSquadCommand(squad.uuid, end))
                 }
@@ -105,11 +98,23 @@ class SquadCommandInputProcessor(
                     logger.info("Cancelling {} because we ended on a different target", state)
                     return true
                 }
+                clearActionQueue(recipients)
                 recipients.forEach {
                     client.sendCommand(AttackSquadCommand(it.uuid, target.uuid))
                 }
                 true
             }
+        }
+    }
+
+    private fun clearActionQueue(recipients: Set<SquadRef>) {
+        if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            logger.info("Clearing action queue of {} (shift not held)", recipients)
+            recipients.forEach {
+                client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
+            }
+        } else {
+            logger.info("Will not clear action queues of {} (shift held)", recipients)
         }
     }
 

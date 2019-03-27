@@ -18,7 +18,7 @@ class GameState : Serializable {
     val ships = HashMap<UUID, Ship>()
     val projectiles = HashMap<UUID, Projectile>()
 
-    val recentFiringEvents: MutableList<FiringEvent> = mutableListOf()
+    val firingEvents: MutableList<FiringEvent> = mutableListOf()
 
     @Transient val shipTree = KDTree2<Ship>()
     @Transient val projectileTree = KDTree2<Projectile>()

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
+import xyz.plenglin.spaceadmiral.game.ship.weapon.HitscanFiringEvent
 import java.util.*
 
 class SimpleGameStateRenderer : GameStateRenderer {
@@ -51,15 +52,25 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
         shape.projectionMatrix = gameCamera.combined
 
+        // Radial distance markers
         shape.begin(ShapeRenderer.ShapeType.Line)
         shape.color = RADIAL_DIST_COLOR
-        listOf(50f, 100f, 150f, 200f).forEach {
+        listOf(50f, 100f, 150f, 200f, 250f, 300f, 350f, 400f).forEach {
             shape.circle(0f, 0f, it, 50)
         }
         shape.end()
 
+        // Firing events
         shape.begin(ShapeRenderer.ShapeType.Line)
+        gs.firingEvents.forEach {
+            if (it is HitscanFiringEvent) {
+                draw(it)
+            }
+        }
+        shape.end()
 
+        // Ships and projectiles
+        shape.begin(ShapeRenderer.ShapeType.Line)
         gs.shipTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, ship) ->
             draw(ship!!)
         }
@@ -67,6 +78,14 @@ class SimpleGameStateRenderer : GameStateRenderer {
             draw(proj!!)
         }
         shape.end()
+    }
+
+    private fun draw(firingEvent: HitscanFiringEvent) {
+        if (firingEvent.success) {
+            shape.line(firingEvent.mount.transform.posGlobal, firingEvent.target.transform.posGlobal)
+        } else {
+            shape.line(firingEvent.mount.transform.posGlobal, firingEvent.target.transform.posGlobal)
+        }
     }
 
     private fun draw(ship: Ship) {

@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.game.ship
 
-import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountType
+import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountTemplate
 
 interface ShipType {
     val hull: Int
@@ -18,5 +18,5 @@ interface ShipType {
     val spacing: Float
     val defaultFormationWidth: Int
 
-    val turrets: List<WeaponMountType>
+    val turrets: List<WeaponMountTemplate>
 }

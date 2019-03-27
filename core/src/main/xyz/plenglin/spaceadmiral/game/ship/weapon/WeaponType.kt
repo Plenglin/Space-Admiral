@@ -15,6 +15,17 @@ data class WeaponType(
 }
 
 class Weapon internal constructor(val parent: WeaponType) : Serializable {
-    var lastFired = 0
-    var beganFiring = 0
+    var lastFired = Long.MIN_VALUE
+
+    fun update() {
+
+    }
+
+    fun onFire() {
+        //nextFiring = parent.cooldownPeriod.toLong()
+    }
+
+    fun canFire(step: Long): Boolean {
+        return true
+    }
 }

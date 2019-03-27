@@ -2,7 +2,6 @@ package xyz.plenglin.spaceadmiral.game.ship.weapon
 
 import xyz.plenglin.spaceadmiral.game.DamageType
 import xyz.plenglin.spaceadmiral.game.GameState
-import xyz.plenglin.spaceadmiral.game.projectile.ProjectileFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import java.io.Serializable
 
@@ -20,16 +19,21 @@ class HitscanFiringType(val damage: Int, val damageType: DamageType) : FiringTyp
     override fun fireFrom(gs: GameState, mount: WeaponMount, target: Ship) {
         val hitChance = 0.5f // TODO FIGURE OUT A FORMULA
         if (Math.random() < hitChance) {
-            gs.recentFiringEvents.add(HitscanFiringEvent(true, this, mount, target))
+            gs.firingEvents.add(HitscanFiringEvent(true, this, mount, target))
             target.health.applyDamage(damage, damageType)
         } else {
-            gs.recentFiringEvents.add(HitscanFiringEvent(false, this, mount, target))
+            gs.firingEvents.add(HitscanFiringEvent(false, this, mount, target))
         }
     }
 }
 
-data class HitscanFiringEvent(val success: Boolean, override val source: HitscanFiringType, override val mount: WeaponMount, override val target: Ship) : FiringEvent()
+data class HitscanFiringEvent(
+        val success: Boolean,
+        override val source: HitscanFiringType,
+        override val mount: WeaponMount,
+        override val target: Ship) : FiringEvent()
 
+/*
 class ProjectileFiringType(val projectile: ProjectileFactory) : FiringType() {
     override fun fireFrom(gs: GameState, mount: WeaponMount, target: Ship) {
         // TODO MAKE PROJECTILES A THING
@@ -37,3 +41,5 @@ class ProjectileFiringType(val projectile: ProjectileFactory) : FiringType() {
         gs.projectiles[obj.uuid] = obj
     }
 }
+*/
+

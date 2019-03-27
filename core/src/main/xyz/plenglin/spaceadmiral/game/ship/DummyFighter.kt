@@ -1,10 +1,10 @@
 package xyz.plenglin.spaceadmiral.game.ship
 
-import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountType
+import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountTemplate
 
 object DummyFighter : ShipType {
     override val displayScale: Float = 1f
-    override val turrets: List<WeaponMountType> = listOf()
+    override val turrets: List<WeaponMountTemplate> = listOf()
     override val hull: Int = 100
     override val armor: Int = 100
     override val shield: Int = 100
