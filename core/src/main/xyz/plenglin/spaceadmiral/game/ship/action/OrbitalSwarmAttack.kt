@@ -47,7 +47,9 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
     }
 
     override fun interrupt() {
-
+        ship.turrets.forEach {
+            it.target = null
+        }
     }
 
     override fun terminate(): State? {

@@ -31,6 +31,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
     private var nextShipColor = 1
     private var height: Int = 0
     private val lasers = mutableListOf<Laser>()
+    private val color = Color()
 
     override fun initialize(gameCamera: OrthographicCamera, uiCamera: OrthographicCamera) {
         shape = ShapeRenderer()
@@ -76,9 +77,9 @@ class SimpleGameStateRenderer : GameStateRenderer {
         shape.begin(ShapeRenderer.ShapeType.Line)
         lasers.forEach {
             draw(it)
-            it.color.a -= 1f * delta
+            it.color.a -= 0.9f * delta
         }
-        lasers.removeAll { it.color.a <= 0f }
+        lasers.removeAll { it.color.a <= 0.02f }
         shape.end()
         Gdx.gl.glDisable(GL20.GL_BLEND)
 
@@ -110,7 +111,9 @@ class SimpleGameStateRenderer : GameStateRenderer {
             val transformed = shipTriangle.map {
                 it.cpy().scl(scale).rotateRad(ship.transform.angleGlobal).add(pos)
             }
-            shape.color = Color(ship.parent.team.color)
+            Color.argb8888ToColor(color, ship.team.color)
+
+            shape.color = color
             shape.polygon(floatArrayOf(
                     transformed[0].x, transformed[0].y,
                     transformed[1].x, transformed[1].y,
@@ -135,7 +138,6 @@ class SimpleGameStateRenderer : GameStateRenderer {
         logger.trace("rendering {}", projectile)
         val pos = projectile.pos
         if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
-            val color = Color()
             projectile.team?.color?.let { Color.argb8888ToColor(color, it) } ?: Color.WHITE
             shape.color = color
             shape.circle(pos.x, pos.y, 1f)
@@ -171,7 +173,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
         const val MIN_SHIP_CLICK_RADIUS = 5
 
-        data class Laser(val start: Vector2, val end: Vector2, val color: Color = Color(0f, 1f, 1f, 0.4f))
+        data class Laser(val start: Vector2, val end: Vector2, val color: Color = Color(0f, 1f, 1f, 0.2f))
     }
 
 }

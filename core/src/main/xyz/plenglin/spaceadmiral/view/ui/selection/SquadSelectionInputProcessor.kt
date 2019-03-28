@@ -59,7 +59,7 @@ class SquadSelectionInputProcessor(
         } else {
             val ship = renderer.getShipAtScreenPos(screenX, screenY)
             logger.info("Clicked at {} {}, corresponding to {}", screenX, screenY, ship)
-            if (ship != null) {
+            if (ship != null && ship.team.uuid == client.team) {
                 val squad = ship.parent
                 logger.info("Ship {} selected, corresponding to squad {}", ship, squad)
                 logger.debug("Adding squad")
