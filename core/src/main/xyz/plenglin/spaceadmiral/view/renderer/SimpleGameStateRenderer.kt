@@ -1,6 +1,8 @@
 package xyz.plenglin.spaceadmiral.view.renderer
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -28,6 +30,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
     private val pixelToShip = HashMap<Int, Ship>()
     private var nextShipColor = 1
     private var height: Int = 0
+    private val lasers = mutableListOf<Laser>()
 
     override fun initialize(gameCamera: OrthographicCamera, uiCamera: OrthographicCamera) {
         shape = ShapeRenderer()
@@ -35,7 +38,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
         this.uiCamera = uiCamera
     }
 
-    override fun draw(gs: GameState) {
+    override fun draw(delta: Float, gs: GameState) {
         val clippingPoints = gameCamera.frustum.planePoints
         val xs = clippingPoints.map { it.x }.toList()
         val ys = clippingPoints.map { it.y }.toList()
@@ -61,13 +64,23 @@ class SimpleGameStateRenderer : GameStateRenderer {
         shape.end()
 
         // Firing events
-        shape.begin(ShapeRenderer.ShapeType.Line)
         gs.firingEvents.forEach {
             if (it is HitscanFiringEvent) {
-                draw(it)
+                lasers.add(Laser(it.mount.transform.posGlobal.cpy(), it.target.transform.posGlobal.cpy()))
             }
         }
+
+        // Draw and update lasers
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        shape.begin(ShapeRenderer.ShapeType.Line)
+        lasers.forEach {
+            draw(it)
+            it.color.a -= 1f * delta
+        }
+        lasers.removeAll { it.color.a <= 0f }
         shape.end()
+        Gdx.gl.glDisable(GL20.GL_BLEND)
 
         // Ships and projectiles
         shape.begin(ShapeRenderer.ShapeType.Line)
@@ -80,12 +93,9 @@ class SimpleGameStateRenderer : GameStateRenderer {
         shape.end()
     }
 
-    private fun draw(firingEvent: HitscanFiringEvent) {
-        if (firingEvent.success) {
-            shape.line(firingEvent.mount.transform.posGlobal, firingEvent.target.transform.posGlobal)
-        } else {
-            shape.line(firingEvent.mount.transform.posGlobal, firingEvent.target.transform.posGlobal)
-        }
+    private fun draw(laser: Laser) {
+        shape.color = laser.color
+        shape.line(laser.start, laser.end)
     }
 
     private fun draw(ship: Ship) {
@@ -160,6 +170,8 @@ class SimpleGameStateRenderer : GameStateRenderer {
         val RADIAL_DIST_COLOR = Color(0.2f, 0.2f, 0.2f, 1f)
 
         const val MIN_SHIP_CLICK_RADIUS = 5
+
+        data class Laser(val start: Vector2, val end: Vector2, val color: Color = Color(0f, 1f, 1f, 0.4f))
     }
 
 }

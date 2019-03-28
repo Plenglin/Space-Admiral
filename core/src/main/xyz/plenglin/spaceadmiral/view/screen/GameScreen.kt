@@ -61,7 +61,7 @@ class GameScreen(private val client: GameClient) : Screen {
         squadCommandHighlighter.render(delta)
         client.gameState?.let {
             //it.updateTrees()
-            gameRenderer.draw(it)
+            gameRenderer.draw(delta, it)
         } ?: logger.warn("Did not receive a game state from client, not drawing anything!")
 
         ui.render(delta)

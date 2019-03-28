@@ -7,7 +7,7 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 
 interface GameStateRenderer : Disposable {
     fun initialize(gameCamera: OrthographicCamera, uiCamera: OrthographicCamera)
-    fun draw(gs: GameState)
+    fun draw(delta: Float, gs: GameState)
     fun resize(width: Int, height: Int)
     fun getShipAtScreenPos(x: Int, y: Int): Ship?
 }

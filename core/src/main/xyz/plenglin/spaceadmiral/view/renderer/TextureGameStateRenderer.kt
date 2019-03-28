@@ -17,7 +17,7 @@ class TextureGameStateRenderer : GameStateRenderer {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun draw(gs: GameState) {
+    override fun draw(delta: Float, gs: GameState) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
