@@ -12,7 +12,7 @@ object DummyFighter : ShipType {
     override val turrets: List<WeaponMountTemplate> = listOf(
             WeaponMountTemplate(
                     transform = Transform2D(Vector2(0f, 0f)),
-                    weapon = WeaponType(HitscanFiringType(10, LASER), 300, 20f),
+                    weapon = WeaponType(HitscanFiringType(10, LASER), 25, 20f),
                     firingLimit = 10f)
     )
     override val hull: Int = 100

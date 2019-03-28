@@ -2,8 +2,9 @@ package xyz.plenglin.spaceadmiral.game.squad
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.util.Transform2D
+import java.io.Serializable
 
-data class SquadTransform(val transform: Transform2D = Transform2D(), var width: Int, var spacing: Float, var count: Int) {
+data class SquadTransform(val transform: Transform2D = Transform2D(), var width: Int, var spacing: Float, var count: Int) : Serializable {
     val physicalWidth: Float get() = (width - 1) * spacing
 
     fun generateChildTransforms(): List<Transform2D> {

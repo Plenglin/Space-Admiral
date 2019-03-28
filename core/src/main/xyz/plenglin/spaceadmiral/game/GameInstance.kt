@@ -12,7 +12,7 @@ class GameInstance : Serializable {
         logger.debug("update {}", gameState.time)
 
         gameState.firingEvents.clear()
-        gameState.updateTrees()
+        //gameState.updateTrees()
 
         gameState.squads.forEach { _, squad ->
             squad.update()

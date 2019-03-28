@@ -100,7 +100,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
             val transformed = shipTriangle.map {
                 it.cpy().scl(scale).rotateRad(ship.transform.angleGlobal).add(pos)
             }
-            shape.color = ship.parent.team.color
+            shape.color = Color(ship.parent.team.color)
             shape.polygon(floatArrayOf(
                     transformed[0].x, transformed[0].y,
                     transformed[1].x, transformed[1].y,
@@ -125,7 +125,9 @@ class SimpleGameStateRenderer : GameStateRenderer {
         logger.trace("rendering {}", projectile)
         val pos = projectile.pos
         if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
-            shape.color = projectile.team?.color ?: Color.WHITE
+            val color = Color()
+            projectile.team?.color?.let { Color.argb8888ToColor(color, it) } ?: Color.WHITE
+            shape.color = color
             shape.circle(pos.x, pos.y, 1f)
         }
     }

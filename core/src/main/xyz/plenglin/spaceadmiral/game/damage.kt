@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.game
 
+import java.io.Serializable
 import kotlin.math.roundToInt
 
 
@@ -12,13 +13,13 @@ import kotlin.math.roundToInt
 data class DamageType(val name: String,
                       val kHull: Float = 1.0f,
                       val kArmor: Float = 1.0f,
-                      val kShield: Float = 1.0f) {
+                      val kShield: Float = 1.0f) : Serializable {
     init {
         assert(kHull >= 0) { "One does not simply ignore hull" }
     }
 }
 
-data class Health(var hull: Int, var armor: Int, var shield: Int) {
+data class Health(var hull: Int, var armor: Int, var shield: Int) : Serializable {
     fun applyDamage(dmg: Int, dmgType: DamageType) {
         var dmgLeft: Int = dmg
         applyDamage(shield, dmg, dmgType.kShield).let { (s, dl) ->

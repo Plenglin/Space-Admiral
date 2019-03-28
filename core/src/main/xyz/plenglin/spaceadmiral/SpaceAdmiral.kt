@@ -21,17 +21,6 @@ class SpaceAdmiral : Game() {
 
         val server = GameServer(listOf(localBridge, dummy))
         val screen = GameScreen(GameClient(localBridge))
-        thread(start = true, isDaemon = true) {
-            while (true) {
-                val start = System.currentTimeMillis()
-                server.update()
-                val elapsed = System.currentTimeMillis() - start
-                if (elapsed < UPDATE_PERIOD) {
-                    Thread.sleep(UPDATE_PERIOD - elapsed)
-                }
-            }
-        }
-
         val teams = server.instance.gameState.teams
         val t1 = teams[localBridge.team]!!
         val t2 = teams[dummy.team]!!
@@ -60,6 +49,17 @@ class SpaceAdmiral : Game() {
         val squad5 = t2.createSquad(DummyCorvette).apply {
             transform.transform.setLocalPosition(-20f, 20f)
             resetShipPositions()
+        }
+
+        thread(start = true, isDaemon = true) {
+            while (true) {
+                val start = System.currentTimeMillis()
+                server.update()
+                val elapsed = System.currentTimeMillis() - start
+                if (elapsed < UPDATE_PERIOD) {
+                    Thread.sleep(UPDATE_PERIOD - elapsed)
+                }
+            }
         }
 
         setScreen(screen)

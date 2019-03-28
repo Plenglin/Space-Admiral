@@ -8,12 +8,13 @@ import xyz.plenglin.spaceadmiral.game.squad.Squad
 import java.io.Serializable
 import java.util.*
 
-data class Team(val gameState: GameState,
-                val color: Color,
+class Team(val gameState: GameState,
+                color: Color,
                 val uuid: UUID = UUID.randomUUID(),
                 val projectiles: MutableList<Projectile> = LinkedList(),
                 val squads: MutableList<Squad> = mutableListOf()) : Serializable {
 
+    val color = color.toIntBits()
     private var nextSquadIndex = 0
 
     fun createSquad(template: ShipType): Squad {

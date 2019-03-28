@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.game.local
 
-import xyz.plenglin.spaceadmiral.game.GameState
+import org.apache.commons.lang3.SerializationUtils
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterface
@@ -9,8 +9,6 @@ import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterfaceFactory
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
-import java.io.ByteArrayInputStream
-import java.io.ObjectInputStream
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -26,9 +24,7 @@ class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, Gam
 
         override fun sendGameState(gs: ByteArray) {
             clientSide?.let {
-                val bis = ByteArrayInputStream(gs)
-                val ois = ObjectInputStream(bis)
-                it.client.gameState = ois.readObject() as GameState
+                it.client.gameState = SerializationUtils.deserialize(gs)
             }
         }
 

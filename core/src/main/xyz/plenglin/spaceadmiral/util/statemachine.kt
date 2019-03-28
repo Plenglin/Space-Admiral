@@ -1,6 +1,8 @@
 package xyz.plenglin.spaceadmiral.util
 
-interface State {
+import java.io.Serializable
+
+interface State : Serializable {
     /**
      * Called when the state is first loaded.
      */
@@ -29,7 +31,7 @@ interface State {
     fun terminate(): State?
 }
 
-class StateScheduler {
+class StateScheduler : Serializable {
     /**
      * The state that is running right now.
      */

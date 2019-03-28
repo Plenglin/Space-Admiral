@@ -20,8 +20,38 @@ class GameState : Serializable {
 
     val firingEvents: MutableList<FiringEvent> = mutableListOf()
 
-    @Transient val shipTree = KDTree2<Ship>()
-    @Transient val projectileTree = KDTree2<Projectile>()
+    @Transient
+    private var _shipTree: KDTree2<Ship>? = null
+    val shipTree: KDTree2<Ship> get() {
+        var obj = _shipTree
+        if (obj == null) {
+            obj = KDTree2()
+            val ship = ships.values.toMutableList()
+            ship.shuffle()  // Jesus take the wheel and make us efficient
+            ship.forEach {
+                obj.insert(it.transform.posGlobal, it)
+            }
+            _shipTree = obj
+        }
+        return obj
+    }
+
+    @Transient
+    private var _projectileTree: KDTree2<Projectile>? = null
+    val projectileTree: KDTree2<Projectile> get() {
+        var obj = _projectileTree
+        if (obj == null) {
+            obj = KDTree2()
+            val ship = projectiles.values.toMutableList()
+            ship.shuffle()  // Jesus take the wheel and make us efficient
+            ship.forEach {
+                obj.insert(it.pos, it)
+            }
+            _projectileTree = obj
+        }
+        return obj
+    }
+
     var time: Long = 0L
 
     fun createTeam(color: Color, uuid: UUID = UUID.randomUUID()): Team {
@@ -30,9 +60,10 @@ class GameState : Serializable {
         return out
     }
 
+    /*
     fun updateTrees() {
-        shipTree.clear()
-        projectileTree.clear()
+        shipTree = KDTree2()
+        projectileTree = KDTree2()
 
         val ship = ships.values.toMutableList()
         ship.shuffle()  // Jesus take the wheel and make us efficient
@@ -45,6 +76,6 @@ class GameState : Serializable {
         projectile.forEach {
             projectileTree.insert(it.pos, it)
         }
-    }
+    }*/
 
 }
