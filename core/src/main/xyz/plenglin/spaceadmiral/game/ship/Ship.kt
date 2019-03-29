@@ -1,7 +1,6 @@
 package xyz.plenglin.spaceadmiral.game.ship
 
 import com.badlogic.gdx.math.Vector2
-import xyz.plenglin.spaceadmiral.game.Health
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.util.State
@@ -22,7 +21,7 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
 
     val stateScheduler = StateScheduler()
 
-    var health = Health(0, 0, 0)
+    var health = template.health.copy()
     var morale = 0f
 
     val turrets = template.turrets.map { it.createMount(this) }
@@ -33,7 +32,6 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     }
 
     fun onDeath() {
-        parent.ships.remove(this)
     }
 
     fun update() {

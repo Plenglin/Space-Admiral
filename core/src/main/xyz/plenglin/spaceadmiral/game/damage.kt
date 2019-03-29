@@ -21,7 +21,7 @@ data class DamageType(val name: String,
 
 data class Health(var hull: Int, var armor: Int, var shield: Int) : Serializable {
     fun applyDamage(dmg: Int, dmgType: DamageType) {
-        var dmgLeft: Int = dmg
+        var dmgLeft: Int
         applyDamage(shield, dmg, dmgType.kShield).let { (s, dl) ->
             shield = s
             dmgLeft = dl
@@ -48,6 +48,7 @@ data class Health(var hull: Int, var armor: Int, var shield: Int) : Serializable
     }
 
     val totalHealth get() = hull + armor + shield
+    val isDead get() = hull <= 0
 
     fun getEffectiveHealth(dmgType: DamageType): Int {
         var ehp = 0

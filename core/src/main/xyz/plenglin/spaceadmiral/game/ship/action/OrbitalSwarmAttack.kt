@@ -10,15 +10,18 @@ import kotlin.random.Random
 
 class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targetSquad: Squad, private val orbitDistance: Float) : ShipAction(parent, ship) {
 
-    private lateinit var target: Ship
-    private var perp = 1
+    private val perp = if (Random.nextBoolean()) 1 else -1
+    private var target: Ship? = null
     private var orbit2 = 0f
 
     private fun reselectTarget() {
-        target = targetSquad.ships.random()
-        perp = if (Random.nextBoolean()) 1 else -1
-        orbit2 = orbitDistance + (Random.nextFloat() + Random.nextFloat() + Random.nextFloat()) - 1.5f
-        orbit2 *= orbit2
+        if (targetSquad.ships.isEmpty()) {
+            target = null
+        } else {
+            target = targetSquad.ships.random()
+            orbit2 = orbitDistance + (Random.nextFloat() + Random.nextFloat() + Random.nextFloat()) - 1.5f
+            orbit2 *= orbit2
+        }
         ship.turrets.forEach {
             it.target = target
         }
@@ -29,6 +32,11 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
     }
 
     override fun update() {
+        val target = target ?: return
+        if (target.health.isDead) {
+            reselectTarget()
+        }
+
         val radius = ship.transform.posGlobal.cpy().sub(target.transform.posGlobal)
         val r2 = radius.len2()
 
@@ -36,26 +44,24 @@ class OrbitalSwarmAttack(parent: AttackSquadAction, ship: Ship, private val targ
 
         val error = -(Math.sqrt(r2.toDouble()) - Math.sqrt(orbit2.toDouble())).toFloat()
         ship.velocity.set(radius).scl(error * 0.25f).add(tangent).setLength(ship.template.speed)
-
-
-
-        //ship.velocity.set(radius).add(radius, r2 - ).setLength(ship.template.speed))
     }
 
     override fun shouldTerminate(): Boolean {
-        return targetSquad.ships.isEmpty()
+        return target == null
     }
 
     override fun interrupt() {
         ship.turrets.forEach {
             it.target = null
         }
+        ship.velocity.set(0f, 0f)
     }
 
     override fun terminate(): State? {
         ship.turrets.forEach {
             it.target = null
         }
+        ship.velocity.set(0f, 0f)
         return null
     }
 

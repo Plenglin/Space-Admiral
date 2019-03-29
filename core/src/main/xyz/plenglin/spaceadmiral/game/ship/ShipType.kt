@@ -1,12 +1,11 @@
 package xyz.plenglin.spaceadmiral.game.ship
 
+import xyz.plenglin.spaceadmiral.game.Health
 import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountTemplate
 import java.io.Serializable
 
 interface ShipType : Serializable {
-    val hull: Int
-    val armor: Int
-    val shield: Int
+    val health: Health
 
     val displayScale: Float
 
