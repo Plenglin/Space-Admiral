@@ -10,11 +10,13 @@ import java.io.Serializable
 import java.util.*
 
 class Squad(val template: ShipType, var team: Team, var index: Int) : Serializable {
+    val gameState get() = team.gameState
+    val isDead: Boolean get() = ships.isEmpty()
+
     val ships: MutableList<Ship> = (0 until template.squadSize).map { Ship(this, it) }.toMutableList()
     val actionQueue: Queue<SquadAction> = LinkedList()
 
     val stateScheduler = StateScheduler()
-    val gameState get() = team.gameState
 
     val transform = SquadTransform(
             count = template.squadSize,
@@ -52,6 +54,11 @@ class Squad(val template: ShipType, var team: Team, var index: Int) : Serializab
             ship.transform.posLocal.set(trs.posGlobal)
             ship.transform.angleLocal = trs.angleGlobal
         }
+    }
+
+    fun onDeath() {
+
+
     }
 
     private companion object {

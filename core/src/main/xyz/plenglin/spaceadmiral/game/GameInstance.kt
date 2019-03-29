@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.game
 
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
+import xyz.plenglin.spaceadmiral.game.squad.Squad
 import java.io.Serializable
 
 class GameInstance : Serializable {
@@ -38,15 +39,25 @@ class GameInstance : Serializable {
         }
 
         val deadShips = mutableListOf<Ship>()
-        gameState.ships.forEach { _, s ->
-            if (s.health.isDead) {
-                deadShips.add(s)
-                s.onDeath()
+        gameState.ships.forEach { _, ship ->
+            if (ship.health.isDead) {
+                deadShips.add(ship)
+                ship.onDeath()
             }
         }
         deadShips.forEach {
             it.parent.ships.remove(it)
             gameState.ships.remove(it.uuid)
+        }
+        val deadSquads = mutableListOf<Squad>()
+        gameState.squads.forEach { _, squad ->
+            if (squad.isDead) {
+                deadSquads.add(squad)
+                squad.onDeath()
+            }
+        }
+        deadSquads.forEach {
+            gameState.squads.remove(it.uuid)
         }
         gameState.time++
     }

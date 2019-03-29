@@ -22,7 +22,7 @@ class AttackSquadAction(squad: Squad, val target: Squad) : SquadAction(squad) {
     }
 
     override fun shouldTerminate(): Boolean {
-        return false
+        return target.isDead
     }
 
     override fun terminate(): State? {
