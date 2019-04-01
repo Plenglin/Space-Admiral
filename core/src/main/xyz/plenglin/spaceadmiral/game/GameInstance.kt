@@ -24,7 +24,7 @@ class GameInstance : Serializable {
             ship.update()
         }
 
-        gameState.projectiles.forEach { _, p ->
+        /*gameState.projectiles.forEach { _, p ->
             val capsule = p.getDetonationCapsule()
             val hit = gameState.shipTree.findInRect(p.getDetectionBoundingBox())
                     .filter { p.canHit(it) }
@@ -36,7 +36,7 @@ class GameInstance : Serializable {
                     p.onInteractWith(it)
                 }
             }
-        }
+        }*/
 
         val deadShips = mutableListOf<Ship>()
         gameState.ships.forEach { _, ship ->
@@ -48,6 +48,7 @@ class GameInstance : Serializable {
         deadShips.forEach {
             it.parent.ships.remove(it)
             gameState.ships.remove(it.uuid)
+            it.sector.onShipDeath(it)
         }
         val deadSquads = mutableListOf<Squad>()
         gameState.squads.forEach { _, squad ->

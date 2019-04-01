@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.game.team
 
 import com.badlogic.gdx.graphics.Color
 import xyz.plenglin.spaceadmiral.game.GameState
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.Squad
@@ -17,8 +18,8 @@ class Team(val gameState: GameState,
     val color = color.toIntBits()
     private var nextSquadIndex = 0
 
-    fun createSquad(template: ShipType): Squad {
-        val out = Squad(template, this, nextSquadIndex)
+    fun createSquad(template: ShipType, sector: Sector): Squad {
+        val out = Squad(template, this, nextSquadIndex, sector)
         nextSquadIndex++
         squads.add(out)
         gameState.squads[out.uuid] = out

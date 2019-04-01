@@ -8,6 +8,7 @@ import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.local.GameDummyPlayer
 import xyz.plenglin.spaceadmiral.net.game.local.GameLocalBridge
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
+import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.view.screen.GameScreen
 import java.util.*
 import kotlin.concurrent.thread
@@ -21,32 +22,34 @@ class SpaceAdmiral : Game() {
 
         val server = GameServer(listOf(localBridge, dummy))
         val screen = GameScreen(GameClient(localBridge))
-        val teams = server.instance.gameState.teams
+        val instance = server.instance
+        val teams = instance.gameState.teams
         val t1 = teams[localBridge.team]!!
         val t2 = teams[dummy.team]!!
+        val sector = instance.gameState.getSector(IntVector2(0, 0))
 
-        t1.createSquad(DummyFighter).apply {
+        t1.createSquad(DummyFighter, sector).apply {
             transform.transform.angleLocal = 0.1f
             transform.transform.setLocalPosition(0f, 0f)
             resetShipPositions()
         }
 
-        t1.createSquad(DummyFighter).apply {
+        t1.createSquad(DummyFighter, sector).apply {
             transform.transform.setLocalPosition(10f, 0f)
             resetShipPositions()
         }
 
-        t2.createSquad(DummyFighter).apply {
+        t2.createSquad(DummyFighter, sector).apply {
             transform.transform.setLocalPosition(10f, 20f)
             resetShipPositions()
         }
 
-        t1.createSquad(DummyCorvette).apply {
+        t1.createSquad(DummyCorvette, sector).apply {
             transform.transform.setLocalPosition(-30f, 20f)
             resetShipPositions()
         }
 
-        t2.createSquad(DummyCorvette).apply {
+        t2.createSquad(DummyCorvette, sector).apply {
             transform.transform.setLocalPosition(-20f, 20f)
             resetShipPositions()
         }

@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.game.squad
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.team.Team
@@ -9,7 +10,7 @@ import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.io.Serializable
 import java.util.*
 
-class Squad(val template: ShipType, var team: Team, var index: Int) : Serializable {
+class Squad(val template: ShipType, var team: Team, var index: Int, var sector: Sector) : Serializable {
     val gameState get() = team.gameState
     val isDead: Boolean get() = ships.isEmpty()
 

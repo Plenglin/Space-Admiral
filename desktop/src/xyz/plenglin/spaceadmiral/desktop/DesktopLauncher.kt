@@ -21,5 +21,5 @@ object DesktopLauncher {
             resizable = false
         }
         LwjglApplication(SpaceAdmiral(), config)
-    }
+    }g
 }

@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.game.ship
 
 import com.badlogic.gdx.math.Vector2
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.util.State
@@ -14,6 +15,7 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     val team get() = parent.team
     val gameState get() = team.gameState
     val template get() = parent.template
+    val sector get() = parent.sector
 
     var transformIndex = number
     val uuid: UUID = UUID.randomUUID()

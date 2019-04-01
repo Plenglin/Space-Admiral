@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.game.projectile
 
 import com.badlogic.gdx.math.Vector2
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.Capsule2D
@@ -15,6 +16,10 @@ abstract class Projectile(
          * The current location of the projectile.
          */
         val pos: Vector2,
+        /**
+         * The sector this projectile is located in
+         */
+        val sector: Sector,
         /**
          * The velocity of the projectile.
          */
