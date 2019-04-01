@@ -34,17 +34,24 @@ class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, Gam
         override val connected: Boolean get() = serverSide != null
         override val team: UUID = this@GameLocalBridge.team
 
-        override fun sendCommandToServer(command: ClientCommand) {
-            serverSide?.let {
-                it.server.onCommandReceived(it, command)
-            }
-        }
+        private val commands = mutableListOf<ClientCommand>()
 
         override fun sendDisconnectToServer() {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
 
 
+        override fun queueCommandToServer(command: ClientCommand) {
+            commands.add(command)
+        }
+
+        override fun commitCommandsToServer() {
+            val server = serverSide ?: return
+            commands.forEach {
+                server.server.onCommandReceived(server, it)
+            }
+            commands.clear()
+        }
     }
 
     override fun createPlayerInterface(team: Team, server: GameServer): GamePlayerInterface {

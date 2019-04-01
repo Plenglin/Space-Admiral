@@ -10,6 +10,7 @@ interface GameServerInterface {
     val connected: Boolean
     val team: UUID
 
-    fun sendCommandToServer(command: ClientCommand)
+    fun queueCommandToServer(command: ClientCommand)
     fun sendDisconnectToServer()
+    fun commitCommandsToServer()
 }

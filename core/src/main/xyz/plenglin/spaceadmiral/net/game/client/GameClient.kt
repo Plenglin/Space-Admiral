@@ -20,11 +20,11 @@ class GameClient(server: GameServerInterfaceFactory) {
     fun getSquad(uuid: UUID): SquadRef = SquadRef(uuid, this)
 
     fun update() {
-
+        server.commitCommandsToServer()
     }
 
     fun sendCommand(cmd: ClientCommand) {
-        server.sendCommandToServer(cmd)
+        server.queueCommandToServer(cmd)
     }
 }
 

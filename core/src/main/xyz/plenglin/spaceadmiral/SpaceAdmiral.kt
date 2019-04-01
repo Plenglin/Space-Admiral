@@ -25,28 +25,28 @@ class SpaceAdmiral : Game() {
         val t1 = teams[localBridge.team]!!
         val t2 = teams[dummy.team]!!
 
-        val squad1 = t1.createSquad(DummyFighter).apply {
+        t1.createSquad(DummyFighter).apply {
             transform.transform.angleLocal = 0.1f
             transform.transform.setLocalPosition(0f, 0f)
             resetShipPositions()
         }
 
-        val squad2 = t1.createSquad(DummyFighter).apply {
+        t1.createSquad(DummyFighter).apply {
             transform.transform.setLocalPosition(10f, 0f)
             resetShipPositions()
         }
 
-        val squad3 = t2.createSquad(DummyFighter).apply {
+        t2.createSquad(DummyFighter).apply {
             transform.transform.setLocalPosition(10f, 20f)
             resetShipPositions()
         }
 
-        val squad4 = t1.createSquad(DummyCorvette).apply {
+        t1.createSquad(DummyCorvette).apply {
             transform.transform.setLocalPosition(-30f, 20f)
             resetShipPositions()
         }
 
-        val squad5 = t2.createSquad(DummyCorvette).apply {
+        t2.createSquad(DummyCorvette).apply {
             transform.transform.setLocalPosition(-20f, 20f)
             resetShipPositions()
         }
@@ -74,6 +74,7 @@ class SpaceAdmiral : Game() {
         @JvmStatic
         val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
 
+        const val PORT = 42069
         const val UPDATE_PERIOD = 20L
     }
 }
