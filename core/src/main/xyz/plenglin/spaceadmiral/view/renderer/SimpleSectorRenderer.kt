@@ -9,13 +9,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.GameState
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.HitscanFiringEvent
 import java.util.*
 
-class SimpleGameStateRenderer : GameStateRenderer {
+class SimpleSectorRenderer : SectorRenderer {
 
     private val shipTriangle = listOf(
             Vector2(0.25f, 0.0f),
@@ -39,7 +39,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
         this.uiCamera = uiCamera
     }
 
-    override fun draw(delta: Float, gs: GameState) {
+    override fun draw(delta: Float, gs: Sector) {
         val clippingPoints = gameCamera.frustum.planePoints
         val xs = clippingPoints.map { it.x }.toList()
         val ys = clippingPoints.map { it.y }.toList()
@@ -166,7 +166,7 @@ class SimpleGameStateRenderer : GameStateRenderer {
 
     private companion object {
         @JvmStatic
-        private val logger = LoggerFactory.getLogger(SimpleGameStateRenderer::class.java)
+        private val logger = LoggerFactory.getLogger(SimpleSectorRenderer::class.java)
 
         @JvmStatic
         val RADIAL_DIST_COLOR = Color(0.2f, 0.2f, 0.2f, 1f)

@@ -9,11 +9,11 @@ import xyz.plenglin.spaceadmiral.net.game.local.GameDummyPlayer
 import xyz.plenglin.spaceadmiral.net.game.local.GameLocalBridge
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
 import xyz.plenglin.spaceadmiral.util.IntVector2
-import xyz.plenglin.spaceadmiral.view.screen.GameScreen
+import xyz.plenglin.spaceadmiral.view.screen.GridScreen
 import java.util.*
 import kotlin.concurrent.thread
 
-class SpaceAdmiral : Game() {
+object SpaceAdmiral : Game() {
 
     override fun create() {
         logger.info("Creating")
@@ -21,7 +21,8 @@ class SpaceAdmiral : Game() {
         val dummy = GameDummyPlayer(UUID.randomUUID())
 
         val server = GameServer(listOf(localBridge, dummy))
-        val screen = GameScreen(GameClient(localBridge))
+        val screen = GridScreen(GameClient(localBridge))
+
         val instance = server.instance
         val teams = instance.gameState.teams
         val t1 = teams[localBridge.team]!!
@@ -73,12 +74,10 @@ class SpaceAdmiral : Game() {
         logger.info("Disposing")
     }
 
-    companion object {
-        @JvmStatic
-        val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
+    @JvmStatic
+    val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
 
-        const val PORT = 42069
-        const val UPDATE_PERIOD = 20L
-    }
+    const val PORT = 42069
+    const val UPDATE_PERIOD = 20L
 }
 

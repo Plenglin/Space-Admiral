@@ -6,7 +6,16 @@ import com.badlogic.gdx.math.Vector3
 import java.io.Serializable
 import java.util.*
 
-data class IntVector2(var x: Int, var y: Int)
+data class IntVector2(var x: Int, var y: Int) : Comparable<IntVector2> {
+    override fun compareTo(other: IntVector2): Int {
+        val dx = x - other.x
+        return if (dx == 0) {
+            y - other.y
+        } else {
+            dx
+        }
+    }
+}
 
 class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, parent: Transform2D? = null) : Serializable {
     private val children = mutableSetOf<Transform2D>()

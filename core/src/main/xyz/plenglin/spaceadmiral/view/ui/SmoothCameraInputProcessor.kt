@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.util.getMousePos3
-import xyz.plenglin.spaceadmiral.view.screen.GameScreen
+import xyz.plenglin.spaceadmiral.view.screen.SectorScreen
 
 class SmoothCameraInputProcessor(
         val camera: OrthographicCamera,
@@ -82,7 +82,7 @@ class SmoothCameraInputProcessor(
     }
 
     fun update(delta: Float) {
-        val trs = Vector2(dx.toFloat(), dy.toFloat()).scl(GameScreen.cameraSpeed * delta * camera.zoom)
+        val trs = Vector2(dx.toFloat(), dy.toFloat()).scl(SectorScreen.cameraSpeed * delta * camera.zoom)
 
         targetCamera.translate(trs)
 

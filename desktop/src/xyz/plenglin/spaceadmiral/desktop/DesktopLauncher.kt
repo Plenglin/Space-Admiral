@@ -20,6 +20,6 @@ object DesktopLauncher {
             height = 720
             resizable = false
         }
-        LwjglApplication(SpaceAdmiral(), config)
-    }g
+        LwjglApplication(SpaceAdmiral, config)
+    }
 }

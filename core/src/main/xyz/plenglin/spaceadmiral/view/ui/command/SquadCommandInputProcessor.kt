@@ -13,14 +13,14 @@ import xyz.plenglin.spaceadmiral.net.game.io.AttackSquadCommand
 import xyz.plenglin.spaceadmiral.net.game.io.ClearSquadActionQueueCommand
 import xyz.plenglin.spaceadmiral.net.game.io.MoveSquadCommand
 import xyz.plenglin.spaceadmiral.util.unproject2
-import xyz.plenglin.spaceadmiral.view.renderer.GameStateRenderer
+import xyz.plenglin.spaceadmiral.view.renderer.SectorRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 
 class SquadCommandInputProcessor(
         val ui: GameUI,
         val client: GameClient,
         val gameCamera: OrthographicCamera,
-        val renderer: GameStateRenderer) : InputProcessor {
+        val renderer: SectorRenderer) : InputProcessor {
 
     var state: CommandState? = null
 
@@ -88,7 +88,7 @@ class SquadCommandInputProcessor(
 
                 clearActionQueue(recipients)
                 targets.forEach { (squad, end) ->
-                    client.sendCommand(MoveSquadCommand(squad.uuid, end))
+                    client.sendCommand(MoveSquadCommand(squad.id, end))
                 }
                 true
             }
@@ -100,7 +100,7 @@ class SquadCommandInputProcessor(
                 }
                 clearActionQueue(recipients)
                 recipients.forEach {
-                    client.sendCommand(AttackSquadCommand(it.uuid, target.uuid))
+                    client.sendCommand(AttackSquadCommand(it.id, target.id))
                 }
                 true
             }
@@ -111,7 +111,7 @@ class SquadCommandInputProcessor(
         if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             logger.info("Clearing action queue of {} (shift not held)", recipients)
             recipients.forEach {
-                client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
+                client.sendCommand(ClearSquadActionQueueCommand(it.id))
             }
         } else {
             logger.info("Will not clear action queues of {} (shift held)", recipients)
@@ -133,7 +133,7 @@ class SquadCommandInputProcessor(
                 }
                 logger.info("Received HALT, clearing action queue for {}", ui.selectedSquads)
                 ui.selectedSquads.forEach {
-                    client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
+                    client.sendCommand(ClearSquadActionQueueCommand(it.id))
                 }
                 return true
             }

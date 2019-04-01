@@ -11,13 +11,19 @@ import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
+import xyz.plenglin.spaceadmiral.net.game.client.SectorRef
 import xyz.plenglin.spaceadmiral.util.rect
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.command.MoveToTransform
 import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.selection.SquadSelectionInputProcessor
 
-class SquadCommandInputHighlighter(private val ui: GameUI, private val client: GameClient, private val selector: SquadSelectionInputProcessor, private val input: SquadCommandInputProcessor) : RendererLayer {
+class SquadCommandInputHighlighter(
+        private val sector: SectorRef,
+        private val ui: GameUI,
+        private val client: GameClient,
+        private val selector: SquadSelectionInputProcessor,
+        private val input: SquadCommandInputProcessor) : RendererLayer {
     private val shape = ShapeRenderer()
     private lateinit var camera: OrthographicCamera
 
@@ -65,7 +71,7 @@ class SquadCommandInputHighlighter(private val ui: GameUI, private val client: G
             shape.color = COLOR_SELECTION
             shape.begin(ShapeRenderer.ShapeType.Filled)
 
-            selectionState.getSelectedSquads(client.gameState!!.shipTree).forEach { squad ->
+            selectionState.getSelectedSquads(sector()!!.shipTree).forEach { squad ->
                 shape.highlightSquad(squad)
             }
 

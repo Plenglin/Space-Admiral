@@ -38,7 +38,7 @@ class ProjectileFiringType(val projectile: ProjectileFactory) : FiringType() {
     override fun fireFrom(gs: GameState, mount: WeaponMount, target: Ship) {
         // TODO MAKE PROJECTILES A THING
         val obj = projectile.createProjectile(mount.transform, target)
-        gs.projectiles[obj.uuid] = obj
+        gs.projectiles[obj.id] = obj
     }
 }
 */

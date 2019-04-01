@@ -1,10 +1,10 @@
 package xyz.plenglin.spaceadmiral.view.renderer
 
 import com.badlogic.gdx.graphics.OrthographicCamera
-import xyz.plenglin.spaceadmiral.game.GameState
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 
-class TextureGameStateRenderer : GameStateRenderer {
+class TextureSectorRenderer : SectorRenderer {
     override fun getShipAtScreenPos(x: Int, y: Int): Ship? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -17,7 +17,7 @@ class TextureGameStateRenderer : GameStateRenderer {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun draw(delta: Float, gs: GameState) {
+    override fun draw(delta: Float, gs: Sector) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
