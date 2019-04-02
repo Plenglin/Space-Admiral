@@ -15,6 +15,13 @@ import kotlin.concurrent.thread
 
 object SpaceAdmiral : Game() {
 
+    @JvmStatic
+    val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
+
+    const val PORT = 42069
+    const val UPDATE_PERIOD = 20L
+    const val GRID_SIZE = 100
+
     override fun create() {
         logger.info("Creating")
         val localBridge = GameLocalBridge(UUID.randomUUID())
@@ -73,11 +80,5 @@ object SpaceAdmiral : Game() {
         super.dispose()
         logger.info("Disposing")
     }
-
-    @JvmStatic
-    val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
-
-    const val PORT = 42069
-    const val UPDATE_PERIOD = 20L
 }
 

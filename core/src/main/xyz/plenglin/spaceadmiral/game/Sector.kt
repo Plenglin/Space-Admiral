@@ -6,15 +6,16 @@ import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.KDTree2
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.HashMap
 
-class Sector(val parent: GameState, val pos: IntVector2) {
+class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
     @Transient
     private val ships = HashMap<UUID, Ship>()
 
-    private val squads = HashMap<UUID, Squad>()
+    val squads = HashMap<UUID, Squad>()
     private val projectiles = mutableListOf<Projectile>()
 
     val firingEvents: MutableList<FiringEvent> = mutableListOf()

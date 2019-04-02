@@ -52,16 +52,15 @@ class SectorScreen(private val parent: GridScreen, private val sector: SectorRef
 
         client.update()
 
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
         val sector = sector()
         if (sector == null) {
             logger.warn("Did not receive a game state from client, not drawing anything!")
             return
         }
-
         sector.updateTrees()
-
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         inputCameraPosition.update(delta)
         gameCamera.update()
