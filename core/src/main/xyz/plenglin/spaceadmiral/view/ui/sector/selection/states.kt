@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.view.ui.selection
+package xyz.plenglin.spaceadmiral.view.ui.sector.selection
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.ship.Ship

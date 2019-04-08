@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.view.ui.command
+package xyz.plenglin.spaceadmiral.view.ui.sector.command
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform

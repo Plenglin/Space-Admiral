@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.view.ui.selection
+package xyz.plenglin.spaceadmiral.view.ui.sector.selection
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input

@@ -9,5 +9,5 @@ interface GridRenderer : Disposable {
     fun initialize(gameCamera: OrthographicCamera, uiCamera: OrthographicCamera)
     fun draw(gs: GameState)
     fun resize(width: Int, height: Int)
-    fun getSectorAtPos(x: Int, y: Int): IntVector2?
+    fun getSectorAtScreenPos(x: Int, y: Int): IntVector2?
 }

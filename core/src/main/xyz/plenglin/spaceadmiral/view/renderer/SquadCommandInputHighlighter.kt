@@ -14,9 +14,9 @@ import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.SectorRef
 import xyz.plenglin.spaceadmiral.util.rect
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
-import xyz.plenglin.spaceadmiral.view.ui.command.MoveToTransform
-import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandInputProcessor
-import xyz.plenglin.spaceadmiral.view.ui.selection.SquadSelectionInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.sector.command.MoveToTransform
+import xyz.plenglin.spaceadmiral.view.ui.sector.command.SquadCommandInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputProcessor
 
 class SquadCommandInputHighlighter(
         private val sector: SectorRef,

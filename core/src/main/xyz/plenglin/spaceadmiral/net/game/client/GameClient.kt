@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.net.game.client
 
 import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
+import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -18,6 +19,7 @@ class GameClient(server: GameServerInterfaceFactory) {
     fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
     fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
     fun getSquad(uuid: UUID): SquadRef = SquadRef(uuid, this)
+    fun getSector(pos: IntVector2): SectorRef = SectorRef(pos, this)
 
     fun update() {
         server.commitCommandsToServer()

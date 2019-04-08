@@ -32,9 +32,10 @@ class SimpleGridRenderer : GridRenderer {
         gridPixmap.setColor(Color.CLEAR)
         gridPixmap.blending = Pixmap.Blending.None
         gridPixmap.fill()
+        gridPixmap.blending = Pixmap.Blending.SourceOver
         gs.sectors.forEach { p, s ->
             gridPixmap.setColor(contested)
-            gridPixmap.drawPixel(p.x, p.y)
+            gridPixmap.drawPixel(p.x, GRID_SIZE - p.y - 1)
         }
 
         tex.draw(gridPixmap, 0, 0)
@@ -55,7 +56,7 @@ class SimpleGridRenderer : GridRenderer {
     override fun resize(width: Int, height: Int) {
     }
 
-    override fun getSectorAtPos(x: Int, y: Int): IntVector2? {
+    override fun getSectorAtScreenPos(x: Int, y: Int): IntVector2? {
         return gridCamera.unproject2(x.toFloat(), y.toFloat()).toIntVector2()
     }
 
@@ -65,10 +66,10 @@ class SimpleGridRenderer : GridRenderer {
 
     companion object {
         @JvmStatic
-        val friendly = Color(0f, 0f, 1f, 0.25f)
+        val friendly = Color(0f, 0f, 1f, 1f)
         @JvmStatic
-        val enemy = Color(1f, 0f, 0f, 0.25f)
+        val enemy = Color(1f, 0f, 0f, 1f)
         @JvmStatic
-        val contested = Color(1f, 1f, 1f, 0.25f)
+        val contested = Color(1f, 1f, 1f, 1f)
     }
 }

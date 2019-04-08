@@ -14,10 +14,10 @@ import xyz.plenglin.spaceadmiral.view.renderer.SimpleSectorRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SquadCommandInputHighlighter
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
-import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandInputProcessor
-import xyz.plenglin.spaceadmiral.view.ui.selection.SquadSelectionInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.sector.command.SquadCommandInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputProcessor
 
-class SectorScreen(private val parent: GridScreen, private val sector: SectorRef, private val client: GameClient) : Screen {
+class SectorScreen(private val parent: GridScreen, private val client: GameClient, private val sector: SectorRef) : Screen {
     private val batch: SpriteBatch = SpriteBatch()
 
     private val gameCamera: OrthographicCamera = OrthographicCamera()

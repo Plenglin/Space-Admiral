@@ -20,7 +20,7 @@ object SpaceAdmiral : Game() {
 
     const val PORT = 42069
     const val UPDATE_PERIOD = 20L
-    const val GRID_SIZE = 100
+    const val GRID_SIZE = 21
 
     override fun create() {
         logger.info("Creating")
