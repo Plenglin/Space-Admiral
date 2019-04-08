@@ -11,6 +11,7 @@ import xyz.plenglin.spaceadmiral.view.grid.GridRenderer
 import xyz.plenglin.spaceadmiral.view.grid.SimpleGridRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.grid.SectorSelectionInputProcessor
 
 class GridScreen(private val client: GameClient) : Screen {
     //private val batch: SpriteBatch = SpriteBatch()
@@ -22,7 +23,12 @@ class GridScreen(private val client: GameClient) : Screen {
     private val ui: GameUI = GameUI(client, uiCamera)
 
     private val inputCameraPosition = SmoothCameraInputProcessor(gameCamera)
-    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition)
+    private val inputSectorSelection = SectorSelectionInputProcessor(this, client, gridRenderer)
+    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSectorSelection)
+
+    init {
+        inputCameraPosition.targetZoom = 0.01f
+    }
 
     override fun hide() {
 

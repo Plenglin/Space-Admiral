@@ -57,7 +57,12 @@ class SimpleGridRenderer : GridRenderer {
     }
 
     override fun getSectorAtScreenPos(x: Int, y: Int): IntVector2? {
-        return gridCamera.unproject2(x.toFloat(), y.toFloat()).toIntVector2()
+        val pos = gridCamera.unproject2(x.toFloat(), y.toFloat()).toIntVector2()
+        return if ((0 until GRID_SIZE).contains(pos.x) && (0 until GRID_SIZE).contains(pos.y)) {
+            pos
+        } else {
+            null
+        }
     }
 
     override fun dispose() {

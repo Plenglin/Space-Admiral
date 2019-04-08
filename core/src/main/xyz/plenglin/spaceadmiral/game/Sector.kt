@@ -13,7 +13,7 @@ import kotlin.collections.HashMap
 class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
     @Transient
-    private val ships = HashMap<UUID, Ship>()
+    private var ships = HashMap<UUID, Ship>()
 
     val squads = HashMap<UUID, Squad>()
     private val projectiles = mutableListOf<Projectile>()
@@ -21,33 +21,28 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
     val firingEvents: MutableList<FiringEvent> = mutableListOf()
 
     @Transient
-    private var _shipTree: KDTree2<Ship>? = null
-    val shipTree: KDTree2<Ship> get() {
-        var obj = _shipTree
-        if (obj == null) {
-            obj = KDTree2()
-            _shipTree = obj
-        }
-        return obj
-    }
-
+    var shipTree: KDTree2<Ship>? = null
     @Transient
-    private var _projectileTree: KDTree2<Projectile>? = null
-    val projectileTree: KDTree2<Projectile> get() {
-        var obj = _projectileTree
-        if (obj == null) {
-            obj = KDTree2()
-            _projectileTree = obj
-        }
-        return obj
-    }
+    var projectileTree: KDTree2<Projectile>? = null
 
     fun updateTrees() {
-        shipTree.apply {
-            clear()
-            ships.forEach { (_, ship) ->
-                insert(ship.transform.posGlobal, ship)
-            }
+        var shipTree = shipTree
+        if (shipTree == null) {
+            shipTree = KDTree2()
+            this.shipTree = shipTree
+        }
+        println("asdf")
+        shipTree.clear()
+        println("asdf")
+        ships.forEach { (_, ship) ->
+            shipTree.insert(ship.transform.posGlobal, ship)
+        }
+        println("asdf")
+
+        var projectileTree = projectileTree
+        if (projectileTree == null) {
+            projectileTree = KDTree2()
+            this.projectileTree = projectileTree
         }
         projectileTree.apply {
             projectiles.shuffle()

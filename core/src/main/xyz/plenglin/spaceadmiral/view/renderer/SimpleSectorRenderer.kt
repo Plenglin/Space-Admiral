@@ -85,10 +85,10 @@ class SimpleSectorRenderer : SectorRenderer {
 
         // Ships and projectiles
         shape.begin(ShapeRenderer.ShapeType.Line)
-        gs.shipTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, ship) ->
+        gs.shipTree!!.findInRect(xMin, xMax, yMin, yMax).forEach { (_, ship) ->
             draw(ship!!)
         }
-        gs.projectileTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, proj) ->
+        gs.projectileTree!!.findInRect(xMin, xMax, yMin, yMax).forEach { (_, proj) ->
             draw(proj!!)
         }
         shape.end()

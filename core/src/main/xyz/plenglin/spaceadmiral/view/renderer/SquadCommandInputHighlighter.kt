@@ -71,7 +71,7 @@ class SquadCommandInputHighlighter(
             shape.color = COLOR_SELECTION
             shape.begin(ShapeRenderer.ShapeType.Filled)
 
-            selectionState.getSelectedSquads(sector()!!.shipTree).forEach { squad ->
+            selectionState.getSelectedSquads(sector()!!.shipTree!!).forEach { squad ->
                 shape.highlightSquad(squad)
             }
 

@@ -60,7 +60,10 @@ class SectorScreen(private val parent: GridScreen, private val client: GameClien
             logger.warn("Did not receive a game state from client, not drawing anything!")
             return
         }
-        sector.updateTrees()
+        sector.let {
+            logger.debug("Received sector {}", it)
+            it.updateTrees()
+        }
 
         inputCameraPosition.update(delta)
         gameCamera.update()

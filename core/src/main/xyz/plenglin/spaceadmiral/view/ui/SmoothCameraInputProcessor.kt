@@ -3,7 +3,7 @@ package xyz.plenglin.spaceadmiral.view.ui
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.util.getMousePos3
 import xyz.plenglin.spaceadmiral.view.screen.SectorScreen
@@ -13,21 +13,16 @@ class SmoothCameraInputProcessor(
         val dampening: Float = 0.9f,
         val zoomRate: Float = 1.5f)
     : InputProcessor {
-    private val targetCamera = OrthographicCamera()
+
+    var targetZoom: Float = camera.zoom
+    var targetPos: Vector3 = camera.position.cpy()
+
     private var dx: Int = 0
     private var dy: Int = 0
 
     private var width: Int = 0
     private var height: Int = 0
 
-    init {
-        targetCamera.apply {
-            position.set(camera.position)
-            direction.set(camera.direction)
-            up.set(camera.up)
-            zoom = camera.zoom
-        }
-    }
     override fun keyDown(keycode: Int): Boolean = when (keycode) {
         Input.Keys.W -> {
             dy += 1
@@ -72,22 +67,22 @@ class SmoothCameraInputProcessor(
         val mouseDelta = camera.unproject(getMousePos3())
         logger.info("mouse pos unprojected {}", mouseDelta)
         if (amount > 0) {
-            targetCamera.position.sub(mouseDelta).scl(zoomRate).add(mouseDelta)
-            targetCamera.zoom *= zoomRate
+            targetPos.sub(mouseDelta).scl(zoomRate).add(mouseDelta)
+            targetZoom *= zoomRate
         } else {
-            targetCamera.position.sub(mouseDelta).scl(1 / zoomRate).add(mouseDelta)
-            targetCamera.zoom /= zoomRate
+            targetPos.sub(mouseDelta).scl(1 / zoomRate).add(mouseDelta)
+            targetZoom /= zoomRate
         }
         return true
     }
 
     fun update(delta: Float) {
-        val trs = Vector2(dx.toFloat(), dy.toFloat()).scl(SectorScreen.cameraSpeed * delta * camera.zoom)
+        val trs = Vector3(dx.toFloat(), dy.toFloat(), 0f).scl(SectorScreen.cameraSpeed * delta * camera.zoom)
 
-        targetCamera.translate(trs)
+        targetPos.add(trs)
 
-        camera.zoom = dampening * camera.zoom + (1 - dampening) * targetCamera.zoom
-        camera.position.scl(dampening).mulAdd(targetCamera.position, 1 - dampening)
+        camera.zoom = dampening * camera.zoom + (1 - dampening) * targetZoom
+        camera.position.scl(dampening).mulAdd(targetPos, 1 - dampening)
         //camera.zoom = targetCamera.zoom
         //camera.position.set(targetCamera.position)
     }
