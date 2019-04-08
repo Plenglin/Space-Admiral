@@ -55,8 +55,9 @@ class GridScreen(private val client: GameClient) : Screen {
             logger.warn("No gamestate detected, not drawing anything!")
             return
         }
+        val tadar = client.tadarData!!
 
-        gridRenderer.draw(gs)
+        gridRenderer.draw(gs, tadar)
         ui.render(delta)
     }
 

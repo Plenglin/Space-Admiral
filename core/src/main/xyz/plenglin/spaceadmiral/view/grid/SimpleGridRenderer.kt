@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import xyz.plenglin.spaceadmiral.SpaceAdmiral.GRID_SIZE
 import xyz.plenglin.spaceadmiral.game.GameState
+import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.toIntVector2
 import xyz.plenglin.spaceadmiral.util.unproject2
@@ -28,7 +29,7 @@ class SimpleGridRenderer : GridRenderer {
         this.uiCamera = uiCamera
     }
 
-    override fun draw(gs: GameState) {
+    override fun draw(gs: GameState, tadar: TadarData) {
         gridPixmap.setColor(Color.CLEAR)
         gridPixmap.blending = Pixmap.Blending.None
         gridPixmap.fill()
@@ -37,6 +38,7 @@ class SimpleGridRenderer : GridRenderer {
             gridPixmap.setColor(contested)
             gridPixmap.drawPixel(p.x, GRID_SIZE - p.y - 1)
         }
+        tadar.drawTadar(gridPixmap)
 
         tex.draw(gridPixmap, 0, 0)
 

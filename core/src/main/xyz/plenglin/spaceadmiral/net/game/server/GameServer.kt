@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Color
 import org.apache.commons.lang3.SerializationUtils
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
+import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.io.CommandResult
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
@@ -49,11 +51,14 @@ class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameIn
         logger.debug("Updating GameInstance")
         instance.update()
 
-        val serialized = SerializationUtils.serialize(instance.gameState)
+        val serializedGameState = SerializationUtils.serialize(instance.gameState)
         //println(serialized.toList())
         players.forEach {
-            logger.debug("Sending data to {}", it)
-            it.sendGameState(serialized)
+            logger.debug("Sending payload to {}", it)
+            val tadar = TadarData()
+            tadar.initializeNoise()
+            val payload = ClientUpdatePayload(serializedGameState, tadar)
+            it.sendPayload(payload)
         }
 
     }

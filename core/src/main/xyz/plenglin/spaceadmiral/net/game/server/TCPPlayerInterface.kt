@@ -1,12 +1,16 @@
 package xyz.plenglin.spaceadmiral.net.game.server
 
 import xyz.plenglin.spaceadmiral.game.team.Team
+import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.ObjectInputStream
 import java.net.Socket
 
 class TCPPlayerInterface(override val team: Team, private val socket: Socket) : GamePlayerInterface {
+    override fun sendPayload(payload: ClientUpdatePayload) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val rx = BufferedInputStream(socket.getInputStream())
     private val rxObj = ObjectInputStream(rx)
@@ -15,7 +19,4 @@ class TCPPlayerInterface(override val team: Team, private val socket: Socket) : 
 
     override val connected: Boolean get() = socket.isConnected
 
-    override fun sendGameState(gs: ByteArray) {
-        tx.write(gs)
-    }
 }

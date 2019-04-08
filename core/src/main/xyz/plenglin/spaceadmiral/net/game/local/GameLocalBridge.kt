@@ -1,11 +1,11 @@
 package xyz.plenglin.spaceadmiral.net.game.local
 
-import org.apache.commons.lang3.SerializationUtils
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterface
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterfaceFactory
 import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterfaceFactory
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
@@ -22,10 +22,8 @@ class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, Gam
     private inner class ServerSide(override val team: Team, val server: GameServer) : GamePlayerInterface {
         override val connected: Boolean get() = clientSide != null
 
-        override fun sendGameState(gs: ByteArray) {
-            clientSide?.let {
-                it.client.gameState = SerializationUtils.deserialize(gs)
-            }
+        override fun sendPayload(payload: ClientUpdatePayload) {
+            clientSide?.client?.onReceivePayload(payload)
         }
 
     }
