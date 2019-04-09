@@ -8,14 +8,16 @@ import java.util.*
 class GameStateCM {
     val sectors = hashMapOf<IntVector2, SectorCM>()
 
+    val teams = hashMapOf<UUID, TeamCM>()
     val squads = hashMapOf<UUID, SquadCM>()
     val ships = hashMapOf<UUID, ShipCM>()
-    val mounts = hashMapOf<UUID, WeaponMountCM>()
+    val turrets = hashMapOf<UUID, TurretCM>()
 
     var tadar: TadarData = TadarData()
 
     fun update(payload: ClientUpdatePayload) {
         val unmentionedSectors = sectors.keys.toHashSet()  // Copy the keys
+        tadar = payload.tadar
 
         payload.sectors.forEach { dtoSector ->
             val pos = dtoSector.pos

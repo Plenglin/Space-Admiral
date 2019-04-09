@@ -1,6 +1,5 @@
 package xyz.plenglin.spaceadmiral.net.game.client
 
-import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
@@ -20,7 +19,6 @@ class GameClient(server: GameServerInterfaceFactory) {
     val team: UUID = this.server.team
 
     val gameState: GameStateCM = server.initialPayload.toClientModel()
-    var tadarData: TadarData? = null
 
     //fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
     //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
@@ -28,10 +26,9 @@ class GameClient(server: GameServerInterfaceFactory) {
     fun getSquad(uuid: UUID): SquadCM = TODO()//SquadRef(uuid, this)
     fun getSector(pos: IntVector2): SectorCM = TODO()//SectorRef(pos, this)
 
+    @Synchronized
     fun onReceivePayload(payload: ClientUpdatePayload) {
-        //gameState = SerializationUtils.deserialize(payload.gameStateBytes)
         gameState.update(payload)
-        //tadarData = payload.tadar
     }
 
     fun update() {
