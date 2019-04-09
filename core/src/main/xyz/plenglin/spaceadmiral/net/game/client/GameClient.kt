@@ -23,8 +23,8 @@ class GameClient(server: GameServerInterfaceFactory) {
     //fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
     //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
     //fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
-    fun getSquad(uuid: UUID): SquadCM = TODO()//SquadRef(uuid, this)
-    fun getSector(pos: IntVector2): SectorCM = TODO()//SectorRef(pos, this)
+    fun getSquad(uuid: UUID): SquadCM = gameState.squads[uuid]!!
+    fun getSector(pos: IntVector2): SectorCM = gameState.sectors[pos]!!
 
     @Synchronized
     fun onReceivePayload(payload: ClientUpdatePayload) {

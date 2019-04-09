@@ -22,7 +22,7 @@ class GameStateCM {
         payload.sectors.forEach { dtoSector ->
             val pos = dtoSector.pos
             unmentionedSectors.remove(pos)
-            val sector = sectors.getValue(pos)
+            val sector = sectors.getOrPut(pos) { SectorCM(pos, this) }
 
             dtoSector.squads.forEach { dtoSquad ->
                 val squad = squads.getValue(dtoSquad.uuid)
@@ -35,7 +35,8 @@ class GameStateCM {
             }
         }
 
-        unmentionedSectors.forEach { sectors.remove(it) }
+        // Prune sectors
+        //sectors.values.removeAll {  }
     }
 
 }

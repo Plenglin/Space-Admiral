@@ -51,11 +51,6 @@ class GridScreen(private val client: GameClient) : Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         val gs = client.gameState
-        if (gs == null) {
-            logger.warn("No gamestate detected, not drawing anything!")
-            return
-        }
-        val tadar = client.tadarData!!
 
         gridRenderer.draw(gs)
         ui.render(delta)

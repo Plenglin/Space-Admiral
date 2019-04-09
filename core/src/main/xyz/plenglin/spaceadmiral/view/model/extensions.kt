@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.view.model
 
+import com.badlogic.gdx.graphics.Color
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.initial.ClientInitialPayload
 
 
@@ -12,7 +13,9 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
     }
 
     gs.teams.forEach { uuid, gsTeam ->
-        val cmTeam = TeamCM(uuid, out)
+        val color = Color()
+        Color.argb8888ToColor(color, gsTeam.color)
+        val cmTeam = TeamCM(uuid, out, color)
         out.teams[uuid] = cmTeam
 
         for (gsSquad in gsTeam.squads) {
