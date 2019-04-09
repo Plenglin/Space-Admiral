@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
-import xyz.plenglin.spaceadmiral.net.game.io.dto.ActionDTO
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ActionDTO
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.util.*

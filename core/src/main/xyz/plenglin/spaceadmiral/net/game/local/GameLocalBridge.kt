@@ -4,8 +4,8 @@ import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterface
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterfaceFactory
-import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
-import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterfaceFactory
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer

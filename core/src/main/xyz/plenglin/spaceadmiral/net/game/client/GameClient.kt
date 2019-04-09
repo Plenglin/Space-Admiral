@@ -3,8 +3,8 @@ package xyz.plenglin.spaceadmiral.net.game.client
 import org.apache.commons.lang3.SerializationUtils
 import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.TadarData
-import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
-import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock

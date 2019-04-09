@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.game.client
 
-import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import java.util.*
 
 /**

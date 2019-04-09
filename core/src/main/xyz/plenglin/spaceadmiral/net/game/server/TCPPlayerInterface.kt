@@ -1,7 +1,7 @@
 package xyz.plenglin.spaceadmiral.net.game.server
 
 import xyz.plenglin.spaceadmiral.game.team.Team
-import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.ObjectInputStream

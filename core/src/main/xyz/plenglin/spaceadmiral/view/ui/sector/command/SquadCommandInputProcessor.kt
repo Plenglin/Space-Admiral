@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.SquadRef
 import xyz.plenglin.spaceadmiral.net.game.client.toRef
-import xyz.plenglin.spaceadmiral.net.game.io.AttackSquadCommand
-import xyz.plenglin.spaceadmiral.net.game.io.ClearSquadActionQueueCommand
-import xyz.plenglin.spaceadmiral.net.game.io.MoveSquadCommand
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.AttackSquadCommand
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClearSquadActionQueueCommand
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.MoveSquadCommand
 import xyz.plenglin.spaceadmiral.util.unproject2
 import xyz.plenglin.spaceadmiral.view.renderer.SectorRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI

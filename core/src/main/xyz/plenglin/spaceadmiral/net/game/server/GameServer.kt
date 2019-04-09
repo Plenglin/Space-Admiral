@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.team.Team
-import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
-import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
-import xyz.plenglin.spaceadmiral.net.game.io.CommandResult
-import xyz.plenglin.spaceadmiral.net.game.io.dto.asDTO
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
+import xyz.plenglin.spaceadmiral.net.game.io.c2s.CommandResult
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.asDTO
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream

@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.game.squad
 
-import xyz.plenglin.spaceadmiral.net.game.io.dto.ActionDTO
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ActionDTO
 import xyz.plenglin.spaceadmiral.util.State
 import java.io.Serializable
 

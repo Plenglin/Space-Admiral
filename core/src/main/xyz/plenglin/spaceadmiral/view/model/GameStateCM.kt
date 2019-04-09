@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.view.model
 
-import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.util.*
 

@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.net.game.io
+package xyz.plenglin.spaceadmiral.net.game.io.c2s
 
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.squad.Squad
