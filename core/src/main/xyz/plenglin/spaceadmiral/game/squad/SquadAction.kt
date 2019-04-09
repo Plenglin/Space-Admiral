@@ -13,8 +13,6 @@ class Definite(val seconds: Float) : ETA()
 
 
 abstract class SquadAction(val squad: Squad) : Serializable, State {
-    open val timeLeft: ETA get() = Indefinite
-
     private var isFinished = false
     open val expectedEndPos get() = squad.transform.transform.posGlobal
 

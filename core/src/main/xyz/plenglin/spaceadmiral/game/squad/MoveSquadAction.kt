@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
+import xyz.plenglin.spaceadmiral.net.game.io.dto.ActionDTO
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.util.*
@@ -85,6 +86,12 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
     override fun toString(): String {
         return "SquadAction($squad, $target)"
     }
+
+    override fun toDTO(): ActionDTO {
+        return DTO(target)
+    }
+
+    data class DTO(override val endPos: SquadTransform) : ActionDTO
 
     private companion object {
         @JvmStatic

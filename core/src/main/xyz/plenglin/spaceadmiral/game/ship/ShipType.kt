@@ -12,7 +12,7 @@ interface ShipType : Serializable {
     val squadSize: Int
 
     /**
-     * How far the ship can move every tick.
+     * How far the ship moves every second.
      */
     val speed: Float
     val spacing: Float

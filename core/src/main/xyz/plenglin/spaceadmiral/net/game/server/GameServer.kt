@@ -53,8 +53,6 @@ class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameIn
         logger.debug("Updating GameInstance")
         instance.update()
 
-        //val serializedGameState = SerializationUtils.asDTO(instance.gameState)
-        //println(asDTO.toList())
         val serializedSectors = instance.gameState.sectors.map { (k, s) ->
             k to s.asDTO()
         }.toMap()

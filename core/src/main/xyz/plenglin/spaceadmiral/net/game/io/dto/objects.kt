@@ -5,10 +5,15 @@ import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
 import java.util.*
+
+interface ActionDTO {
+    val endPos: SquadTransform
+}
 
 data class ProjectileDTO internal constructor(
         val uuid: UUID,
@@ -52,7 +57,7 @@ fun Squad.asDTO(): SquadDTO {
     return SquadDTO(
             uuid,
             ships.map { it.asDTO() },
-            actions
+            actionQueue.map { it.toDTO() }
     )
 }
 
