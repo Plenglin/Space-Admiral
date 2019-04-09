@@ -6,20 +6,20 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
-import xyz.plenglin.spaceadmiral.net.game.client.ShipRef
-import xyz.plenglin.spaceadmiral.net.game.client.SquadRef
+import xyz.plenglin.spaceadmiral.view.model.ShipCM
+import xyz.plenglin.spaceadmiral.view.model.SquadCM
 
 class GameUI(val client: GameClient, camera: OrthographicCamera) : Disposable {
     private val viewport = ScreenViewport(camera)
     val stage: Stage = Stage(viewport)
 
-    val selectedSquads: MutableSet<SquadRef> = HashSet()
+    val selectedSquads: MutableSet<SquadCM> = HashSet()
 
     init {
 
     }
 
-    fun onShipSelected(ship: ShipRef?, ctrl: Boolean) {
+    fun onShipSelected(ship: ShipCM?, ctrl: Boolean) {
         if (ship == null) {
             logger.info("Ship null selected, clearing squad selection")
             selectedSquads.clear()
@@ -31,7 +31,7 @@ class GameUI(val client: GameClient, camera: OrthographicCamera) : Disposable {
             selectedSquads.clear()
         }
         logger.debug("Adding squad")
-        selectedSquads.add(ship.parent!!)
+        selectedSquads.add(ship.squad)
     }
 
     fun render(delta: Float) {

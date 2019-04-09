@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.Sector
-import xyz.plenglin.spaceadmiral.game.projectile.Projectile
-import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.HitscanFiringEvent
+import xyz.plenglin.spaceadmiral.view.model.ProjectileCM
+import xyz.plenglin.spaceadmiral.view.model.SectorCM
+import xyz.plenglin.spaceadmiral.view.model.ShipCM
 import java.util.*
 
 class SimpleSectorRenderer : SectorRenderer {
@@ -27,7 +27,7 @@ class SimpleSectorRenderer : SectorRenderer {
     lateinit var uiCamera: OrthographicCamera
     var shipPixmap: Pixmap? = null
 
-    private val pixelToShip = HashMap<Int, Ship>()
+    private val pixelToShip = HashMap<Int, ShipCM>()
     private var nextShipColor = 1
     private var height: Int = 0
     private val lasers = mutableListOf<Laser>()
@@ -39,7 +39,7 @@ class SimpleSectorRenderer : SectorRenderer {
         this.uiCamera = uiCamera
     }
 
-    override fun draw(delta: Float, gs: Sector) {
+    override fun draw(delta: Float, gs: SectorCM) {
         val clippingPoints = gameCamera.frustum.planePoints
         val xs = clippingPoints.map { it.x }.toList()
         val ys = clippingPoints.map { it.y }.toList()
@@ -67,7 +67,8 @@ class SimpleSectorRenderer : SectorRenderer {
         // Firing events
         gs.firingEvents.forEach {
             if (it is HitscanFiringEvent) {
-                lasers.add(Laser(it.mount.transform.posGlobal.cpy(), it.target.transform.posGlobal.cpy()))
+                val target = gs.ships[it.target]!!
+                lasers.add(Laser(it.mount.transform.posGlobal.cpy(), target.transform.posGlobal.cpy()))
             }
         }
 
@@ -85,10 +86,10 @@ class SimpleSectorRenderer : SectorRenderer {
 
         // Ships and projectiles
         shape.begin(ShapeRenderer.ShapeType.Line)
-        gs.shipTree!!.findInRect(xMin, xMax, yMin, yMax).forEach { (_, ship) ->
+        gs.shipTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, ship) ->
             draw(ship!!)
         }
-        gs.projectileTree!!.findInRect(xMin, xMax, yMin, yMax).forEach { (_, proj) ->
+        gs.projectileTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, proj) ->
             draw(proj!!)
         }
         shape.end()
@@ -99,7 +100,7 @@ class SimpleSectorRenderer : SectorRenderer {
         shape.line(laser.start, laser.end)
     }
 
-    private fun draw(ship: Ship) {
+    private fun draw(ship: ShipCM) {
         logger.trace("rendering {}", ship)
         ship.transform.update()
         val pos = ship.transform.posGlobal
@@ -111,9 +112,8 @@ class SimpleSectorRenderer : SectorRenderer {
             val transformed = shipTriangle.map {
                 it.cpy().scl(scale).rotateRad(ship.transform.angleGlobal).add(pos)
             }
-            Color.argb8888ToColor(color, ship.team.color)
 
-            shape.color = color
+            shape.color = ship.team.color
             shape.polygon(floatArrayOf(
                     transformed[0].x, transformed[0].y,
                     transformed[1].x, transformed[1].y,
@@ -134,11 +134,11 @@ class SimpleSectorRenderer : SectorRenderer {
         }
     }
 
-    private fun draw(projectile: Projectile) {
+    private fun draw(projectile: ProjectileCM) {
         logger.trace("rendering {}", projectile)
         val pos = projectile.pos
         if (gameCamera.frustum.pointInFrustum(pos.x, pos.y, 0f)) {
-            projectile.team?.color?.let { Color.argb8888ToColor(color, it) } ?: Color.WHITE
+            color.set(projectile.team.color)
             shape.color = color
             shape.circle(pos.x, pos.y, 1f)
         }
@@ -158,7 +158,7 @@ class SimpleSectorRenderer : SectorRenderer {
         shipPixmap?.dispose()
     }
 
-    override fun getShipAtScreenPos(x: Int, y: Int): Ship? {
+    override fun getShipAtScreenPos(x: Int, y: Int): ShipCM? {
         val pixel = shipPixmap?.getPixel(x, height - y) ?: return null
         logger.debug("Querying {} {}: {}", x, y, pixel)
         return pixelToShip[pixel]

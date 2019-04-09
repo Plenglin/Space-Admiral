@@ -12,6 +12,7 @@ import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.toIntVector2
 import xyz.plenglin.spaceadmiral.util.unproject2
+import xyz.plenglin.spaceadmiral.view.model.GameStateCM
 
 class SimpleGridRenderer : GridRenderer {
 
@@ -29,7 +30,7 @@ class SimpleGridRenderer : GridRenderer {
         this.uiCamera = uiCamera
     }
 
-    override fun draw(gs: GameState, tadar: TadarData) {
+    override fun draw(gs: GameStateCM) {
         gridPixmap.setColor(Color.CLEAR)
         gridPixmap.blending = Pixmap.Blending.None
         gridPixmap.fill()
@@ -38,7 +39,7 @@ class SimpleGridRenderer : GridRenderer {
             gridPixmap.setColor(contested)
             gridPixmap.drawPixel(p.x, GRID_SIZE - p.y - 1)
         }
-        tadar.drawTadar(gridPixmap)
+        gs.tadar.drawTadar(gridPixmap)
 
         tex.draw(gridPixmap, 0, 0)
 

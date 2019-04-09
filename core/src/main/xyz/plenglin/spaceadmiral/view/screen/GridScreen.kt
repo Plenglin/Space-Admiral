@@ -57,7 +57,7 @@ class GridScreen(private val client: GameClient) : Screen {
         }
         val tadar = client.tadarData!!
 
-        gridRenderer.draw(gs, tadar)
+        gridRenderer.draw(gs)
         ui.render(delta)
     }
 

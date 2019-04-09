@@ -16,11 +16,9 @@ class Team(val gameState: GameState,
                 val squads: MutableList<Squad> = mutableListOf()) : Serializable {
 
     val color = color.toIntBits()
-    private var nextSquadIndex = 0
 
     fun createSquad(template: ShipType, sector: Sector): Squad {
-        val out = Squad(template, this, nextSquadIndex, sector)
-        nextSquadIndex++
+        val out = Squad(template, this, sector)
         squads.add(out)
         gameState.squads[out.uuid] = out
         out.ships.forEach { gameState.ships[it.uuid] = it }

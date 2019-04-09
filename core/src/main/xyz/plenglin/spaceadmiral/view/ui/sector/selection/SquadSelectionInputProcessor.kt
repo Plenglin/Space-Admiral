@@ -6,14 +6,13 @@ import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.OrthographicCamera
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
-import xyz.plenglin.spaceadmiral.net.game.client.SectorRef
-import xyz.plenglin.spaceadmiral.net.game.client.toRef
 import xyz.plenglin.spaceadmiral.util.unproject2
+import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.renderer.SectorRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 
 class SquadSelectionInputProcessor(
-        val sector: SectorRef,
+        val sector: SectorCM,
         private val ui: GameUI,
         private val gameCamera: OrthographicCamera,
         private val client: GameClient,
@@ -56,16 +55,16 @@ class SquadSelectionInputProcessor(
 
         if (state.dragged) {
             logger.info("Selection was dragged, interpreting as selection box")
-            val selected = state.getSelectedSquads(sector()!!.shipTree!!).map { client.getSquad(it.uuid) }
+            val selected = state.getSelectedSquads(sector.shipTree).map { client.getSquad(it.uuid) }
             ui.selectedSquads.addAll(selected)
         } else {
             val ship = renderer.getShipAtScreenPos(screenX, screenY)
             logger.info("Clicked at {} {}, corresponding to {}", screenX, screenY, ship)
             if (ship != null && ship.team.uuid == client.team) {
-                val squad = ship.parent
+                val squad = ship.squad
                 logger.info("Ship {} selected, corresponding to squad {}", ship, squad)
                 logger.debug("Adding squad")
-                ui.selectedSquads.add(squad.toRef(client))
+                ui.selectedSquads.add(squad)
             } else {
                 logger.info("Clearing selection, no ships selected")
                 ui.selectedSquads.clear()

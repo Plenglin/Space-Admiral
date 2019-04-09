@@ -7,12 +7,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
-import xyz.plenglin.spaceadmiral.net.game.client.SquadRef
-import xyz.plenglin.spaceadmiral.net.game.client.toRef
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.AttackSquadCommand
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClearSquadActionQueueCommand
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.MoveSquadCommand
 import xyz.plenglin.spaceadmiral.util.unproject2
+import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.renderer.SectorRenderer
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 
@@ -27,7 +26,7 @@ class SquadCommandInputProcessor(
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val recipients = ui.selectedSquads
 
-        val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent
+        val target = renderer.getShipAtScreenPos(screenX, screenY)?.squad
 
         when (button) {
             Input.Buttons.RIGHT -> {
@@ -40,7 +39,7 @@ class SquadCommandInputProcessor(
 
                 if (target != null && !target.team.isAlliedWith(ui.client.team)) {
                     logger.info("Creating an attack command for {} to attack {}", recipients, target)
-                    state = Attack(ui.selectedSquads, target.toRef(client))
+                    state = Attack(ui.selectedSquads, target)
                     return true
                 }
 
@@ -88,30 +87,30 @@ class SquadCommandInputProcessor(
 
                 clearActionQueue(recipients)
                 targets.forEach { (squad, end) ->
-                    client.sendCommand(MoveSquadCommand(squad.id, end))
+                    client.sendCommand(MoveSquadCommand(squad.uuid, end))
                 }
                 true
             }
             is Attack -> {
-                val target = renderer.getShipAtScreenPos(screenX, screenY)?.parent?.toRef(client)
+                val target = renderer.getShipAtScreenPos(screenX, screenY)?.squad
                 if (state.target != target) {
                     logger.info("Cancelling {} because we ended on a different target", state)
                     return true
                 }
                 clearActionQueue(recipients)
                 recipients.forEach {
-                    client.sendCommand(AttackSquadCommand(it.id, target.id))
+                    client.sendCommand(AttackSquadCommand(it.uuid, target.uuid))
                 }
                 true
             }
         }
     }
 
-    private fun clearActionQueue(recipients: Set<SquadRef>) {
+    private fun clearActionQueue(recipients: Set<SquadCM>) {
         if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             logger.info("Clearing action queue of {} (shift not held)", recipients)
             recipients.forEach {
-                client.sendCommand(ClearSquadActionQueueCommand(it.id))
+                client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
             }
         } else {
             logger.info("Will not clear action queues of {} (shift held)", recipients)
@@ -133,7 +132,7 @@ class SquadCommandInputProcessor(
                 }
                 logger.info("Received HALT, clearing action queue for {}", ui.selectedSquads)
                 ui.selectedSquads.forEach {
-                    client.sendCommand(ClearSquadActionQueueCommand(it.id))
+                    client.sendCommand(ClearSquadActionQueueCommand(it.uuid))
                 }
                 return true
             }

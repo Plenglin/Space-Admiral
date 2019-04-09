@@ -2,18 +2,18 @@ package xyz.plenglin.spaceadmiral.view.ui.sector.command
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
-import xyz.plenglin.spaceadmiral.net.game.client.SquadRef
 import xyz.plenglin.spaceadmiral.util.Transform2D
+import xyz.plenglin.spaceadmiral.view.model.SquadCM
 
 sealed class CommandState {
     /**
      * The squads that will receive the command.
      */
-    abstract val recipients: Set<SquadRef>
+    abstract val recipients: Set<SquadCM>
 }
 
 data class MoveToTransform(
-        override val recipients: Set<SquadRef>,
+        override val recipients: Set<SquadCM>,
         /**
          * The point in world space where the user began the drag.
          */
@@ -27,13 +27,12 @@ data class MoveToTransform(
          */
         var dragged: Boolean = false) : CommandState() {
 
-    fun generateSimpleTransform(): Map<SquadRef, SquadTransform> {
-        val squadRefs = recipients.sortedBy { it()!!.index }
-        val squadObjects = squadRefs.map { it()!! }
-        val totalWidth: Float by lazy { recipients.map { it.getObject!!.transform.physicalWidth }.sum() }
+    fun generateSimpleTransform(): Map<SquadCM, SquadTransform> {
+        val squadRefs = recipients.sortedBy { it.index }
+        val totalWidth: Float by lazy { recipients.map { it.transform.physicalWidth }.sum() }
 
         val selectionCentroid = Vector2(0f, 0f)
-        squadObjects.forEach { selectionCentroid.add(it.transform.transform.posGlobal) }
+        squadRefs.forEach { selectionCentroid.add(it.transform.transform.posGlobal) }
         selectionCentroid.scl(1f / squadRefs.size)
 
         val displacement = start.cpy().sub(selectionCentroid)
@@ -44,7 +43,7 @@ data class MoveToTransform(
 
         val outTransforms = ArrayList<SquadTransform>(squadRefs.size)
         for (i in squadRefs.indices) {
-            val obj = squadObjects[i]
+            val obj = squadRefs[i]
             val width = obj.transform.physicalWidth
             val center = pos.cpy().mulAdd(step, width / 2f)
 
@@ -57,19 +56,18 @@ data class MoveToTransform(
         return squadRefs.zip(outTransforms).toMap()
     }
 
-    fun generateDraggedTransform(): Map<SquadRef, SquadTransform> {
-        val squads = recipients.sortedBy { it()!!.index }
+    fun generateDraggedTransform(): Map<SquadCM, SquadTransform> {
+        val squads = recipients.sortedBy { it.index }
         val delta = end.cpy().sub(start)
         val perSquadStep = delta.cpy().scl(1f / squads.size)
         val perSquadWidth = perSquadStep.len()
         val facing: Float = delta.angleRad() + Math.PI.toFloat() / 2
 
-        return squads.mapIndexed { index, squadRef ->
-            val squad = squadRef()!!
+        return squads.mapIndexed { index, squad ->
             val template = squad.template
             val widthCount = (perSquadWidth / template.spacing).toInt()
 
-            squadRef to SquadTransform(
+            squad to SquadTransform(
                     Transform2D(start.cpy().mulAdd(perSquadStep, index + 0.5f), facing),
                     widthCount,
                     template.spacing,
@@ -79,4 +77,4 @@ data class MoveToTransform(
     }
 }
 
-data class Attack(override val recipients: Set<SquadRef>, val target: SquadRef) : CommandState()
+data class Attack(override val recipients: Set<SquadCM>, val target: SquadCM) : CommandState()

@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.view.model
 
+import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.util.*
@@ -7,6 +8,7 @@ import java.util.*
 class GameStateCM {
     val squads = hashMapOf<UUID, SquadCM>()
     val sectors = hashMapOf<IntVector2, SectorCM>()
+    val tadar: TadarData = TODO()
 
     fun update(payload: ClientUpdatePayload) {
         val unmentionedSectors = sectors.keys.toHashSet()  // Copy the keys

@@ -6,6 +6,9 @@ import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
+import xyz.plenglin.spaceadmiral.view.model.GameStateCM
+import xyz.plenglin.spaceadmiral.view.model.SectorCM
+import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -17,18 +20,20 @@ class GameClient(server: GameServerInterfaceFactory) {
     private val server: GameServerInterface = server.createServerInterface(this)
     val team: UUID = this.server.team
 
-    var gameState: GameState? = null
+    val gameState: GameStateCM = TODO()
+    //var gameState: GameState? = null
     var tadarData: TadarData? = null
 
-    fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
-    fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
-    fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
-    fun getSquad(uuid: UUID): SquadRef = SquadRef(uuid, this)
-    fun getSector(pos: IntVector2): SectorRef = SectorRef(pos, this)
+    //fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
+    //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
+    //fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
+    fun getSquad(uuid: UUID): SquadCM = TODO()//SquadRef(uuid, this)
+    fun getSector(pos: IntVector2): SectorCM = TODO()//SectorRef(pos, this)
 
     fun onReceivePayload(payload: ClientUpdatePayload) {
-        gameState = SerializationUtils.deserialize(payload.gameStateBytes)
-        tadarData = payload.tadar
+        //gameState = SerializationUtils.deserialize(payload.gameStateBytes)
+        gameState.update(payload)
+        //tadarData = payload.tadar
     }
 
     fun update() {

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
-import xyz.plenglin.spaceadmiral.net.game.client.SectorRef
+import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.renderer.SectorRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleSectorRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SquadCommandInputHighlighter
@@ -17,7 +17,11 @@ import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.sector.command.SquadCommandInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputProcessor
 
-class SectorScreen(private val parent: GridScreen, private val client: GameClient, private val sector: SectorRef) : Screen {
+class SectorScreen(
+        private val parent: GridScreen,
+        private val client: GameClient,
+        private val sector: SectorCM) : Screen {
+
     private val batch: SpriteBatch = SpriteBatch()
 
     private val gameCamera: OrthographicCamera = OrthographicCamera()
@@ -54,16 +58,6 @@ class SectorScreen(private val parent: GridScreen, private val client: GameClien
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-
-        val sector = sector()
-        if (sector == null) {
-            logger.warn("Did not receive a game state from client, not drawing anything!")
-            return
-        }
-        sector.let {
-            logger.debug("Received sector {}", it)
-            it.updateTrees()
-        }
 
         inputCameraPosition.update(delta)
         gameCamera.update()

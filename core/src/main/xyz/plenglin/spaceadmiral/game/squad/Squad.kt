@@ -10,7 +10,7 @@ import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.io.Serializable
 import java.util.*
 
-class Squad(val template: ShipType, var team: Team, var index: Int, var sector: Sector) : Serializable {
+class Squad(val template: ShipType, var team: Team, var sector: Sector) : Serializable {
     val gameState get() = team.gameState
     val isDead: Boolean get() = ships.isEmpty()
 

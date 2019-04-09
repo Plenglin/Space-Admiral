@@ -11,19 +11,21 @@ import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
-import xyz.plenglin.spaceadmiral.net.game.client.SectorRef
 import xyz.plenglin.spaceadmiral.util.rect
+import xyz.plenglin.spaceadmiral.view.model.SectorCM
+import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.sector.command.MoveToTransform
 import xyz.plenglin.spaceadmiral.view.ui.sector.command.SquadCommandInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputProcessor
 
 class SquadCommandInputHighlighter(
-        private val sector: SectorRef,
+        private val sector: SectorCM,
         private val ui: GameUI,
         private val client: GameClient,
         private val selector: SquadSelectionInputProcessor,
         private val input: SquadCommandInputProcessor) : RendererLayer {
+
     private val shape = ShapeRenderer()
     private lateinit var camera: OrthographicCamera
 
@@ -41,7 +43,7 @@ class SquadCommandInputHighlighter(
             shape.color = COLOR_SELECTION
             shape.begin(ShapeRenderer.ShapeType.Filled)
             ui.selectedSquads.forEach { squad ->
-                drawSelectedSquad(squad()!!)
+                drawSelectedSquad(squad)
             }
             shape.end()
         }
@@ -71,7 +73,7 @@ class SquadCommandInputHighlighter(
             shape.color = COLOR_SELECTION
             shape.begin(ShapeRenderer.ShapeType.Filled)
 
-            selectionState.getSelectedSquads(sector()!!.shipTree!!).forEach { squad ->
+            selectionState.getSelectedSquads(sector.shipTree).forEach { squad ->
                 shape.highlightSquad(squad)
             }
 
@@ -89,10 +91,11 @@ class SquadCommandInputHighlighter(
 
     }
 
-    private fun drawSelectedSquad(squad: Squad) {
+    private fun drawSelectedSquad(squad: SquadCM) {
         shape.highlightSquad(squad)
-        val state = (squad.stateScheduler.currentState ?: return) as SquadAction
-        var prev: SquadAction? = null
+        //val state = (squad.stateScheduler.currentState ?: return) as SquadAction
+        TODO()
+        /*var prev: SquadAction? = null
         val actions = squad.actionQueue.toMutableList()
         actions.add(0, state)
 
@@ -109,11 +112,11 @@ class SquadCommandInputHighlighter(
                 }
             }
             prev = action
-        }
+        }*/
     }
 
-    private fun ShapeRenderer.highlightSquad(squad: Squad) {
-        squad.ships.forEach { ship ->
+    private fun ShapeRenderer.highlightSquad(squad: SquadCM) {
+        squad.ships.forEach { _, ship ->
             val pos = ship.transform.posGlobal
             circle(pos.x, pos.y, squad.template.displayScale * 0.4f, 10)
         }
