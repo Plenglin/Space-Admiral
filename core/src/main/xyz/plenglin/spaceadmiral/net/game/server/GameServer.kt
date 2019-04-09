@@ -1,13 +1,15 @@
 package xyz.plenglin.spaceadmiral.net.game.server
 
 import com.badlogic.gdx.graphics.Color
-import org.apache.commons.lang3.SerializationUtils
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.TadarData
+import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.io.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.io.CommandResult
+import xyz.plenglin.spaceadmiral.net.game.io.dto.asDTO
+import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.util.concurrent.BlockingQueue
@@ -51,14 +53,23 @@ class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameIn
         logger.debug("Updating GameInstance")
         instance.update()
 
-        val serializedGameState = SerializationUtils.serialize(instance.gameState)
-        //println(serialized.toList())
-        players.forEach {
-            logger.debug("Sending payload to {}", it)
+        //val serializedGameState = SerializationUtils.asDTO(instance.gameState)
+        //println(asDTO.toList())
+        val serializedSectors = instance.gameState.sectors.map { (k, s) ->
+            k to s.asDTO()
+        }.toMap()
+        val knownSectors = mutableMapOf<Team, HashSet<IntVector2>>()
+        instance.gameState.squads.forEach { _, squad ->
+            knownSectors.getOrPut(squad.team) { HashSet() }.add(squad.sector.pos)
+        }
+
+        players.forEach { player ->
+            logger.debug("Sending payload to {}", player)
             val tadar = TadarData()
             tadar.initializeNoise()
-            val payload = ClientUpdatePayload(serializedGameState, tadar)
-            it.sendPayload(payload)
+            val sentSectors = knownSectors[player.team]?.map { serializedSectors.getValue(it) } ?: listOf()
+            val payload = ClientUpdatePayload(sentSectors, tadar)
+            player.sendPayload(payload)
         }
 
     }

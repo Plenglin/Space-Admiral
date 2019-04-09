@@ -16,7 +16,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
     private var ships = HashMap<UUID, Ship>()
 
     val squads = HashMap<UUID, Squad>()
-    private val projectiles = mutableListOf<Projectile>()
+    val projectiles = HashMap<UUID, Projectile>()
 
     val firingEvents: MutableList<FiringEvent> = mutableListOf()
 
@@ -31,25 +31,19 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
             shipTree = KDTree2()
             this.shipTree = shipTree
         }
-        println("asdf")
         shipTree.clear()
-        println("asdf")
-        ships.forEach { (_, ship) ->
+        ships.forEach { _, ship ->
             shipTree.insert(ship.transform.posGlobal, ship)
         }
-        println("asdf")
 
         var projectileTree = projectileTree
         if (projectileTree == null) {
             projectileTree = KDTree2()
             this.projectileTree = projectileTree
         }
-        projectileTree.apply {
-            projectiles.shuffle()
-            clear()
-            projectiles.forEach {
-                insert(it.pos, it)
-            }
+        projectileTree.clear()
+        projectiles.forEach { _, projectile ->
+            projectileTree.insert(projectile.pos, projectile)
         }
     }
 

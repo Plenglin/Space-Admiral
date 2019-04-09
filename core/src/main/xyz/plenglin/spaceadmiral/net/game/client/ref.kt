@@ -8,6 +8,9 @@ import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.util.*
 
+/**
+ * A client-side view of an object.
+ */
 sealed class Ref<T, U : Comparable<U>>(val id: U, val client: GameClient) : Comparable<Ref<T, U>> {
     operator fun invoke(): T? = getObject
     abstract val getObject: T?
