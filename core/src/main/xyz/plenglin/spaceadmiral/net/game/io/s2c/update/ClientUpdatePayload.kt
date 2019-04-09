@@ -4,6 +4,6 @@ import xyz.plenglin.spaceadmiral.game.TadarData
 import java.io.Serializable
 
 data class ClientUpdatePayload(
-        val sectors: List<SectorDTO>,
+        val sectors: List<SectorUDTO>,
         val tadar: TadarData
 ) : Serializable

@@ -15,56 +15,56 @@ interface ActionDTO {
     val endPos: SquadTransform
 }
 
-data class ProjectileDTO internal constructor(
+data class ProjectileUDTO internal constructor(
         val uuid: UUID,
         val pos: Vector2,
         val velocity: Vector2
 )
 
-data class SectorDTO internal constructor(
+data class SectorUDTO internal constructor(
         val pos: IntVector2,
-        val squads: List<SquadDTO>,
-        val projectiles: List<ProjectileDTO>
+        val squads: List<SquadUDTO>,
+        val projectiles: List<ProjectileUDTO>
 ) : Serializable
 
-data class SquadDTO internal constructor(
+data class SquadUDTO internal constructor(
         val uuid: UUID,
-        val ships: List<ShipDTO>,
+        val ships: List<ShipUDTO>,
         val actions: List<ActionDTO>
 ) : Serializable
 
-data class ShipDTO internal constructor(
+data class ShipUDTO internal constructor(
         val uuid: UUID,
         val transform: Transform2D
-)
+) : Serializable
 
-fun Projectile.asDTO(): ProjectileDTO {
-    return ProjectileDTO(
+fun Projectile.asUpdateDTO(): ProjectileUDTO {
+    return ProjectileUDTO(
             uuid,
             pos,
             velocity
     )
 }
 
-fun Ship.asDTO(): ShipDTO {
-    return ShipDTO(
+fun Ship.asUpdateDTO(): ShipUDTO {
+    return ShipUDTO(
             uuid,
             transform
     )
 }
 
-fun Squad.asDTO(): SquadDTO {
-    return SquadDTO(
+fun Squad.asUpdateDTO(): SquadUDTO {
+    return SquadUDTO(
             uuid,
-            ships.map { it.asDTO() },
+            ships.map { it.asUpdateDTO() },
             actionQueue.map { it.toDTO() }
     )
 }
 
-fun Sector.asDTO(): SectorDTO {
-    return SectorDTO(
+fun Sector.asUpdateDTO(): SectorUDTO {
+    return SectorUDTO(
             pos,
-            squads.map { (_, s) -> s.asDTO() },
-            projectiles.map { (_, p) -> p.asDTO() }
+            squads.map { (_, s) -> s.asUpdateDTO() },
+            projectiles.map { (_, p) -> p.asUpdateDTO() }
     )
 }

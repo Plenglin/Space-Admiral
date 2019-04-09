@@ -6,16 +6,16 @@ import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
-import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.CommandResult
-import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.asDTO
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.asUpdateDTO
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameInstance = GameInstance()) {
+class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameInstance = GameInstance()) {
 
     private val commands: BlockingQueue<Pair<GamePlayerInterface, ClientCommand>> = LinkedBlockingQueue()
     val players: List<GamePlayerInterface>
@@ -54,7 +54,7 @@ class GameServer(players: List<GamePlayerInterfaceFactory>, val instance: GameIn
         instance.update()
 
         val serializedSectors = instance.gameState.sectors.map { (k, s) ->
-            k to s.asDTO()
+            k to s.asUpdateDTO()
         }.toMap()
         val knownSectors = mutableMapOf<Team, HashSet<IntVector2>>()
         instance.gameState.squads.forEach { _, squad ->

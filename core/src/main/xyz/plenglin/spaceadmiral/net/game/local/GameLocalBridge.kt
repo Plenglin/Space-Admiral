@@ -5,6 +5,7 @@ import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterface
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterfaceFactory
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.initial.ClientInitialPayload
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterfaceFactory
@@ -12,8 +13,8 @@ import xyz.plenglin.spaceadmiral.net.game.server.GameServer
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
-class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, GameServerInterfaceFactory {
 
+class GameLocalBridge(override val team: UUID, override val initialPayload: ClientInitialPayload) : GamePlayerInterfaceFactory, GameServerInterfaceFactory {
     private val lock = ReentrantLock()
 
     private var clientSide: ClientSide? = null

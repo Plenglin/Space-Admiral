@@ -4,6 +4,7 @@ import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
+import java.util.*
 
 data class WeaponMountTemplate(
         /**
@@ -29,6 +30,7 @@ data class WeaponMountTemplate(
 }
 
 class WeaponMount internal constructor(template: WeaponMountTemplate, val ship: Ship) : Serializable {
+    val uuid: UUID = UUID.randomUUID()
     val gameState: GameState get() = ship.gameState
     val transform: Transform2D = template.transform.clone().apply {
         this.parent = ship.transform

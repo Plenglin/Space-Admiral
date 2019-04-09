@@ -2,9 +2,11 @@ package xyz.plenglin.spaceadmiral
 
 import com.badlogic.gdx.Game
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.ship.DummyCorvette
 import xyz.plenglin.spaceadmiral.game.ship.DummyFighter
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.initial.toInitialDTO
 import xyz.plenglin.spaceadmiral.net.game.local.GameDummyPlayer
 import xyz.plenglin.spaceadmiral.net.game.local.GameLocalBridge
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
@@ -24,10 +26,13 @@ object SpaceAdmiral : Game() {
 
     override fun create() {
         logger.info("Creating")
-        val localBridge = GameLocalBridge(UUID.randomUUID())
+        val gameInstance = GameInstance()
+        val payload = gameInstance.toInitialDTO()
+
+        val localBridge = GameLocalBridge(UUID.randomUUID(), payload)
         val dummy = GameDummyPlayer(UUID.randomUUID())
 
-        val server = GameServer(listOf(localBridge, dummy))
+        val server = GameServer(localBridge, dummy, instance = gameInstance)
         val screen = GridScreen(GameClient(localBridge))
 
         val instance = server.instance
