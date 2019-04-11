@@ -19,4 +19,7 @@ interface ShipType : Serializable {
     val defaultFormationWidth: Int
 
     val turrets: List<WeaponMountTemplate>
+    val tadarStrength: Float
+    val tadarSignature: Float
+
 }

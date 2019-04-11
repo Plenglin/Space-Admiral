@@ -3,13 +3,14 @@ package xyz.plenglin.spaceadmiral.net.game.server
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.TadarData
+import xyz.plenglin.spaceadmiral.game.TadarData.Companion.VISIBILITY_THRESHOLD
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.CommandResult
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.asUpdateDTO
-import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
 import java.util.concurrent.BlockingQueue
@@ -53,19 +54,45 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         logger.debug("Updating GameInstance")
         instance.update()
 
-        val serializedSectors = instance.gameState.sectors.map { (k, s) ->
-            k to s.asUpdateDTO()
-        }.toMap()
-        val knownSectors = mutableMapOf<Team, HashSet<IntVector2>>()
+        val sectorOccupation = mutableMapOf<Team, HashSet<Sector>>()
         instance.gameState.squads.forEach { _, squad ->
-            knownSectors.getOrPut(squad.team) { HashSet() }.add(squad.sector.pos)
+            sectorOccupation.getOrPut(squad.team) { HashSet() }.add(squad.sector)
         }
 
         players.forEach { player ->
             logger.debug("Sending payload to {}", player)
             val tadar = TadarData()
             tadar.initializeNoise()
-            val sentSectors = knownSectors[player.team]?.map { serializedSectors.getValue(it) } ?: listOf()
+
+            val occupiedSectors = sectorOccupation[player.team] ?: hashSetOf()
+            val signals = instance.gameState.sectors.map { it.value to 0f }.toMap().toMutableMap()
+
+            occupiedSectors.forEach { s1 ->
+                val strength = s1.squads.values
+                        .filter { player.team.isAlliedWith(it.team) }
+                        .map { it.template.tadarStrength }
+                        .sum()
+                signals[s1] = 1f
+
+                (signals.keys - occupiedSectors).forEach { s2 ->
+                    val dist2 = s1.pos.dist2(s2.pos)
+                    val signature = s1.squads.values
+                            .map { it.template.tadarSignature }
+                            .sum()
+                    signals[s2] = signals[s2]!!.plus(strength * signature / dist2)
+                }
+            }
+
+            val knownSectors = mutableSetOf<Sector>()
+
+            signals.forEach { sector, signal ->
+                tadar[sector.pos] += signal
+                if (signal >= VISIBILITY_THRESHOLD) {
+                    knownSectors.add(sector)
+                }
+            }
+
+            val sentSectors = knownSectors.map { it.asUpdateDTO() }
             val payload = ClientUpdatePayload(sentSectors, tadar)
             player.sendPayload(payload)
         }

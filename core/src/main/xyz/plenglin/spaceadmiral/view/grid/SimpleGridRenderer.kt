@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import xyz.plenglin.spaceadmiral.SpaceAdmiral.GRID_SIZE
-import xyz.plenglin.spaceadmiral.game.GameState
-import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.toIntVector2
 import xyz.plenglin.spaceadmiral.util.unproject2
@@ -35,11 +33,11 @@ class SimpleGridRenderer : GridRenderer {
         gridPixmap.blending = Pixmap.Blending.None
         gridPixmap.fill()
         gridPixmap.blending = Pixmap.Blending.SourceOver
+        gs.tadar.drawTadar(gridPixmap)
         gs.sectors.forEach { p, s ->
             gridPixmap.setColor(contested)
             gridPixmap.drawPixel(p.x, GRID_SIZE - p.y - 1)
         }
-        gs.tadar.drawTadar(gridPixmap)
 
         tex.draw(gridPixmap, 0, 0)
 

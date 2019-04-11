@@ -15,6 +15,12 @@ data class IntVector2(var x: Int, var y: Int) : Serializable, Comparable<IntVect
             dx
         }
     }
+
+    fun dist2(o: IntVector2): Int {
+        val dx = x - o.x
+        val dy = y - o.y
+        return dx * dx + dy * dy
+    }
 }
 
 fun Vector2.toIntVector2(): IntVector2 {

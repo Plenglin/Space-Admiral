@@ -11,4 +11,7 @@ object DummyCorvette : ShipType {
     override val speed: Float = 80f
     override val spacing: Float = 1f
     override val defaultFormationWidth: Int = 1
+
+    override val tadarStrength: Float = 0.01f
+    override val tadarSignature: Float = 0.0001f
 }

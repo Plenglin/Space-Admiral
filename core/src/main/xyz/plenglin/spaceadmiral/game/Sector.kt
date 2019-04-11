@@ -65,5 +65,8 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
         }
         squads.remove(squad.uuid)
     }
-    
+
+    override fun hashCode(): Int {
+        return pos.hashCode()
+    }
 }

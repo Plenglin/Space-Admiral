@@ -21,4 +21,7 @@ object DummyFighter : ShipType {
     override val speed: Float = 100f
     override val spacing: Float = 1f
     override val defaultFormationWidth: Int = 9
+
+    override val tadarStrength: Float = 0.001f
+    override val tadarSignature: Float = 0.0001f
 }
