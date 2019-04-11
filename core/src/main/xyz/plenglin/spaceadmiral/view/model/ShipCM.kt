@@ -8,6 +8,7 @@ import java.util.*
 class ShipCM(val uuid: UUID, val squad: SquadCM, val transform: Transform2D) {
     val team: TeamCM get() = squad.team
     val template: ShipType get() = squad.template
+    val turrets = hashMapOf<UUID, TurretCM>()
 
     fun updateWith(dto: ShipUDTO) {
         transform.set(dto.transform)

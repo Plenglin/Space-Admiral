@@ -11,7 +11,6 @@ class GameStateCM {
     val teams = hashMapOf<UUID, TeamCM>()
     val squads = hashMapOf<UUID, SquadCM>()
     val ships = hashMapOf<UUID, ShipCM>()
-    val turrets = hashMapOf<UUID, TurretCM>()
 
     var tadar: TadarData = TadarData()
 
@@ -19,17 +18,22 @@ class GameStateCM {
         val unmentionedSectors = sectors.keys.toHashSet()  // Copy the keys
         tadar = payload.tadar
 
+        squads.values.forEach {
+            it.visible = false
+        }
+
         payload.sectors.forEach { dtoSector ->
             val pos = dtoSector.pos
             unmentionedSectors.remove(pos)
             val sector = sectors.getOrPut(pos) { SectorCM(pos, this) }
+            sector.updateWith(dtoSector)
 
             dtoSector.squads.forEach { dtoSquad ->
                 val squad = squads.getValue(dtoSquad.uuid)
                 squad.updateWith(dtoSquad)
 
                 dtoSquad.ships.forEach { dtoShip ->
-                    val ship = sector.ships.getValue(dtoShip.uuid)
+                    val ship = ships.getValue(dtoShip.uuid)
                     ship.updateWith(dtoShip)
                 }
             }

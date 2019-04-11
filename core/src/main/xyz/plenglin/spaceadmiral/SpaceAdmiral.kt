@@ -27,13 +27,11 @@ object SpaceAdmiral : Game() {
     override fun create() {
         logger.info("Creating")
         val gameInstance = GameInstance()
-        val payload = gameInstance.toInitialDTO()
 
-        val localBridge = GameLocalBridge(UUID.randomUUID(), payload)
+        val localBridge = GameLocalBridge(UUID.randomUUID())
         val dummy = GameDummyPlayer(UUID.randomUUID())
 
         val server = GameServer(localBridge, dummy, instance = gameInstance)
-        val screen = GridScreen(GameClient(localBridge))
 
         val instance = server.instance
         val teams = instance.gameState.teams
@@ -67,7 +65,13 @@ object SpaceAdmiral : Game() {
             resetShipPositions()
         }
 
-        thread(start = true, isDaemon = true) {
+        val initialPayload = gameInstance.toInitialDTO()
+        localBridge.initialPayload = initialPayload
+        logger.debug("{}", initialPayload)
+
+        val localClient = GameClient(localBridge)
+
+        thread(name = "Space Admiral Server", start = true, isDaemon = true) {
             while (true) {
                 val start = System.currentTimeMillis()
                 server.update()
@@ -78,6 +82,7 @@ object SpaceAdmiral : Game() {
             }
         }
 
+        val screen = GridScreen(localClient)
         setScreen(screen)
     }
 

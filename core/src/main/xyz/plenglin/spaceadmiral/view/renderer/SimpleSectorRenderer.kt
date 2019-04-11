@@ -68,7 +68,7 @@ class SimpleSectorRenderer : SectorRenderer {
         gs.firingEvents.forEach {
             if (it is HitscanFiringEvent) {
                 val target = gs.ships[it.target]!!
-                val turret = gs.gameState.turrets[it.mount]!!
+                val turret = gs.turrets[it.mount]!!
                 lasers.add(Laser(turret.transform.posGlobal.cpy(), target.transform.posGlobal.cpy()))
             }
         }

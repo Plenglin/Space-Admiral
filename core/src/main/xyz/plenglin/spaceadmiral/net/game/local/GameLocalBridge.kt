@@ -14,7 +14,8 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 
-class GameLocalBridge(override val team: UUID, override val initialPayload: ClientInitialPayload) : GamePlayerInterfaceFactory, GameServerInterfaceFactory {
+class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, GameServerInterfaceFactory {
+    override lateinit var initialPayload: ClientInitialPayload
     private val lock = ReentrantLock()
 
     private var clientSide: ClientSide? = null

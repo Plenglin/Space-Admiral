@@ -8,11 +8,13 @@ import kotlin.collections.HashMap
 
 class SquadCM(val uuid: UUID, val team: TeamCM, val template: ShipType, val transform: SquadTransform) {
 
-    val ships: HashMap<UUID, ShipCM> = HashMap()
+    var sector: SectorCM? = null
+    val ships: MutableMap<UUID, ShipCM> = HashMap()
     var index: Int = 0
+    var visible = false
 
     fun updateWith(dto: SquadUDTO) {
-
+        visible = true
     }
 
 }

@@ -65,6 +65,7 @@ class SectorScreen(
     override fun render(delta: Float) {
         logger.debug("SectorScreen performing a render, FPS = {}", 1 / delta)
 
+        sector.updateTreesIfNecessary()
         client.update()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)

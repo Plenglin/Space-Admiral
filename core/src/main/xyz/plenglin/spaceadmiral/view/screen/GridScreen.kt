@@ -36,7 +36,7 @@ class GridScreen(private val client: GameClient) : Screen {
         logger.info("showing GridScreen")
 
         lastSectorScreen?.let {
-            logger.info("Disposing child $it")
+            logger.info("Disposing child {}", it)
             it.dispose()
         }
 

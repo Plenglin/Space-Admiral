@@ -5,27 +5,32 @@ import xyz.plenglin.spaceadmiral.net.game.io.s2c.initial.ClientInitialPayload
 
 
 fun ClientInitialPayload.toClientModel(): GameStateCM {
-    val out = GameStateCM()
+    val cmGameState = GameStateCM()
     val gs = gameState
 
     gs.sectors.forEach { pos, sector ->
-        out.sectors[pos] = SectorCM(pos, out)
+        cmGameState.sectors[pos] = SectorCM(pos, cmGameState)
     }
 
     gs.teams.forEach { uuid, gsTeam ->
         val color = Color()
         Color.argb8888ToColor(color, gsTeam.color)
-        val cmTeam = TeamCM(uuid, out, color)
-        out.teams[uuid] = cmTeam
+        val cmTeam = TeamCM(uuid, cmGameState, color)
+        cmGameState.teams[uuid] = cmTeam
 
         for (gsSquad in gsTeam.squads) {
+            val cmSquadParentSector = cmGameState.sectors.getValue(gsSquad.sector.pos)
             val cmSquad = SquadCM(
                     gsSquad.uuid,
                     cmTeam,
                     gsSquad.template,
                     gsSquad.transform
             )
-            out.squads[gsSquad.uuid] = cmSquad
+
+            cmSquad.sector = cmSquadParentSector
+
+            cmGameState.squads[cmSquad.uuid] = cmSquad
+            cmSquadParentSector.squads[cmSquad.uuid] = cmSquad
 
             for (gsShip in gsSquad.ships) {
                 val cmShip = ShipCM(
@@ -33,7 +38,8 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
                         cmSquad,
                         gsShip.transform.toGlobal()
                 )
-                out.ships[gsShip.uuid] = cmShip
+                cmGameState.ships[cmShip.uuid] = cmShip
+                cmSquadParentSector.ships[cmShip.uuid] = cmShip
 
                 for (gsTurret in gsShip.turrets) {
                     val cmTurret = TurretCM(
@@ -41,11 +47,13 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
                             cmShip,
                             gsShip.transform.clone().apply { parent = cmShip.transform }
                     )
-                    out.turrets[gsTurret.uuid] = cmTurret
+                    cmSquadParentSector.turrets[cmTurret.uuid] = cmTurret
+                    cmShip.turrets[gsTurret.uuid] = cmTurret
+                    //cmGameState.turrets[gsTurret.uuid] = cmTurret
                 }
             }
         }
     }
 
-    return out
+    return cmGameState
 }

@@ -21,6 +21,7 @@ class Team(val gameState: GameState,
         val out = Squad(template, this, sector)
         squads.add(out)
         gameState.squads[out.uuid] = out
+        sector.squads[out.uuid] = out
         out.ships.forEach { gameState.ships[it.uuid] = it }
         return out
     }

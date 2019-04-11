@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.game.client
 
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
@@ -28,6 +29,7 @@ class GameClient(server: GameServerInterfaceFactory) {
 
     @Synchronized
     fun onReceivePayload(payload: ClientUpdatePayload) {
+        //logger.debug("Received update payload: {}", payload)
         gameState.update(payload)
     }
 
@@ -37,6 +39,11 @@ class GameClient(server: GameServerInterfaceFactory) {
 
     fun sendCommand(cmd: ClientCommand) {
         server.queueCommandToServer(cmd)
+    }
+
+    private companion object {
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(GameClient::class.java)
     }
 }
 
