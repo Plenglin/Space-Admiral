@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.renderer.SectorRenderer
@@ -14,6 +15,7 @@ import xyz.plenglin.spaceadmiral.view.renderer.SimpleSectorRenderer
 import xyz.plenglin.spaceadmiral.view.renderer.SquadCommandInputHighlighter
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
+import xyz.plenglin.spaceadmiral.view.ui.sector.ReturnFromSectorInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.sector.command.SquadCommandInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputProcessor
 
@@ -34,7 +36,14 @@ class SectorScreen(
     private val inputCameraPosition: SmoothCameraInputProcessor = SmoothCameraInputProcessor(gameCamera)
     private val inputSquadCommand = SquadCommandInputProcessor(ui, client, gameCamera, gameRenderer)
     private val inputSquadSelect = SquadSelectionInputProcessor(sector, ui, gameCamera, client, gameRenderer)
-    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSquadCommand, inputSquadSelect)
+    private val inputReturnFromSector = ReturnFromSectorInputProcessor(this)
+    private val inputMultiplexer = InputMultiplexer(
+            ui.stage,
+            inputCameraPosition,
+            inputSquadCommand,
+            inputSquadSelect,
+            inputReturnFromSector
+    )
 
     private val squadCommandHighlighter = SquadCommandInputHighlighter(sector, ui, client, inputSquadSelect, inputSquadCommand)
 
@@ -49,6 +58,8 @@ class SectorScreen(
 
         gameRenderer.initialize(gameCamera, uiCamera)
         squadCommandHighlighter.initialize(gameCamera, uiCamera)
+
+        Gdx.input.inputProcessor = inputMultiplexer
     }
 
     override fun render(delta: Float) {
@@ -67,14 +78,19 @@ class SectorScreen(
         ui.render(delta)
     }
 
+    override fun resume() {
+        logger.info("Resuming")
+        Gdx.input.inputProcessor = inputMultiplexer
+    }
+
     override fun pause() {
         logger.info("Pausing")
         Gdx.input.inputProcessor = null
     }
 
-    override fun resume() {
-        logger.info("Resuming")
-        Gdx.input.inputProcessor = inputMultiplexer
+    override fun hide() {
+        logger.info("Hiding")
+        Gdx.input.inputProcessor = null
     }
 
     override fun resize(width: Int, height: Int) {
@@ -88,16 +104,14 @@ class SectorScreen(
         ui.resize(width, height)
     }
 
-    override fun hide() {
-        logger.info("Hiding")
-        Gdx.input.inputProcessor = null
-    }
-
     override fun dispose() {
         logger.info("Disposing")
         batch.dispose()
         ui.dispose()
-        Gdx.input.inputProcessor = null
+    }
+
+    fun returnToParent() {
+        SpaceAdmiral.screen = parent
     }
 
     companion object {

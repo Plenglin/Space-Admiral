@@ -1,11 +1,9 @@
 package xyz.plenglin.spaceadmiral.view.ui.grid
 
 import com.badlogic.gdx.InputProcessor
-import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.view.grid.GridRenderer
 import xyz.plenglin.spaceadmiral.view.screen.GridScreen
-import xyz.plenglin.spaceadmiral.view.screen.SectorScreen
 
 class SectorSelectionInputProcessor(
         private val parent: GridScreen,
@@ -15,7 +13,7 @@ class SectorSelectionInputProcessor(
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val pos = renderer.getSectorAtScreenPos(screenX, screenY) ?: return false
         val sector = client.getSector(pos)
-        SpaceAdmiral.screen = SectorScreen(parent, client, sector)
+        parent.openSector(sector)
         return true
     }
 
