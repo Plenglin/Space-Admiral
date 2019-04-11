@@ -1,12 +1,14 @@
-package xyz.plenglin.spaceadmiral.game.squad
+package xyz.plenglin.spaceadmiral.game.action
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
-import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ActionDTO
+import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
+import xyz.plenglin.spaceadmiral.view.model.GameStateCM
 import java.util.*
 
 class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(squad) {
@@ -91,7 +93,14 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
         return DTO(target)
     }
 
-    data class DTO(override val endPos: SquadTransform) : ActionDTO
+    private data class DTO(val target: SquadTransform) : ActionDTO, ActionCM {
+        override val endPos: SquadTransform get() = target
+        override val eta: ETA get() = Definite(10f)
+
+        override fun deserialize(gs: GameStateCM): ActionCM {
+            return this
+        }
+    }
 
     private companion object {
         @JvmStatic

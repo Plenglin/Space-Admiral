@@ -1,7 +1,9 @@
-package xyz.plenglin.spaceadmiral.game.squad
+package xyz.plenglin.spaceadmiral.game.action
 
-import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ActionDTO
+import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.util.State
+import xyz.plenglin.spaceadmiral.view.model.GameStateCM
 import java.io.Serializable
 
 
@@ -21,4 +23,13 @@ abstract class SquadAction(val squad: Squad) : Serializable, State {
     }
 
     abstract fun toDTO(): ActionDTO
+}
+
+interface ActionDTO : Serializable {
+    fun deserialize(gs: GameStateCM): ActionCM
+}
+
+interface ActionCM {
+    val endPos: SquadTransform
+    val eta: ETA
 }

@@ -1,8 +1,8 @@
 package xyz.plenglin.spaceadmiral.game.ship.action
 
+import xyz.plenglin.spaceadmiral.game.action.AttackSquadAction
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
-import xyz.plenglin.spaceadmiral.game.squad.AttackSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler

@@ -1,9 +1,8 @@
 package xyz.plenglin.spaceadmiral.game.ship
 
 import com.badlogic.gdx.math.Vector2
-import xyz.plenglin.spaceadmiral.game.Sector
+import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
-import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import xyz.plenglin.spaceadmiral.util.Transform2D

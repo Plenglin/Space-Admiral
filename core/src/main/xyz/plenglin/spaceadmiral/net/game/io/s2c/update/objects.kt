@@ -3,11 +3,11 @@ package xyz.plenglin.spaceadmiral.net.game.io.s2c.update
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.TadarData
+import xyz.plenglin.spaceadmiral.game.action.ActionDTO
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
-import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
@@ -18,10 +18,6 @@ data class ClientUpdatePayload(
         val sectors: List<SectorUDTO>,
         val tadar: TadarData
 ) : Serializable
-
-interface ActionDTO : Serializable {
-    val endPos: SquadTransform
-}
 
 data class ProjectileUDTO internal constructor(
         val uuid: UUID,

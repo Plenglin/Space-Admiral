@@ -6,10 +6,6 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.squad.AttackSquadAction
-import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
-import xyz.plenglin.spaceadmiral.game.squad.Squad
-import xyz.plenglin.spaceadmiral.game.squad.SquadAction
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.util.rect
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
@@ -94,7 +90,6 @@ class SquadCommandInputHighlighter(
     private fun drawSelectedSquad(squad: SquadCM) {
         shape.highlightSquad(squad)
         //val state = (squad.stateScheduler.currentState ?: return) as SquadAction
-        TODO()
         /*var prev: SquadAction? = null
         val actions = squad.actionQueue.toMutableList()
         actions.add(0, state)

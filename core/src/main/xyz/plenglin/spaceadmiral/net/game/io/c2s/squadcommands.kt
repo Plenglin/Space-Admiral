@@ -1,8 +1,8 @@
 package xyz.plenglin.spaceadmiral.net.game.io.c2s
 
 import xyz.plenglin.spaceadmiral.game.GameInstance
-import xyz.plenglin.spaceadmiral.game.squad.AttackSquadAction
-import xyz.plenglin.spaceadmiral.game.squad.MoveSquadAction
+import xyz.plenglin.spaceadmiral.game.action.AttackSquadAction
+import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import java.util.*
