@@ -11,8 +11,8 @@ import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.renderer.SectorRenderer
+import xyz.plenglin.spaceadmiral.view.renderer.SelectedSquadHighlighter
 import xyz.plenglin.spaceadmiral.view.renderer.SimpleSectorRenderer
-import xyz.plenglin.spaceadmiral.view.renderer.SquadCommandInputHighlighter
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.sector.ReturnFromSectorInputProcessor
@@ -26,7 +26,9 @@ class SectorScreen(
 
     private val batch: SpriteBatch = SpriteBatch()
 
-    private val gameCamera: OrthographicCamera = OrthographicCamera()
+    private val gameCamera: OrthographicCamera = OrthographicCamera().apply {
+        zoom = .1f
+    }
     private val uiCamera: OrthographicCamera = OrthographicCamera()
 
     private val gameRenderer: SectorRenderer = SimpleSectorRenderer()
@@ -45,7 +47,7 @@ class SectorScreen(
             inputReturnFromSector
     )
 
-    private val squadCommandHighlighter = SquadCommandInputHighlighter(sector, ui, inputSquadSelect, inputSquadCommand)
+    private val squadCommandHighlighter = SelectedSquadHighlighter(sector, ui, inputSquadSelect, inputSquadCommand)
 
     init {
         logger.info("Initializing SectorScreen")
@@ -70,7 +72,7 @@ class SectorScreen(
                 ship.updateDisplayTransform(delta)
             }
         }
-        sector.updateTreesIfNecessary()
+        sector.updateTrees()
         client.update()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)

@@ -18,7 +18,7 @@ import xyz.plenglin.spaceadmiral.view.ui.sector.command.SquadCommandInputProcess
 import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputProcessor
 import java.util.*
 
-class SquadCommandInputHighlighter(
+class SelectedSquadHighlighter(
         private val sector: SectorCM,
         private val ui: GameUI,
         private val selector: SquadSelectionInputProcessor,
@@ -139,6 +139,6 @@ class SquadCommandInputHighlighter(
         @JvmStatic
         private val COLOR_MOVE = Color(0f, 1f, 1f, 0.4f)
         @JvmStatic
-        private val logger = LoggerFactory.getLogger(SquadCommandInputHighlighter::class.java)
+        private val logger = LoggerFactory.getLogger(SelectedSquadHighlighter::class.java)
     }
 }

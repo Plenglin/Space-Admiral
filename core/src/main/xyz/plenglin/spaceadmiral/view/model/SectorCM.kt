@@ -17,28 +17,17 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
     val projectileTree = KDTree2<ProjectileCM>()
     val firingEvents = mutableListOf<FiringEvent>()
 
-    private var treesDirty = true
-
     fun updateWith(dto: SectorUDTO) {
-        treesDirty = true
+
     }
 
     fun updateTrees() {
-        logger.debug("Updating trees.")
+        logger.debug("Updating trees of {}", this)
         shipTree.clear()
-        ships.values.toMutableList().let { ships ->
-            logger.debug("Adding ships: {}", ships)
-            ships.shuffle()
-            ships.forEach {
-                shipTree.insert(it.transform.posGlobal, it)
-            }
-        }
-        treesDirty = false
-    }
-
-    fun updateTreesIfNecessary() {
-        if (treesDirty) {
-            updateTrees()
+        val ships = ships.values.toMutableList()//.let { ships ->
+        ships.shuffle()
+        ships.forEach {
+            shipTree.insert(it.transform.posGlobal, it)
         }
     }
 

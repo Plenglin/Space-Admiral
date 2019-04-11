@@ -13,4 +13,8 @@ class TeamCM(val uuid: UUID, val gameState: GameStateCM, val color: Color) {
     fun isAlliedWith(other: TeamCM): Boolean {
         return isAlliedWith(other.uuid)
     }
+
+    fun controls(squad: SquadCM): Boolean {
+        return squad.team == this
+    }
 }

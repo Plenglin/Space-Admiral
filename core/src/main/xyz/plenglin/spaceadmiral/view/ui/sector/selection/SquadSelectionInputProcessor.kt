@@ -32,7 +32,7 @@ class SquadSelectionInputProcessor(
             logger.info("Control was held, will not clear selection")
         }
 
-        state = SelectionState(ui.client.team, gameCamera.unproject2(screenX.toFloat(), screenY.toFloat()))
+        state = SelectionState(client.team, gameCamera.unproject2(screenX.toFloat(), screenY.toFloat()))
         return true
     }
 
@@ -61,7 +61,7 @@ class SquadSelectionInputProcessor(
         } else {
             val ship = renderer.getShipAtScreenPos(screenX, screenY)
             logger.info("Clicked at {} {}, corresponding to {}", screenX, screenY, ship)
-            if (ship != null && ship.team.uuid == client.team) {
+            if (ship != null && client.team.isAlliedWith(ship.team)) {
                 val squad = ship.squad
                 logger.info("Ship {} selected, corresponding to squad {}", ship, squad)
                 logger.debug("Adding squad")

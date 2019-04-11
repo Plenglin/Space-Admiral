@@ -4,10 +4,7 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
-import xyz.plenglin.spaceadmiral.view.model.GameStateCM
-import xyz.plenglin.spaceadmiral.view.model.SectorCM
-import xyz.plenglin.spaceadmiral.view.model.SquadCM
-import xyz.plenglin.spaceadmiral.view.model.toClientModel
+import xyz.plenglin.spaceadmiral.view.model.*
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
@@ -17,9 +14,9 @@ import java.util.concurrent.locks.ReentrantLock
 class GameClient(server: GameServerInterfaceFactory) {
     private val gsLock = ReentrantLock(true)
     private val server: GameServerInterface = server.createServerInterface(this)
-    val team: UUID = this.server.team
-
     val gameState: GameStateCM = server.initialPayload.toClientModel()
+
+    val team: TeamCM = gameState.teams[this.server.team]!!
 
     //fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
     //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
