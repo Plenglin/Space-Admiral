@@ -45,7 +45,7 @@ class SectorScreen(
             inputReturnFromSector
     )
 
-    private val squadCommandHighlighter = SquadCommandInputHighlighter(sector, ui, client, inputSquadSelect, inputSquadCommand)
+    private val squadCommandHighlighter = SquadCommandInputHighlighter(sector, ui, inputSquadSelect, inputSquadCommand)
 
     init {
         logger.info("Initializing SectorScreen")

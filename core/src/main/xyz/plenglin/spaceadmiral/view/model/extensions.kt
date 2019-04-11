@@ -38,6 +38,7 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
                         cmSquad,
                         gsShip.transform.toGlobal()
                 )
+                cmSquad.ships[cmShip.uuid] = cmShip
                 cmGameState.ships[cmShip.uuid] = cmShip
                 cmSquadParentSector.ships[cmShip.uuid] = cmShip
 

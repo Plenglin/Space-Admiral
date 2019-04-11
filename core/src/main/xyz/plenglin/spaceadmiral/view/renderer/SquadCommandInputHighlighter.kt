@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.action.ActionCM
 import xyz.plenglin.spaceadmiral.game.action.AttackSquadAction
 import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
-import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.util.rect
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.model.SquadCM
@@ -22,7 +21,6 @@ import java.util.*
 class SquadCommandInputHighlighter(
         private val sector: SectorCM,
         private val ui: GameUI,
-        private val client: GameClient,
         private val selector: SquadSelectionInputProcessor,
         private val input: SquadCommandInputProcessor) : RendererLayer {
 
