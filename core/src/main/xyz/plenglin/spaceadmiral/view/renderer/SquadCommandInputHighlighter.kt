@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.action.ActionCM
+import xyz.plenglin.spaceadmiral.game.action.AttackSquadAction
+import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.util.rect
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
@@ -14,6 +17,7 @@ import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.sector.command.MoveToTransform
 import xyz.plenglin.spaceadmiral.view.ui.sector.command.SquadCommandInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputProcessor
+import java.util.*
 
 class SquadCommandInputHighlighter(
         private val sector: SectorCM,
@@ -89,25 +93,28 @@ class SquadCommandInputHighlighter(
 
     private fun drawSelectedSquad(squad: SquadCM) {
         shape.highlightSquad(squad)
-        //val state = (squad.stateScheduler.currentState ?: return) as SquadAction
-        /*var prev: SquadAction? = null
-        val actions = squad.actionQueue.toMutableList()
+
+        if (squad.actions.isEmpty()) return
+
+        val actions = LinkedList(squad.actions)
+        val state = actions.pop()
+        var prev: ActionCM? = null
         actions.add(0, state)
 
-        for (action in actions) {
-            val start = prev?.expectedEndPos ?: squad.centerOfMass
+        while (actions.isNotEmpty()) {
+            val action = actions.pop()
+            val start = prev?.endPos?.transform?.posGlobal ?: squad.centerOfMass
             when (action) {
-                is MoveSquadAction -> {
+                is MoveSquadAction.CM -> {
                     shape.color = COLOR_MOVE
-                    shape.line(start, action.expectedEndPos)
                 }
-                is AttackSquadAction -> {
+                is AttackSquadAction.CM -> {
                     shape.color = COLOR_ATTACK
-                    shape.line(start, action.expectedEndPos)
                 }
             }
+            shape.line(start, action.endPos.transform.posGlobal)
             prev = action
-        }*/
+        }
     }
 
     private fun ShapeRenderer.highlightSquad(squad: SquadCM) {

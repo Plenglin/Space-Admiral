@@ -90,10 +90,10 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
     }
 
     override fun toDTO(): ActionDTO {
-        return DTO(target)
+        return CM(target)
     }
 
-    private data class DTO(val target: SquadTransform) : ActionDTO, ActionCM {
+    data class CM(val target: SquadTransform) : ActionDTO, ActionCM {
         override val endPos: SquadTransform get() = target
         override val eta: ETA get() = Definite(10f)
 

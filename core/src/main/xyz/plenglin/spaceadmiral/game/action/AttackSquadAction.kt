@@ -44,7 +44,7 @@ class AttackSquadAction(squad: Squad, val target: Squad) : SquadAction(squad) {
         }
     }
 
-    private data class CM(val target: SquadCM) : ActionCM {
+    data class CM(val target: SquadCM) : ActionCM {
         override val endPos: SquadTransform get() = target.transform
         override val eta: ETA get() = Indefinite
     }

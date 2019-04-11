@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.view.model
 
+import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.action.ActionCM
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
@@ -17,6 +18,13 @@ class SquadCM(val uuid: UUID, val team: TeamCM, val template: ShipType, val tran
     val actions = mutableListOf<ActionCM>()
 
     val gameState: GameStateCM get() = team.gameState
+    val centerOfMass: Vector2 get() {
+        val out = Vector2(0f, 0f)
+        ships.forEach { _, ship ->
+            out.add(ship.transform.posGlobal)
+        }
+        return out.scl(1f / ships.size)
+    }
 
     fun updateWith(dto: SquadUDTO) {
         visible = true

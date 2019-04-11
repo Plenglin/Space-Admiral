@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.action.ActionDTO
+import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
@@ -59,10 +60,13 @@ fun Ship.asUpdateDTO(): ShipUDTO {
 }
 
 fun Squad.asUpdateDTO(): SquadUDTO {
+    val actions = mutableListOf<ActionDTO>()
+    stateScheduler.currentState?.let { actions.add((it as SquadAction).toDTO()) }
+    actionQueue.forEach { actions.add(it.toDTO()) }
     return SquadUDTO(
             uuid,
             ships.map { it.asUpdateDTO() },
-            actionQueue.map { it.toDTO() }
+            actions
     )
 }
 
