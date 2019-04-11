@@ -14,6 +14,8 @@ class GameStateCM {
 
     var tadar: TadarData = TadarData()
 
+    var lastUpdateTime: Long = 0L
+
     fun update(payload: ClientUpdatePayload) {
         val unmentionedSectors = sectors.keys.toHashSet()  // Copy the keys
         tadar = payload.tadar
@@ -39,6 +41,7 @@ class GameStateCM {
             }
         }
 
+        lastUpdateTime = System.currentTimeMillis()
         // Prune sectors
         //sectors.values.removeAll {  }
     }

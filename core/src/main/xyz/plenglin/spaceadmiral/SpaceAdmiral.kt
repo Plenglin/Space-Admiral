@@ -22,7 +22,7 @@ object SpaceAdmiral : Game() {
 
     const val PORT = 42069
     const val UPDATE_PERIOD = 50L
-    const val DELTA_TIME = 0.001f / UPDATE_PERIOD
+    const val DELTA_TIME = UPDATE_PERIOD / 1000f
     const val GRID_SIZE = 21
 
     override fun create() {

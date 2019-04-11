@@ -8,7 +8,7 @@ object DummyCorvette : ShipType {
     override val turrets: List<WeaponMountTemplate> = listOf()
     override val health: Health = Health(100, 100, 100)
     override val squadSize: Int = 1
-    override val speed: Float = 0.2f
+    override val speed: Float = 80f
     override val spacing: Float = 1f
     override val defaultFormationWidth: Int = 1
 }

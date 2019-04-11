@@ -65,6 +65,9 @@ class SectorScreen(
     override fun render(delta: Float) {
         logger.debug("SectorScreen performing a render, FPS = {}", 1 / delta)
 
+        sector.ships.forEach { _, ship ->
+            ship.updateDisplayTransform(delta)
+        }
         sector.updateTreesIfNecessary()
         client.update()
 

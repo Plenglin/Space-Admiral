@@ -196,3 +196,30 @@ fun lerp(x: Float, v0: Vector2, v1: Vector2): Vector2 {
 fun lerp(x: Float, v0: Vector3, v1: Vector3): Vector3 {
     return (v1.cpy().sub(v0)).scl(x).add(v0)
 }
+
+fun splineInterp(t: Float, x0: Float, v0: Float, x1: Float, v1: Float): Float {
+    val t2 = t * t
+    val t3 = t2 * t
+    
+    val h00 = 2 * t3 - 3 * t2 + 1
+    val h10 = t3 - 2 * t2 + t
+    val h01 = -2 * t3 + 3 * t2
+    val h11 = t3 - t2
+    
+    return h00 * x0 + h10 * v0 + h01 * x1 + h11 * v1
+}
+
+fun splineInterp(t: Float, x0: Vector2, v0: Vector2, x1: Vector2, v1: Vector2): Vector2 {
+    val t2 = t * t
+    val t3 = t2 * t
+
+    val h00 = 2 * t3 - 3 * t2 + 1
+    val h10 = t3 - 2 * t2 + t
+    val h01 = -2 * t3 + 3 * t2
+    val h11 = t3 - t2
+
+    return Vector2(h00 * x0.x, h00 * x0.y)
+            .mulAdd(v0, h10)
+            .mulAdd(x1, h01)
+            .mulAdd(v1, h11)
+}

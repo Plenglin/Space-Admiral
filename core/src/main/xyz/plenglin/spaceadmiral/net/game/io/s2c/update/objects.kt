@@ -26,24 +26,6 @@ data class ProjectileUDTO internal constructor(
         val velocity: Vector2
 ) : Serializable
 
-data class SectorUDTO internal constructor(
-        val pos: IntVector2,
-        val squads: List<SquadUDTO>,
-        val projectiles: List<ProjectileUDTO>,
-        val firingEvents: List<FiringEvent>
-) : Serializable
-
-data class SquadUDTO internal constructor(
-        val uuid: UUID,
-        val ships: List<ShipUDTO>,
-        val actions: List<ActionDTO>
-) : Serializable
-
-data class ShipUDTO internal constructor(
-        val uuid: UUID,
-        val transform: Transform2D
-) : Serializable
-
 fun Projectile.asUpdateDTO(): ProjectileUDTO {
     return ProjectileUDTO(
             uuid,
@@ -52,12 +34,27 @@ fun Projectile.asUpdateDTO(): ProjectileUDTO {
     )
 }
 
-fun Ship.asUpdateDTO(): ShipUDTO {
-    return ShipUDTO(
-            uuid,
-            transform
+data class SectorUDTO internal constructor(
+        val pos: IntVector2,
+        val squads: List<SquadUDTO>,
+        val projectiles: List<ProjectileUDTO>,
+        val firingEvents: List<FiringEvent>
+) : Serializable
+
+fun Sector.asUpdateDTO(): SectorUDTO {
+    return SectorUDTO(
+            pos,
+            squads.map { (_, s) -> s.asUpdateDTO() },
+            projectiles.map { (_, p) -> p.asUpdateDTO() },
+            firingEvents
     )
 }
+
+data class SquadUDTO internal constructor(
+        val uuid: UUID,
+        val ships: List<ShipUDTO>,
+        val actions: List<ActionDTO>
+) : Serializable
 
 fun Squad.asUpdateDTO(): SquadUDTO {
     val actions = mutableListOf<ActionDTO>()
@@ -70,11 +67,16 @@ fun Squad.asUpdateDTO(): SquadUDTO {
     )
 }
 
-fun Sector.asUpdateDTO(): SectorUDTO {
-    return SectorUDTO(
-            pos,
-            squads.map { (_, s) -> s.asUpdateDTO() },
-            projectiles.map { (_, p) -> p.asUpdateDTO() },
-            firingEvents
+data class ShipUDTO internal constructor(
+        val uuid: UUID,
+        val transform: Transform2D,
+        val velocity: Vector2
+) : Serializable
+
+fun Ship.asUpdateDTO(): ShipUDTO {
+    return ShipUDTO(
+            uuid,
+            transform,
+            velocity
     )
 }

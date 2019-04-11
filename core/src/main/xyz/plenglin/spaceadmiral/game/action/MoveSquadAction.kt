@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.game.action
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SpaceAdmiral.DELTA_TIME
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
@@ -47,8 +48,8 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
         }
     }
 
-    private val speed = squad.template.speed
-    private val epsilon2 = squad.template.speed * squad.template.speed
+    private val step = squad.template.speed * DELTA_TIME
+    private val epsilon2 = step * step
 
     inner class MoveShipAction(ship: Ship) : ShipAction(this@MoveSquadAction, ship) {
         private var error = Vector2(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
@@ -60,7 +61,7 @@ class MoveSquadAction(squad: Squad, val target: SquadTransform) : SquadAction(sq
 
         override fun update() {
             error = target.posGlobal.cpy().sub(ship.transform.posGlobal)
-            val delta = error.cpy().setLength(speed)
+            val delta = error.cpy().setLength(ship.template.speed)
             ship.velocity.set(delta)
             logger.trace("Moving {} at {} to {} (error={})", ship, ship.transform.posGlobal, target.posGlobal, error.len())
         }
