@@ -1,34 +1,34 @@
 
 atlas.png
-size: 256,128
+size: 128,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 icon-corvette
   rotate: false
-  xy: 2, 2
+  xy: 2, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 icon-fighter
   rotate: false
-  xy: 134, 68
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-squad-card-selected
+squad-card
   rotate: false
-  xy: 2, 36
-  size: 64, 64
-  orig: 64, 64
+  xy: 2, 200
+  size: 96, 128
+  orig: 96, 128
   offset: 0, 0
   index: -1
-squad-card-unselected
+squad-card-selection-halo
   rotate: false
-  xy: 68, 36
-  size: 64, 64
-  orig: 64, 64
+  xy: 2, 70
+  size: 96, 128
+  orig: 96, 128
   offset: 0, 0
   index: -1

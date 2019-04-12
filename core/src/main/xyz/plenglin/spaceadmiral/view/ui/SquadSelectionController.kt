@@ -16,24 +16,10 @@ class SquadSelectionController(val ui: GameUI) {
 
     val squadListTable = table {
         ui.client.team.squads.forEachIndexed { i, squad ->
-            /*val button = button(style = "toggle") {
-                label(squad.template.displayName)
-                addListener(object : ClickListener() {
-                    override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                        if (ui.selectedSquads.contains(squad)) {
-                            ui.selectedSquads.remove(squad)
-                        } else {
-                            ui.selectedSquads.add(squad)
-                        }
-                    }
-                })
-            }
-            squadVMs[squad] = SquadButtonVM(squad, button)*/
             val card = SquadCard(this@SquadSelectionController, i, squad, skin)
-            this@table.add(card)
+            this@table.add(card).pad(5f)
             squadVMs[squad] = SquadButtonVM(squad, card)
             cards.add(card)
-            row()
         }
     }
 
@@ -61,7 +47,7 @@ class SquadSelectionController(val ui: GameUI) {
 
     fun onSquadSelectionChange() {
         squadVMs.forEach { _, vm ->
-            //vm.card.isChecked = ui.selectedSquads.contains(vm.squad)
+            vm.card.onSelectionChanged()
         }
         if (ui.selectedSquads.isEmpty()) {
             lastClickedIndex = 0
