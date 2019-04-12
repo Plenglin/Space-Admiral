@@ -1,8 +1,7 @@
 package xyz.plenglin.spaceadmiral
 
 import com.badlogic.gdx.Game
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.assets.AssetManager
 import ktx.scene2d.Scene2DSkin
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
@@ -23,15 +22,25 @@ object SpaceAdmiral : Game() {
     @JvmStatic
     val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
 
+    lateinit var assets: AssetManager
+
     const val PORT = 42069
     const val UPDATE_PERIOD = 50L
     const val DELTA_TIME = UPDATE_PERIOD / 1000f
     const val GRID_SIZE = 21
 
     override fun create() {
-        Scene2DSkin.defaultSkin = Skin(Gdx.files.internal("skin/default/skin/uiskin.skin"))
-
         logger.info("Creating")
+
+        logger.info("Loading assets")
+        assets = AssetManager()
+        assets.load(ASSET_SKIN)
+        assets.load(ASSET_ATLAS)
+        assets.finishLoading()
+        logger.info("Assets finished loading")
+
+        Scene2DSkin.defaultSkin = assets.get(ASSET_SKIN)
+
         val gameInstance = GameInstance()
 
         val localBridge = GameLocalBridge(UUID.randomUUID())
@@ -56,13 +65,24 @@ object SpaceAdmiral : Game() {
             resetShipPositions()
         }
 
-        t2.createSquad(DummyFighter, sector).apply {
-            transform.transform.setLocalPosition(10f, 20f)
+        t1.createSquad(DummyFighter, sector).apply {
+            transform.transform.angleLocal = 0.1f
+            transform.transform.setLocalPosition(-14f, 53f)
+            resetShipPositions()
+        }
+
+        t1.createSquad(DummyFighter, sector).apply {
+            transform.transform.setLocalPosition(36f, 23f)
             resetShipPositions()
         }
 
         t1.createSquad(DummyCorvette, sector).apply {
             transform.transform.setLocalPosition(-30f, 20f)
+            resetShipPositions()
+        }
+
+        t2.createSquad(DummyFighter, sector).apply {
+            transform.transform.setLocalPosition(10f, 20f)
             resetShipPositions()
         }
 
@@ -95,6 +115,7 @@ object SpaceAdmiral : Game() {
     override fun dispose() {
         super.dispose()
         logger.info("Disposing")
+        assets.dispose()
     }
 }
 

@@ -9,7 +9,7 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 /**
- * The client, after initial handshake and initial strength
+ * The client, after initial handshake and initial data
  */
 class GameClient(server: GameServerInterfaceFactory) {
     private val gsLock = ReentrantLock(true)

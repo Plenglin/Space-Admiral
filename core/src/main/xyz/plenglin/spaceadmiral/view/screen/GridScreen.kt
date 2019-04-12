@@ -29,6 +29,7 @@ class GridScreen(private val client: GameClient) : Screen {
 
     override fun show() {
         logger.info("showing GridScreen")
+        client.gameState.ui = ui
 
         ui.sectorScreen?.let {
             logger.info("Disposing child {}", it)

@@ -3,9 +3,15 @@ package xyz.plenglin.spaceadmiral.view.model
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
+import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import java.util.*
 
 class GameStateCM {
+    /**
+     * The UI that this is bound to. If `null`, then there is no UI and this client model is an AI.
+     */
+    var ui: GameUI? = null
+
     val sectors = hashMapOf<IntVector2, SectorCM>()
 
     val teams = hashMapOf<UUID, TeamCM>()

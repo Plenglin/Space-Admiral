@@ -5,10 +5,24 @@ import xyz.plenglin.spaceadmiral.game.action.ActionCM
 import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.SquadUDTO
+import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import java.util.*
 import kotlin.collections.HashMap
 
-class SquadCM(val uuid: UUID, val team: TeamCM, val template: ShipType, val transform: SquadTransform) {
+class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipType, val transform: SquadTransform) {
+
+    val ui: GameUI? get() = gameState.ui
+
+    var selected
+        get() = ui!!.selectedSquads.contains(this)
+        set(value) {
+            val ui = ui!!
+            if (value) {
+                ui.selectedSquads.add(this)
+            } else {
+                ui.selectedSquads.remove(this)
+            }
+        }
 
     var visible = false
 
