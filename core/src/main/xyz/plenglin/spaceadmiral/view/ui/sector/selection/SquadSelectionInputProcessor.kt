@@ -28,6 +28,7 @@ class SquadSelectionInputProcessor(
         if (!Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             logger.info("Control was not held, clearing selection")
             ui.selectedSquads.clear()
+            ui.ctrlSquadSelection.onSquadSelectionChange()
         } else {
             logger.info("Control was held, will not clear selection")
         }
@@ -72,6 +73,7 @@ class SquadSelectionInputProcessor(
                 return false
             }
         }
+        ui.ctrlSquadSelection.onSquadSelectionChange()
 
         return true
     }

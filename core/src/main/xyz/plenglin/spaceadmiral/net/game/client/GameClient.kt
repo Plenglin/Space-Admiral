@@ -22,7 +22,7 @@ class GameClient(server: GameServerInterfaceFactory) {
     //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
     //fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
     fun getSquad(uuid: UUID): SquadCM = gameState.squads[uuid]!!
-    fun getSector(pos: IntVector2): SectorCM = gameState.sectors[pos]!!
+    fun getSector(pos: IntVector2): SectorCM? = gameState.sectors[pos]
 
     @Synchronized
     fun onReceivePayload(payload: ClientUpdatePayload) {

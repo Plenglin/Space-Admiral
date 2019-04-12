@@ -29,6 +29,7 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
 
             cmSquad.sector = cmSquadParentSector
 
+            cmTeam.squads.add(cmSquad)
             cmGameState.squads[cmSquad.uuid] = cmSquad
             cmSquadParentSector.squads[cmSquad.uuid] = cmSquad
 
