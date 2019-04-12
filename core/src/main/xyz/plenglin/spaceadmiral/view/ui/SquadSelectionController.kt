@@ -3,6 +3,7 @@ package xyz.plenglin.spaceadmiral.view.ui
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import ktx.scene2d.table
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.ui.widget.SquadCard
 
@@ -65,6 +66,11 @@ class SquadSelectionController(val ui: GameUI) {
         if (ui.selectedSquads.isEmpty()) {
             lastClickedIndex = 0
         }
+    }
+
+    private companion object {
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(SquadCard::class.java)
     }
 
 }

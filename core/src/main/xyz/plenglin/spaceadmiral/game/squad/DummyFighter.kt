@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.game.ship
+package xyz.plenglin.spaceadmiral.game.squad
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.Health
@@ -9,6 +9,9 @@ import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponType
 import xyz.plenglin.spaceadmiral.util.Transform2D
 
 object DummyFighter : ShipType {
+
+    override val classification: ShipClassification = ShipClassification.FIGHTER
+
     override val displayName: String = "Fighter"
 
     override val displayScale: Float = 1f

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.ship.ShipType
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import java.io.Serializable

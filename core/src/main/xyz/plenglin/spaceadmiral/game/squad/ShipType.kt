@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.game.ship
+package xyz.plenglin.spaceadmiral.game.squad
 
 import xyz.plenglin.spaceadmiral.game.Health
 import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountTemplate
@@ -23,5 +23,7 @@ interface ShipType : Serializable {
     val turrets: List<WeaponMountTemplate>
     val tadarStrength: Float
     val tadarSignature: Float
+
+    val classification: ShipClassification
 
 }

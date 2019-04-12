@@ -1,4 +1,4 @@
-package xyz.plenglin.spaceadmiral.game.ship
+package xyz.plenglin.spaceadmiral.game.squad
 
 import xyz.plenglin.spaceadmiral.game.Health
 import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountTemplate
@@ -16,4 +16,6 @@ object DummyCorvette : ShipType {
 
     override val tadarStrength: Float = 0.01f
     override val tadarSignature: Float = 0.0001f
+
+    override val classification: ShipClassification = ShipClassification.CORVETTE
 }

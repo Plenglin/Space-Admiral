@@ -5,11 +5,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
-import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.ASSET_ATLAS
 import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.ui.SquadSelectionController
+import xyz.plenglin.spaceadmiral.view.ui.getIconLabel
 
 class SquadCard(val parent: SquadSelectionController, var index: Int, val squad: SquadCM, val skin: Skin) : Actor() {
 
@@ -35,12 +35,10 @@ class SquadCard(val parent: SquadSelectionController, var index: Int, val squad:
         val assetLabel = if (squad.selected) "squad-card-selected" else "squad-card-unselected"
         batch.draw(atlas.findRegion(assetLabel), x, y)
 
-        batch.setColor(0f, 0f, 0f, 0.75f)
-        font.draw(batch, squad.template.displayName, 5f, 5f)
+        batch.draw(atlas.findRegion(squad.template.classification.getIconLabel()), x + 16f, y + 16f)
+
+        batch.setColor(1f, 1f, 1f, 0.75f)
+        font.draw(batch, squad.template.displayName, x + 5f, y + 15f)
     }
 
-    private companion object {
-        @JvmStatic
-        val logger = LoggerFactory.getLogger(SquadCard::class.java)
-    }
 }
