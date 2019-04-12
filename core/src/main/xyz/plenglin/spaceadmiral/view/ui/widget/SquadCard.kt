@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
-import xyz.plenglin.spaceadmiral.ASSET_ATLAS
+import xyz.plenglin.spaceadmiral.ASSET_UI_ATLAS
 import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.ui.SquadSelectionController
@@ -29,7 +29,7 @@ class SquadCard(val parent: SquadSelectionController, var index: Int, val squad:
     init {
         addListener(clickListener)
 
-        val atlas = SpaceAdmiral.assets.get(ASSET_ATLAS)
+        val atlas = SpaceAdmiral.assets.get(ASSET_UI_ATLAS)
         selectionHalo = Image(atlas.findRegion("squad-card-selection-halo")).apply {
             setPosition(0f, 0f)
             isVisible = false
@@ -57,7 +57,7 @@ class SquadCard(val parent: SquadSelectionController, var index: Int, val squad:
     }
 /*
     override fun draw(batch: Batch, parentAlpha: Float) {
-        val atlas = SpaceAdmiral.assets.get(ASSET_ATLAS)
+        val atlas = SpaceAdmiral.assets.get(ASSET_UI_ATLAS)
         batch.setColor(1f, 1f, 1f, 1f)
 
         val assetLabel = if (squad.selected) "squad-card-selected" else "squad-card-unselected"

@@ -31,7 +31,7 @@ dependencies {
     implementation "ch.qos.logback:logback-core:$logbackVersion"
 }
 
-task run(dependsOn: classes, type: JavaExec) {
+task run(dependsOn: [classes, ':texturePacker'], type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     systemProperties['org.slf4j.simpleLogger.defaultLogLevel'] = 'trace'
