@@ -9,6 +9,8 @@ import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponType
 import xyz.plenglin.spaceadmiral.util.Transform2D
 
 object DummyFighter : ShipType {
+    override val displayName: String = "Fighter"
+
     override val displayScale: Float = 1f
     override val turrets: List<WeaponMountTemplate> = listOf(
             WeaponMountTemplate(

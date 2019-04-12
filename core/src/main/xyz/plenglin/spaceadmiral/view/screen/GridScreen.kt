@@ -6,19 +6,14 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.view.grid.GridRenderer
 import xyz.plenglin.spaceadmiral.view.grid.SimpleGridRenderer
-import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.grid.SectorSelectionInputProcessor
 
 class GridScreen(private val client: GameClient) : Screen {
-    //private val batch: SpriteBatch = SpriteBatch()
-
-    private var lastSectorScreen: SectorScreen? = null
 
     private val gameCamera: OrthographicCamera = OrthographicCamera().apply {
         zoom = 0.01f
@@ -26,16 +21,16 @@ class GridScreen(private val client: GameClient) : Screen {
     private val uiCamera: OrthographicCamera = OrthographicCamera()
 
     private val gridRenderer: GridRenderer = SimpleGridRenderer()
-    private val ui: GameUI = GameUI(client, uiCamera)
+    private val ui: GameUI = GameUI(client, this, uiCamera)
 
     private val inputCameraPosition = SmoothCameraInputProcessor(gameCamera)
-    private val inputSectorSelection = SectorSelectionInputProcessor(this, client, gridRenderer)
+    private val inputSectorSelection = SectorSelectionInputProcessor(ui, client, gridRenderer)
     private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSectorSelection)
 
     override fun show() {
         logger.info("showing GridScreen")
 
-        lastSectorScreen?.let {
+        ui.sectorScreen?.let {
             logger.info("Disposing child {}", it)
             it.dispose()
         }
@@ -87,12 +82,6 @@ class GridScreen(private val client: GameClient) : Screen {
         logger.info("disposing")
         gridRenderer.dispose()
         ui.dispose()
-    }
-
-    fun openSector(sector: SectorCM) {
-        val screen = SectorScreen(this, client, sector)
-        lastSectorScreen = screen
-        SpaceAdmiral.screen = screen
     }
 
     private companion object {

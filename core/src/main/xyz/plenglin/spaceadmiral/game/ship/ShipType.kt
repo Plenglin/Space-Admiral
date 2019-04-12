@@ -5,6 +5,8 @@ import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountTemplate
 import java.io.Serializable
 
 interface ShipType : Serializable {
+    val displayName: String
+
     val health: Health
 
     val displayScale: Float

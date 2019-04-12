@@ -1,6 +1,9 @@
 package xyz.plenglin.spaceadmiral
 
 import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import ktx.scene2d.Scene2DSkin
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.ship.DummyCorvette
@@ -26,6 +29,8 @@ object SpaceAdmiral : Game() {
     const val GRID_SIZE = 21
 
     override fun create() {
+        Scene2DSkin.defaultSkin = Skin(Gdx.files.internal("skin/default/skin/uiskin.skin"))
+
         logger.info("Creating")
         val gameInstance = GameInstance()
 

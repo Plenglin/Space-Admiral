@@ -4,6 +4,8 @@ import xyz.plenglin.spaceadmiral.game.Health
 import xyz.plenglin.spaceadmiral.game.ship.weapon.WeaponMountTemplate
 
 object DummyCorvette : ShipType {
+
+    override val displayName: String = "Corvette"
     override val displayScale: Float = 4f
     override val turrets: List<WeaponMountTemplate> = listOf()
     override val health: Health = Health(100, 100, 100)
