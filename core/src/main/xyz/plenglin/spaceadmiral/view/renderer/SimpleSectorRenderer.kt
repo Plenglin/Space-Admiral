@@ -25,8 +25,8 @@ class SimpleSectorRenderer : SectorRenderer {
     lateinit var shape: ShapeRenderer
     lateinit var gameCamera: OrthographicCamera
     lateinit var uiCamera: OrthographicCamera
-    var shipPixmap: Pixmap? = null
 
+    private var shipPixmap: Pixmap? = null
     private val pixelToShip = HashMap<Int, ShipCM>()
     private var nextShipColor = 1
     private var height: Int = 0

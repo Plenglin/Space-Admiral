@@ -26,4 +26,7 @@ interface ShipType : Serializable {
 
     val classification: ShipClassification
 
+    val mass: Float
+    val repulsion: RepulsionField? get() = null
+
 }

@@ -54,6 +54,7 @@ class Squad(val template: ShipType, var team: Team, var sector: Sector) : Serial
             trs.update()
             ship.transform.posLocal.set(trs.posGlobal)
             ship.transform.angleLocal = trs.angleGlobal
+            ship.target.set(ship.transform)
         }
     }
 

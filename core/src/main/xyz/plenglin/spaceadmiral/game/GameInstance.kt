@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.game
 
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SpaceAdmiral.DELTA_TIME
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import java.io.Serializable
@@ -14,14 +15,39 @@ class GameInstance : Serializable {
         logger.debug("update {}", gameState.time)
 
         gameState.firingEvents.clear()
-        //gameState.updateTrees()
+        gameState.sectors.forEach { _, sector ->
+            sector.updateTrees()
+        }
 
         gameState.squads.forEach { _, squad ->
             squad.update()
         }
 
+        val repulsors = mutableListOf<Ship>()
         gameState.ships.forEach { _, ship ->
-            ship.update()
+            ship.updateLogic()
+            if (ship.template.repulsion != null) {
+                repulsors.add(ship)
+            }
+        }
+
+        repulsors.forEach { ship ->
+            println(ship.sector.shipTree!!)
+            ship.sector.shipTree!!.findInCircle(ship.transform.posGlobal, ship.template.repulsion!!.range)
+                    .map { it.value!! }
+                    .filter { !ship.team.isAlliedWith(it.team) }
+                    .forEach { other ->
+                        val r2 = ship.transform.posGlobal.dst2(other.transform.posGlobal)
+                        val mag = ship.template.repulsion!!.force / r2
+                        val force = other.transform.posGlobal.cpy().sub(ship.transform.posGlobal).setLength(mag).scl(DELTA_TIME)
+
+                        other.velocity.mulAdd(force, 1 / other.template.mass)
+                        ship.velocity.mulAdd(force, -1 / ship.template.mass)
+                    }
+        }
+
+        gameState.ships.forEach { _, ship ->
+            ship.updatePosition()
         }
 
         /*gameState.projectiles.forEach { _, p ->

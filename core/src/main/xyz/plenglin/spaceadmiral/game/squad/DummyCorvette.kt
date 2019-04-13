@@ -18,4 +18,5 @@ object DummyCorvette : ShipType {
     override val tadarSignature: Float = 0.0001f
 
     override val classification: ShipClassification = ShipClassification.CORVETTE
+    override val mass: Float = 1f
 }

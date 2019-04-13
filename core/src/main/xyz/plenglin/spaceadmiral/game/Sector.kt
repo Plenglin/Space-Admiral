@@ -12,9 +12,6 @@ import kotlin.collections.HashMap
 
 class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
-    @Transient
-    private var ships = HashMap<UUID, Ship>()
-
     val squads = HashMap<UUID, Squad>()
     val projectiles = HashMap<UUID, Projectile>()
 
@@ -26,44 +23,23 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
     var projectileTree: KDTree2<Projectile>? = null
 
     fun updateTrees() {
-        var shipTree = shipTree
-        if (shipTree == null) {
-            shipTree = KDTree2()
-            this.shipTree = shipTree
-        }
+        val shipTree = KDTree2<Ship>()
         shipTree.clear()
-        ships.forEach { _, ship ->
-            shipTree.insert(ship.transform.posGlobal, ship)
+        squads.values.forEach { squad ->
+            squad.ships.forEach { ship ->
+                shipTree.insert(ship.transform.posGlobal, ship)
+            }
         }
+        this.shipTree = shipTree
 
-        var projectileTree = projectileTree
-        if (projectileTree == null) {
-            projectileTree = KDTree2()
-            this.projectileTree = projectileTree
-        }
-        projectileTree.clear()
+        val projectileTree = KDTree2<Projectile>()
         projectiles.forEach { _, projectile ->
             projectileTree.insert(projectile.pos, projectile)
         }
-    }
-
-    fun onSquadEnter(squad: Squad) {
-        squad.ships.forEach {
-            ships[it.uuid] = it
-        }
-        squads[squad.uuid] = squad
-        squad.sector = this
+        this.projectileTree = projectileTree
     }
 
     fun onShipDeath(ship: Ship) {
-        ships.remove(ship.uuid)
-    }
-
-    fun onSquadLeave(squad: Squad) {
-        squad.ships.forEach {
-            ships.remove(it.uuid)
-        }
-        squads.remove(squad.uuid)
     }
 
     override fun hashCode(): Int {

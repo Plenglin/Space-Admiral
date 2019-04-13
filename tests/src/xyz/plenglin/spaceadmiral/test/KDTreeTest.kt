@@ -5,8 +5,6 @@ import org.junit.Assert.*
 import org.junit.Test
 import xyz.plenglin.spaceadmiral.util.KDTree2
 import xyz.plenglin.spaceadmiral.util.KDTree2Node
-import java.lang.AssertionError
-import java.lang.Exception
 import java.util.*
 
 class KDTreeTest {
@@ -108,36 +106,18 @@ class KDTreeTest {
 
     @Test
     fun testFindWithinCircle() {
-        val random = Random(321)
+        val random = Random(4563)
         (1..100).forEach { _ ->
             val (tree, nodes) = createRandomTree(random, random.nextInt(30) + 10)
             val pos = Vector2(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
-            val rad = random.nextFloat() / 2
-            val inSquare = nodes.filter {
-                pos.dst(it.key) <= rad
-            }.toMutableSet()
-            val inSquareOriginal = inSquare.toSet()
-            tree.findInCircle(pos, rad).forEach {
-                try {
-                    assertTrue(inSquare.remove(it))
-                } catch (e: AssertionError) {
-                    println(pos)
-                    println(rad)
-                    println(tree.root.toTreeJson())
-                    println(it.key)
-                    throw e
-                }
-            }
-            try {
-                assertTrue(inSquare.isEmpty())
-            } catch (e: AssertionError) {
-                println(pos)
-                println(rad)
-                println(tree.root.toTreeJson())
-                println(inSquare.map { it.key })
-                println(inSquareOriginal.map { it.key })
-                throw e
-            }
+            val rad = random.nextFloat() / 2 + 0.25f
+            val inCircle = nodes.filter {
+                pos.dst2(it.key) <= rad * rad
+            }.toSet()
+
+            println(inCircle)
+            assertTrue(tree.findInCircle(pos, rad).toSet() == inCircle)
+
         }
     }
 

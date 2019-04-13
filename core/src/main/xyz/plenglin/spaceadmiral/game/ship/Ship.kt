@@ -20,6 +20,7 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     var transformIndex = number
     val uuid: UUID = UUID.randomUUID()
     val transform = Transform2D(Vector2(), 0f)
+    val target: Transform2D = transform
 
     val stateScheduler = StateScheduler()
 
@@ -36,14 +37,21 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     fun onDeath() {
     }
 
-    fun update() {
+    fun updateLogic() {
+        val error = target.posGlobal.cpy().sub(transform.posGlobal)
+        val delta = error.cpy().setLength(template.speed)
+        velocity.set(delta)
+
         stateScheduler.update()
+        turrets.forEach {
+            it.update()
+        }
+    }
+
+    fun updatePosition() {
         transform.posLocal.mulAdd(velocity, DELTA_TIME)
         if (velocity.len2() != 0f) {
             transform.angleLocal = velocity.angleRad()
-        }
-        turrets.forEach {
-            it.update()
         }
     }
 

@@ -29,4 +29,5 @@ object DummyFighter : ShipType {
 
     override val tadarStrength: Float = 0.001f
     override val tadarSignature: Float = 0.0001f
+    override val mass: Float = 0.01f
 }

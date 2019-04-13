@@ -6,6 +6,7 @@ import ktx.scene2d.Scene2DSkin
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.squad.DummyCorvette
+import xyz.plenglin.spaceadmiral.game.squad.DummyCruiser
 import xyz.plenglin.spaceadmiral.game.squad.DummyFighter
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.initial.toInitialDTO
@@ -78,6 +79,11 @@ object SpaceAdmiral : Game() {
 
         t1.createSquad(DummyCorvette, sector).apply {
             transform.transform.setLocalPosition(-30f, 20f)
+            resetShipPositions()
+        }
+
+        t1.createSquad(DummyCruiser, sector).apply {
+            transform.transform.setLocalPosition(43f, -23f)
             resetShipPositions()
         }
 
