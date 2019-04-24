@@ -65,7 +65,7 @@ fun Squad.asUpdateDTO(): SquadUDTO {
     actionQueue.forEach { actions.add(it.toDTO()) }
     return SquadUDTO(
             uuid,
-            ships.filter { (it.flags and IS_DEAD != 0) || (it.flags and DIED_RECENTLY != 0) }
+            ships.filter { (it.flags and IS_DEAD == 0) || (it.flags and DIED_RECENTLY != 0) }
                     .map { it.asUpdateDTO() },
             actions
     )

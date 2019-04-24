@@ -14,9 +14,6 @@ class ShipCM(val uuid: UUID, val squad: SquadCM, val transform: Transform2D) {
     val interpolator = LinearInterpolator2(UPDATE_PERIOD / 1000f)
     val velocity: Vector2 = Vector2()
 
-    private val interpV0: Vector2 = Vector2()
-    private val interpV1: Vector2 = Vector2()
-
     val team: TeamCM get() = squad.team
     val template: ShipType get() = squad.template
     val turrets = hashMapOf<UUID, TurretCM>()
@@ -27,7 +24,7 @@ class ShipCM(val uuid: UUID, val squad: SquadCM, val transform: Transform2D) {
         interpolator.pushActual(dto.transform.posGlobal)
         transform.set(dto.transform)
         velocity.set(dto.velocity)
-        alive = dto.flags and IS_DEAD == 0
+        alive = (dto.flags and IS_DEAD) == 0
     }
 
     fun updateRender(delta: Float) {
