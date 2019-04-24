@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.game.ship
 
 import com.badlogic.gdx.math.Vector2
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.SpaceAdmiral.DELTA_TIME
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
@@ -36,7 +37,8 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     }
 
     fun onDeath() {
-        flags = flags or DIED_RECENTLY
+        logger.debug("{} died, setting flags")
+        flags = flags or DIED_RECENTLY or IS_DEAD
     }
 
     fun updateLogic() {
@@ -60,7 +62,11 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     }
 
     companion object {
-        const val DIED_RECENTLY = 0x1
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(Ship::class.java)
+
+        const val IS_DEAD = 0x1
+        const val DIED_RECENTLY = 0x2
     }
 }
 

@@ -35,13 +35,21 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
     fun update() {
         logger.debug("Updating server {}", this)
 
+        applyCommands()
+
+        logger.debug("Updating GameInstance")
+        instance.update()
+
+        sendToClients()
+    }
+
+    private fun applyCommands() {
         val commands = mutableListOf<Pair<GamePlayerInterface, ClientCommand>>()
         this.commands.drainTo(commands)
         commands.forEach { (sender, cmd) ->
             logger.info("Received command {} from {}", cmd, sender)
-            val result = cmd.applyCommand(sender, instance)
 
-            when (result) {
+            when (val result = cmd.applyCommand(sender, instance)) {
                 is CommandResult.Success -> {
                     logger.info("Command {} successfully executed", cmd)
                 }
@@ -50,12 +58,11 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
                 }
             }
         }
+    }
 
-        logger.debug("Updating GameInstance")
-        instance.update()
-
+    private fun sendToClients() {
         val sectorOccupation = mutableMapOf<Team, HashSet<Sector>>()
-        instance.gameState.squads.forEach { _, squad ->
+        instance.gameState.squads.forEach { (_, squad) ->
             sectorOccupation.getOrPut(squad.team) { HashSet() }.add(squad.sector)
         }
 
@@ -85,7 +92,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
             val knownSectors = mutableSetOf<Sector>()
 
-            signals.forEach { sector, signal ->
+            signals.forEach { (sector, signal) ->
                 tadar[sector.pos] += signal
                 if (signal >= VISIBILITY_THRESHOLD) {
                     knownSectors.add(sector)
@@ -96,11 +103,6 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
             val payload = ClientUpdatePayload(sentSectors, tadar)
             player.sendPayload(payload)
         }
-
-    }
-
-    fun sendPlayerData() {
-
     }
 
     fun onCommandReceived(client: GamePlayerInterface, command: ClientCommand) {

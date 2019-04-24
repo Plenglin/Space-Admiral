@@ -65,7 +65,7 @@ class SectorScreen(
 
         sector.squads.filter { (_, squad) -> squad.visible }.forEach { _, squad ->
             squad.ships.forEach { _, ship ->
-                ship.updateDisplayTransform(delta)
+                ship.updateRender(delta)
             }
         }
         sector.updateTrees()

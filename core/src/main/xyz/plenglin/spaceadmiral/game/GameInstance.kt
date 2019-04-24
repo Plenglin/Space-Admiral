@@ -8,31 +8,32 @@ import java.io.Serializable
 
 class GameInstance : Serializable {
     val gameState = GameState()
-    //val clock = AdjustableClock()
-    //val loop = EventLoop(clock)
 
     fun update() {
         logger.debug("update {}", gameState.time)
 
+        // Cache trees
         gameState.firingEvents.clear()
-        gameState.sectors.forEach { _, sector ->
+        gameState.sectors.forEach { (_, sector) ->
             sector.updateTrees()
         }
 
-        gameState.squads.forEach { _, squad ->
+        // Squad update
+        gameState.squads.forEach { (_, squad) ->
             squad.update()
         }
 
+        // Ship initial logic update
         val repulsors = mutableListOf<Ship>()
-        gameState.ships.forEach { _, ship ->
+        gameState.ships.forEach { (_, ship) ->
             ship.updateLogic()
             if (ship.template.repulsion != null) {
                 repulsors.add(ship)
             }
         }
 
+        // Process repulsor forces
         repulsors.forEach { ship ->
-            println(ship.sector.shipTree!!)
             ship.sector.shipTree!!.findInCircle(ship.transform.posGlobal, ship.template.repulsion!!.range)
                     .map { it.value!! }
                     .filter { !ship.team.isAlliedWith(it.team) }
@@ -46,26 +47,16 @@ class GameInstance : Serializable {
                     }
         }
 
-        gameState.ships.forEach { _, ship ->
+        // Move ships
+        gameState.ships.forEach { (_, ship) ->
             ship.updatePosition()
         }
 
-        /*gameState.projectiles.forEach { _, p ->
-            val capsule = p.getDetonationCapsule()
-            val hit = gameState.shipTree.findInRect(p.getDetectionBoundingBox())
-                    .filter { p.canHit(it) }
-                    .filter { capsule.contains(it.key) }
-                    .map { it.value!! }
-                    .toList()
-            if (hit.isNotEmpty()) {
-                hit.forEach {
-                    p.onInteractWith(it)
-                }
-            }
-        }*/
+        // Process projectiles
 
+        // Bring out yer dead
         val deadShips = mutableListOf<Ship>()
-        gameState.ships.forEach { _, ship ->
+        gameState.ships.forEach { (_, ship) ->
             if (ship.health.isDead) {
                 deadShips.add(ship)
                 ship.onDeath()
@@ -77,7 +68,7 @@ class GameInstance : Serializable {
             it.sector.onShipDeath(it)
         }
         val deadSquads = mutableListOf<Squad>()
-        gameState.squads.forEach { _, squad ->
+        gameState.squads.forEach { (_, squad) ->
             if (squad.isDead) {
                 deadSquads.add(squad)
                 squad.onDeath()
@@ -86,6 +77,8 @@ class GameInstance : Serializable {
         deadSquads.forEach {
             gameState.squads.remove(it.uuid)
         }
+
+        // Increment time
         gameState.time++
     }
 

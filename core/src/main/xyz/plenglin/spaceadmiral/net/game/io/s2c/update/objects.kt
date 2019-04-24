@@ -7,8 +7,11 @@ import xyz.plenglin.spaceadmiral.game.action.ActionDTO
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
+import xyz.plenglin.spaceadmiral.game.ship.Ship.Companion.DIED_RECENTLY
+import xyz.plenglin.spaceadmiral.game.ship.Ship.Companion.IS_DEAD
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ShipUDTO.Companion.SENT_FLAGS
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
@@ -62,7 +65,8 @@ fun Squad.asUpdateDTO(): SquadUDTO {
     actionQueue.forEach { actions.add(it.toDTO()) }
     return SquadUDTO(
             uuid,
-            ships.map { it.asUpdateDTO() },
+            ships.filter { (it.flags and IS_DEAD != 0) || (it.flags and DIED_RECENTLY != 0) }
+                    .map { it.asUpdateDTO() },
             actions
     )
 }
@@ -70,13 +74,22 @@ fun Squad.asUpdateDTO(): SquadUDTO {
 data class ShipUDTO internal constructor(
         val uuid: UUID,
         val transform: Transform2D,
-        val velocity: Vector2
-) : Serializable
+        val velocity: Vector2,
+        val flags: Int
+) : Serializable {
+    companion object {
+        /**
+         * The flags to send over to the client.
+         */
+        const val SENT_FLAGS = IS_DEAD
+    }
+}
 
 fun Ship.asUpdateDTO(): ShipUDTO {
     return ShipUDTO(
             uuid,
             transform,
-            velocity
+            velocity,
+            flags and SENT_FLAGS
     )
 }

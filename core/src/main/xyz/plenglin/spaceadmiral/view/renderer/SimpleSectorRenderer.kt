@@ -114,7 +114,7 @@ class SimpleSectorRenderer : SectorRenderer {
                 it.cpy().scl(scale).rotateRad(ship.transform.angleGlobal).add(pos)
             }
 
-            shape.color = ship.team.color
+            shape.color = if (ship.alive) ship.team.color else DEAD_COLOR
             shape.polygon(floatArrayOf(
                     transformed[0].x, transformed[0].y,
                     transformed[1].x, transformed[1].y,
@@ -171,6 +171,8 @@ class SimpleSectorRenderer : SectorRenderer {
 
         @JvmStatic
         val RADIAL_DIST_COLOR = Color(0.2f, 0.2f, 0.2f, 1f)
+        @JvmStatic
+        val DEAD_COLOR = Color(0.1f, 0.1f, 0.1f, 1f)
 
         const val MIN_SHIP_CLICK_RADIUS = 5
 
