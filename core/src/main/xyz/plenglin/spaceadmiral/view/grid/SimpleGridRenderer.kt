@@ -45,9 +45,9 @@ class SimpleGridRenderer : GridRenderer {
         shape.projectionMatrix = gridCamera.combined
 
         shape.color = Color.WHITE
-        shape.begin(ShapeRenderer.ShapeType.Line)
-        shape.circle(0f, 0f, GRID_SIZE.toFloat())
-        shape.end()
+        //shape.begin(ShapeRenderer.ShapeType.Line)
+        //shape.circle(0f, 0f, GRID_SIZE.toFloat())
+        //shape.end()
 
         batch.begin()
         batch.draw(tex, 0f, 0f)

@@ -121,6 +121,13 @@ class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, par
         dirty = true
     }
 
+    fun setGlobal(trs: Transform2D) {
+        posLocal.set(trs.posLocal)
+        angleLocal = trs.angleLocal
+        parent = null
+        dirty = true
+    }
+
     override fun toString(): String {
         return "Transform($posLocal, $angleLocal, $parent)"
     }

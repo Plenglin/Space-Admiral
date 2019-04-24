@@ -7,6 +7,7 @@ import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.StateScheduler
+import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
 import java.util.*
 
@@ -61,6 +62,10 @@ class Squad(val template: ShipType, var team: Team, var sector: Sector) : Serial
     fun onDeath() {
 
 
+    }
+
+    fun setTarget(transform: Transform2D) {
+        this.transform.transform.setGlobal(transform)
     }
 
     private companion object {

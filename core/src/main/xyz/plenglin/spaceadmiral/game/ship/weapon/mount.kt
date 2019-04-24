@@ -41,7 +41,7 @@ class WeaponMount internal constructor(template: WeaponMountTemplate, val ship: 
 
     private fun fire(target: Ship) {
         weapon?.let {
-            it.parent.firingType.fireFrom(gameState, this, target)
+            it.parent.firingType.fireFrom(ship.sector, this, target)
             it.onFire(gameState.time)
         }
     }

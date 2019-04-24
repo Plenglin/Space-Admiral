@@ -1,13 +1,13 @@
 package xyz.plenglin.spaceadmiral.game.ship.weapon
 
 import xyz.plenglin.spaceadmiral.game.DamageType
-import xyz.plenglin.spaceadmiral.game.GameState
+import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import java.io.Serializable
 import java.util.*
 
 sealed class FiringType : Serializable {
-    abstract fun fireFrom(gs: GameState, mount: WeaponMount, target: Ship)
+    abstract fun fireFrom(gs: Sector, mount: WeaponMount, target: Ship)
 }
 
 sealed class FiringEvent : Serializable {
@@ -17,7 +17,7 @@ sealed class FiringEvent : Serializable {
 }
 
 class HitscanFiringType(val damage: Int, val damageType: DamageType) : FiringType() {
-    override fun fireFrom(gs: GameState, mount: WeaponMount, target: Ship) {
+    override fun fireFrom(gs: Sector, mount: WeaponMount, target: Ship) {
         val hitChance = 0.5f  // TODO FIGURE OUT A FORMULA
         if (Math.random() < hitChance) {
             gs.firingEvents.add(HitscanFiringEvent(true, this, mount.uuid, target.uuid))

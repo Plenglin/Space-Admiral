@@ -23,6 +23,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
     var projectileTree: KDTree2<Projectile>? = null
 
     fun updateTrees() {
+        firingEvents.clear()
         val shipTree = KDTree2<Ship>()
         shipTree.clear()
         squads.values.forEach { squad ->
@@ -33,7 +34,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
         this.shipTree = shipTree
 
         val projectileTree = KDTree2<Projectile>()
-        projectiles.forEach { _, projectile ->
+        projectiles.forEach { (_, projectile) ->
             projectileTree.insert(projectile.pos, projectile)
         }
         this.projectileTree = projectileTree

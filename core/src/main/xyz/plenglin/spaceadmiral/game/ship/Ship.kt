@@ -26,6 +26,7 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
 
     var health = template.health.copy()
     var morale = 0f
+    var flags = 0
 
     val turrets = template.turrets.map { it.createMount(this) }
     val velocity = Vector2()
@@ -35,9 +36,12 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     }
 
     fun onDeath() {
+        flags = flags or DIED_RECENTLY
     }
 
     fun updateLogic() {
+        flags = flags and DIED_RECENTLY.inv()
+
         val error = target.posGlobal.cpy().sub(transform.posGlobal)
         val delta = error.cpy().setLength(template.speed)
         velocity.set(delta)
@@ -55,6 +59,9 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
         }
     }
 
+    companion object {
+        const val DIED_RECENTLY = 0x1
+    }
 }
 
 abstract class ShipAction(val parent: SquadAction, val ship: Ship) : Serializable, State

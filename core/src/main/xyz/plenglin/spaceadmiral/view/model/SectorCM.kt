@@ -18,7 +18,8 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
     val firingEvents = mutableListOf<FiringEvent>()
 
     fun updateWith(dto: SectorUDTO) {
-
+        firingEvents.clear()
+        firingEvents.addAll(dto.firingEvents)
     }
 
     fun updateTrees() {

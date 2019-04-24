@@ -99,6 +99,10 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
     }
 
+    fun sendPlayerData() {
+
+    }
+
     fun onCommandReceived(client: GamePlayerInterface, command: ClientCommand) {
         logger.info("Client {} sent squad command {}", client, command)
         commands.add(client to command)
