@@ -20,6 +20,9 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
     fun updateWith(dto: SectorUDTO) {
         firingEvents.clear()
         firingEvents.addAll(dto.firingEvents)
+        dto.recentlyDiedShips.forEach {
+            ships.getValue(it).onDead()
+        }
     }
 
     fun updateTrees() {

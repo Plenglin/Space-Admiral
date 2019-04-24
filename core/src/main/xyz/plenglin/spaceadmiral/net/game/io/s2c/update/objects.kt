@@ -7,7 +7,6 @@ import xyz.plenglin.spaceadmiral.game.action.ActionDTO
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.ship.Ship.Companion.DIED_RECENTLY
 import xyz.plenglin.spaceadmiral.game.ship.Ship.Companion.IS_DEAD
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
@@ -41,7 +40,8 @@ data class SectorUDTO internal constructor(
         val pos: IntVector2,
         val squads: List<SquadUDTO>,
         val projectiles: List<ProjectileUDTO>,
-        val firingEvents: List<FiringEvent>
+        val firingEvents: List<FiringEvent>,
+        val recentlyDiedShips: List<UUID>
 ) : Serializable
 
 fun Sector.asUpdateDTO(): SectorUDTO {
@@ -49,7 +49,8 @@ fun Sector.asUpdateDTO(): SectorUDTO {
             pos,
             squads.map { (_, s) -> s.asUpdateDTO() },
             projectiles.map { (_, p) -> p.asUpdateDTO() },
-            firingEvents
+            firingEvents,
+            recentlyDiedShips.map { it.uuid }
     )
 }
 
@@ -65,7 +66,7 @@ fun Squad.asUpdateDTO(): SquadUDTO {
     actionQueue.forEach { actions.add(it.toDTO()) }
     return SquadUDTO(
             uuid,
-            ships.filter { (it.flags and IS_DEAD == 0) || (it.flags and DIED_RECENTLY != 0) }
+            ships.filter { it.flags and IS_DEAD == 0 }
                     .map { it.asUpdateDTO() },
             actions
     )

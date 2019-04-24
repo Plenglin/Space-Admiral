@@ -2,7 +2,6 @@ package xyz.plenglin.spaceadmiral.view.model
 
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.SpaceAdmiral.UPDATE_PERIOD
-import xyz.plenglin.spaceadmiral.game.ship.Ship.Companion.IS_DEAD
 import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ShipUDTO
 import xyz.plenglin.spaceadmiral.util.LinearInterpolator2
@@ -24,7 +23,6 @@ class ShipCM(val uuid: UUID, val squad: SquadCM, val transform: Transform2D) {
         interpolator.pushActual(dto.transform.posGlobal)
         transform.set(dto.transform)
         velocity.set(dto.velocity)
-        alive = (dto.flags and IS_DEAD) == 0
     }
 
     fun updateRender(delta: Float) {
@@ -33,6 +31,10 @@ class ShipCM(val uuid: UUID, val squad: SquadCM, val transform: Transform2D) {
         } else {
             transform.setLocalPosition(transform.posGlobal.cpy().mulAdd(velocity, delta))
         }
+    }
+
+    fun onDead() {
+        alive = false
     }
 
 }

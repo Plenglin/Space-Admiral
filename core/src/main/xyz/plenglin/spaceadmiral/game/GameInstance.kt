@@ -11,10 +11,9 @@ class GameInstance : Serializable {
     fun update() {
         logger.debug("update {}", gameState.time)
 
-        // Cache trees
-        gameState.firingEvents.clear()
+        // Sector update
         gameState.sectors.forEach { (_, sector) ->
-            sector.updateTrees()
+            sector.updateInitial()
         }
 
         // Squad update
@@ -55,18 +54,17 @@ class GameInstance : Serializable {
         // TODO
 
         // Bring out yer dead (ships)
-        val deadShips = mutableListOf<Ship>()
-        gameState.ships.forEach { (_, ship) ->
+        gameState.ships.values.forEach { ship ->
             if (ship.health.isDead) {
                 ship.onDeath()
-            }
-            if (ship.shouldRemove()) {
-                deadShips.add(ship)
+                ship.sector.recentlyDiedShips.add(ship)
             }
         }
-        deadShips.forEach {
-            it.parent.ships.remove(it)
-            gameState.ships.remove(it.uuid)
+        gameState.sectors.values.forEach { sector ->
+            sector.recentlyDiedShips.forEach {
+                it.parent.ships.remove(it)
+                gameState.ships.remove(it.uuid)
+            }
         }
 
         // Bring out yer dead (squads)
