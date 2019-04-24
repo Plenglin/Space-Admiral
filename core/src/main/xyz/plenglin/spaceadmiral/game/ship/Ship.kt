@@ -37,8 +37,8 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     }
 
     fun onDeath() {
-        logger.debug("{} died, setting flags")
         flags = flags or DIED_RECENTLY or IS_DEAD
+        logger.debug("{} died, set flags to {}", this, flags)
     }
 
     fun updateLogic() {
@@ -61,12 +61,15 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
         }
     }
 
+    fun shouldRemove(): Boolean {
+        return (flags and IS_DEAD != 0) && (flags and DIED_RECENTLY == 0)
+    }
     companion object {
         @JvmStatic
         private val logger = LoggerFactory.getLogger(Ship::class.java)
 
-        const val IS_DEAD = 0x1
-        const val DIED_RECENTLY = 0x2
+        const val IS_DEAD = 1
+        const val DIED_RECENTLY = 1 shl 2
     }
 }
 

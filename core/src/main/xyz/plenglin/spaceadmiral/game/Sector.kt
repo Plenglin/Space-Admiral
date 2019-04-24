@@ -40,9 +40,6 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
         this.projectileTree = projectileTree
     }
 
-    fun onShipDeath(ship: Ship) {
-    }
-
     override fun hashCode(): Int {
         return pos.hashCode()
     }

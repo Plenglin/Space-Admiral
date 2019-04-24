@@ -3,7 +3,6 @@ package xyz.plenglin.spaceadmiral.game
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.SpaceAdmiral.DELTA_TIME
 import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.game.squad.Squad
 import java.io.Serializable
 
 class GameInstance : Serializable {
@@ -53,21 +52,25 @@ class GameInstance : Serializable {
         }
 
         // Process projectiles
+        // TODO
 
-        // Bring out yer dead
+        // Bring out yer dead (ships)
         val deadShips = mutableListOf<Ship>()
         gameState.ships.forEach { (_, ship) ->
             if (ship.health.isDead) {
-                deadShips.add(ship)
                 ship.onDeath()
+            }
+            if (ship.shouldRemove()) {
+                deadShips.add(ship)
             }
         }
         deadShips.forEach {
             it.parent.ships.remove(it)
             gameState.ships.remove(it.uuid)
-            it.sector.onShipDeath(it)
         }
-        val deadSquads = mutableListOf<Squad>()
+
+        // Bring out yer dead (squads)
+        /*val deadSquads = mutableListOf<Squad>()
         gameState.squads.forEach { (_, squad) ->
             if (squad.isDead) {
                 deadSquads.add(squad)
@@ -76,7 +79,7 @@ class GameInstance : Serializable {
         }
         deadSquads.forEach {
             gameState.squads.remove(it.uuid)
-        }
+        }*/
 
         // Increment time
         gameState.time++
