@@ -1,0 +1,54 @@
+
+gamesprite.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+corvette-base
+  rotate: false
+  xy: 2, 68
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+corvette-team
+  rotate: false
+  xy: 516, 582
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+cruiser-base
+  rotate: false
+  xy: 2, 326
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+fighter-base
+  rotate: false
+  xy: 2, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+fighter-team
+  rotate: false
+  xy: 260, 260
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+
+gamesprite2.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cruiser-team
+  rotate: false
+  xy: 2, 2
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1

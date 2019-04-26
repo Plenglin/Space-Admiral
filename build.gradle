@@ -34,6 +34,7 @@ task texturePacker() {
     doFirst() {
         logger.info("Packaging UI textures")
         TexturePacker.process(project.file("asset-src/ui/").toString(), project.file("android/assets/").toString(), "ui")
+        TexturePacker.process(project.file("asset-src/gamesprite/").toString(), project.file("android/assets/").toString(), "gamesprite")
     }
 }
 

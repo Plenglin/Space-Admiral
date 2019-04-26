@@ -37,6 +37,7 @@ object SpaceAdmiral : Game() {
         assets = AssetManager()
         assets.load(ASSET_SKIN)
         assets.load(ASSET_UI_ATLAS)
+        assets.load(ASSET_GAMESPRITE_ATLAS)
         assets.finishLoading()
         logger.info("Assets finished loading")
 

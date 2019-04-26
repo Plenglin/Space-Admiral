@@ -8,11 +8,11 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
     val cmGameState = GameStateCM()
     val gs = gameState
 
-    gs.sectors.forEach { pos, sector ->
+    gs.sectors.forEach { (pos, sector) ->
         cmGameState.sectors[pos] = SectorCM(pos, cmGameState)
     }
 
-    gs.teams.forEach { uuid, gsTeam ->
+    gs.teams.forEach { (uuid, gsTeam) ->
         val color = Color()
         Color.argb8888ToColor(color, gsTeam.color)
         val cmTeam = TeamCM(uuid, cmGameState, color)

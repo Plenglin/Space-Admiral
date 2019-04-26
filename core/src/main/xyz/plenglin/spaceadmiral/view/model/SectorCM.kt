@@ -29,7 +29,6 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
         logger.debug("Updating trees of {}", this)
         shipTree.clear()
         val ships = ships.values.toMutableList()//.let { ships ->
-        ships.shuffle()
         ships.forEach {
             shipTree.insert(it.transform.posGlobal, it)
         }
