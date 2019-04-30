@@ -2,7 +2,7 @@ package xyz.plenglin.spaceadmiral.game
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Pixmap
-import xyz.plenglin.spaceadmiral.SpaceAdmiral.GRID_SIZE
+import xyz.plenglin.spaceadmiral.SpaceAdmiral.Companion.GRID_SIZE
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.io.Serializable
 import java.util.*

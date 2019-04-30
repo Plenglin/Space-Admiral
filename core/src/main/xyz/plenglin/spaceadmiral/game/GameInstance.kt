@@ -1,7 +1,7 @@
 package xyz.plenglin.spaceadmiral.game
 
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.SpaceAdmiral.DELTA_TIME
+import xyz.plenglin.spaceadmiral.SpaceAdmiral.Companion.DELTA_TIME
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import java.io.Serializable
 

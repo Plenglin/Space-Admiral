@@ -3,9 +3,11 @@ package xyz.plenglin.spaceadmiral.view.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.view.grid.GridRenderer
 import xyz.plenglin.spaceadmiral.view.grid.SimpleGridRenderer
@@ -13,7 +15,7 @@ import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.SmoothCameraInputProcessor
 import xyz.plenglin.spaceadmiral.view.ui.grid.SectorSelectionInputProcessor
 
-class GridScreen(private val client: GameClient) : Screen {
+class GridScreen(game: SpaceAdmiral, assets: AssetManager, private val client: GameClient) : Screen {
 
     private val gameCamera: OrthographicCamera = OrthographicCamera().apply {
         zoom = 0.01f
@@ -21,7 +23,7 @@ class GridScreen(private val client: GameClient) : Screen {
     private val uiCamera: OrthographicCamera = OrthographicCamera()
 
     private val gridRenderer: GridRenderer = SimpleGridRenderer()
-    private val ui: GameUI = GameUI(client, this, uiCamera)
+    private val ui: GameUI = GameUI(game, assets, client, this, uiCamera)
 
     private val inputCameraPosition = SmoothCameraInputProcessor(gameCamera)
     private val inputSectorSelection = SectorSelectionInputProcessor(ui, client, gridRenderer)

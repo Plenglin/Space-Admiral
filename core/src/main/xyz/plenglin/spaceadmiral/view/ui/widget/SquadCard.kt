@@ -7,16 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
-import xyz.plenglin.spaceadmiral.ASSET_UI_ATLAS
-import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.ui.SquadSelectionController
-import xyz.plenglin.spaceadmiral.view.ui.getIconLabel
 
 class SquadCard(val parent: SquadSelectionController, var index: Int, val squad: SquadCM, val skin: Skin) : Group() {
 
     override fun getWidth(): Float = 96f
     override fun getHeight(): Float = 128f
+
+    val ui get() = parent.ui
 
     private val clickListener = object : ClickListener() {
         override fun clicked(event: InputEvent, x: Float, y: Float) {
@@ -29,7 +28,7 @@ class SquadCard(val parent: SquadSelectionController, var index: Int, val squad:
     init {
         addListener(clickListener)
 
-        val atlas = SpaceAdmiral.assets.get(ASSET_UI_ATLAS)
+        val atlas = ui.uiAtlas
         selectionHalo = Image(atlas.findRegion("squad-card-selection-halo")).apply {
             setPosition(0f, 0f)
             isVisible = false
@@ -39,7 +38,7 @@ class SquadCard(val parent: SquadSelectionController, var index: Int, val squad:
             setPosition(0f, 0f)
         })
         addActor(selectionHalo)
-        addActor(Image(atlas.findRegion(squad.template.classification.getIconLabel())).apply {
+        addActor(Image(squad.icon).apply {
             setAlign(Align.topRight)
             setPosition(64f, 96f)
         })

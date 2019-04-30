@@ -2,7 +2,7 @@ package xyz.plenglin.spaceadmiral.game.action
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.SpaceAdmiral.DELTA_TIME
+import xyz.plenglin.spaceadmiral.SpaceAdmiral.Companion.DELTA_TIME
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.ShipAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad

@@ -18,17 +18,9 @@ import xyz.plenglin.spaceadmiral.view.screen.GridScreen
 import java.util.*
 import kotlin.concurrent.thread
 
-object SpaceAdmiral : Game() {
-
-    @JvmStatic
-    val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
+class SpaceAdmiral : Game() {
 
     lateinit var assets: AssetManager
-
-    const val PORT = 42069
-    const val UPDATE_PERIOD = 50L
-    const val DELTA_TIME = UPDATE_PERIOD / 1000f
-    const val GRID_SIZE = 21
 
     override fun create() {
         logger.info("Creating")
@@ -115,7 +107,7 @@ object SpaceAdmiral : Game() {
             }
         }
 
-        val screen = GridScreen(localClient)
+        val screen = GridScreen(this, assets, localClient)
         setScreen(screen)
     }
 
@@ -124,5 +116,16 @@ object SpaceAdmiral : Game() {
         logger.info("Disposing")
         assets.dispose()
     }
+
+    companion object {
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(SpaceAdmiral::class.java)
+
+        const val PORT = 42069
+        const val UPDATE_PERIOD = 50L
+        const val DELTA_TIME = UPDATE_PERIOD / 1000f
+        const val GRID_SIZE = 21
+    }
+
 }
 

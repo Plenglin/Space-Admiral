@@ -1,7 +1,7 @@
 package xyz.plenglin.spaceadmiral.view.model
 
 import com.badlogic.gdx.math.Vector2
-import xyz.plenglin.spaceadmiral.SpaceAdmiral.UPDATE_PERIOD
+import xyz.plenglin.spaceadmiral.SpaceAdmiral.Companion.UPDATE_PERIOD
 import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ShipUDTO
 import xyz.plenglin.spaceadmiral.util.LinearInterpolator2

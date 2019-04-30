@@ -1,11 +1,14 @@
 package xyz.plenglin.spaceadmiral.view.ui
 
+import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import ktx.scene2d.window
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.ASSET_GAMESPRITE_ATLAS
+import xyz.plenglin.spaceadmiral.ASSET_UI_ATLAS
 import xyz.plenglin.spaceadmiral.SpaceAdmiral
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
@@ -13,7 +16,11 @@ import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.screen.GridScreen
 import xyz.plenglin.spaceadmiral.view.screen.SectorScreen
 
-class GameUI(val client: GameClient, val gridScreen: GridScreen, val camera: OrthographicCamera) : Disposable {
+class GameUI(val game: SpaceAdmiral, val assets: AssetManager, val client: GameClient, val gridScreen: GridScreen, val camera: OrthographicCamera) : Disposable {
+
+    val uiAtlas = assets.get(ASSET_UI_ATLAS)
+    val gameAtlas = assets.get(ASSET_GAMESPRITE_ATLAS)
+
     val viewport = ScreenViewport(camera)
     val stage: Stage = Stage(viewport)
 
@@ -46,13 +53,13 @@ class GameUI(val client: GameClient, val gridScreen: GridScreen, val camera: Ort
     var sectorScreen: SectorScreen? = null
 
     fun openGrid() {
-        SpaceAdmiral.screen = gridScreen
+        game.screen = gridScreen
     }
 
     fun openSector(sector: SectorCM) {
         val screen = SectorScreen(client, this, sector)
         sectorScreen = screen
-        SpaceAdmiral.screen = screen
+        game.screen = screen
     }
 
     companion object {

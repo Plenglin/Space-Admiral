@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import xyz.plenglin.spaceadmiral.SpaceAdmiral.GRID_SIZE
+import xyz.plenglin.spaceadmiral.SpaceAdmiral.Companion.GRID_SIZE
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.toIntVector2
 import xyz.plenglin.spaceadmiral.util.unproject2

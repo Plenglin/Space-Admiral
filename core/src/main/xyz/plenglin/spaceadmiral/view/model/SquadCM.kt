@@ -1,17 +1,23 @@
 package xyz.plenglin.spaceadmiral.view.model
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.game.action.ActionCM
 import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.SquadUDTO
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
+import xyz.plenglin.spaceadmiral.view.ui.getIconLabel
 import java.util.*
 import kotlin.collections.HashMap
 
 class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipType, val transform: SquadTransform) {
 
     val ui: GameUI? get() = gameState.ui
+    val displayName: String get() = template.displayName
+    val icon: TextureRegion? by lazy {
+        ui?.uiAtlas?.findRegion(template.classification.getIconLabel())
+    }
 
     var selected
         get() = ui!!.selectedSquads.contains(this)
