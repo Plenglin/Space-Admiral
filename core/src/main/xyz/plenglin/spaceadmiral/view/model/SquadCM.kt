@@ -15,9 +15,7 @@ class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipTy
 
     val ui: GameUI? get() = gameState.ui
     val displayName: String get() = template.displayName
-    val icon: TextureRegion? by lazy {
-        ui?.uiAtlas?.findRegion(template.classification.getIconLabel())
-    }
+    val icon: TextureRegion? get() = ui?.uiAtlas?.findRegion(template.classification.getIconLabel())
 
     var selected
         get() = ui!!.selectedSquads.contains(this)
@@ -41,7 +39,7 @@ class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipTy
     val gameState: GameStateCM get() = team.gameState
     val centerOfMass: Vector2 get() {
         val out = Vector2(0f, 0f)
-        ships.forEach { _, ship ->
+        ships.forEach { (_, ship) ->
             out.add(ship.transform.posGlobal)
         }
         return out.scl(1f / ships.size)

@@ -92,6 +92,7 @@ class SpaceAdmiral : Game() {
 
         val initialPayload = gameInstance.toInitialDTO()
         localBridge.initialPayload = initialPayload
+        localBridge.lockServerSide.unlock()
         logger.debug("{}", initialPayload)
 
         val localClient = GameClient(localBridge)

@@ -12,14 +12,19 @@ import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterfaceFactory
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 
 class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, GameServerInterfaceFactory {
-    override lateinit var initialPayload: ClientInitialPayload
-    private val lock = ReentrantLock()
+    var initialPayload: ClientInitialPayload? = null
+    val lockServerSide = ReentrantLock()
 
     private var clientSide: ClientSide? = null
     private var serverSide: ServerSide? = null
+
+    init {
+        lockServerSide.lock()
+    }
 
     private inner class ServerSide(override val team: Team, val server: GameServer) : GamePlayerInterface {
         override val connected: Boolean get() = clientSide != null
@@ -64,6 +69,12 @@ class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, Gam
         val obj = ClientSide(client)
         clientSide = obj
         return obj
+    }
+
+    override fun awaitInitialPayload(): ClientInitialPayload {
+        lockServerSide.withLock {
+            return initialPayload!!
+        }
     }
 
 }

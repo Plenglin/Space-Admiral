@@ -6,15 +6,13 @@ import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.view.model.*
 import java.util.*
-import java.util.concurrent.locks.ReentrantLock
 
 /**
  * The client, after initial handshake and initial data
  */
 class GameClient(server: GameServerInterfaceFactory) {
-    private val gsLock = ReentrantLock(true)
     private val server: GameServerInterface = server.createServerInterface(this)
-    val gameState: GameStateCM = server.initialPayload.toClientModel()
+    val gameState: GameStateCM = server.awaitInitialPayload().toClientModel()
 
     val team: TeamCM = gameState.teams[this.server.team]!!
 

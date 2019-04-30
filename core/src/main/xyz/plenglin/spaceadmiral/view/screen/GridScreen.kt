@@ -29,9 +29,12 @@ class GridScreen(game: SpaceAdmiral, assets: AssetManager, private val client: G
     private val inputSectorSelection = SectorSelectionInputProcessor(ui, client, gridRenderer)
     private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSectorSelection)
 
+    init {
+        client.gameState.ui = ui
+    }
+
     override fun show() {
         logger.info("showing GridScreen")
-        client.gameState.ui = ui
 
         ui.sectorScreen?.let {
             logger.info("Disposing child {}", it)
