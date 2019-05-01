@@ -26,7 +26,7 @@ class GameUI(val game: SpaceAdmiral, val assets: AssetManager, val client: GameC
 
     val selectedSquads: MutableSet<SquadCM> = HashSet()
 
-    val ctrlSquadSelection = SquadSelectionController(this)
+    val ctrlSquadSelection by lazy { SquadSelectionController(this) }
 
     val windowSquadList = window(title = "Squads") {
         add(ctrlSquadSelection.squadListTable)
@@ -35,6 +35,11 @@ class GameUI(val game: SpaceAdmiral, val assets: AssetManager, val client: GameC
 
     init {
         stage.addActor(windowSquadList)
+    }
+
+    fun firstShow() {
+        ctrlSquadSelection.updateSquadListTable()
+        windowSquadList.pack()
     }
 
     fun render(delta: Float) {

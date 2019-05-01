@@ -25,13 +25,13 @@ class GridScreen(game: SpaceAdmiral, assets: AssetManager, private val client: G
     private val gridRenderer: GridRenderer = SimpleGridRenderer()
     private val ui: GameUI = GameUI(game, assets, client, this, uiCamera)
 
-    private val inputCameraPosition = SmoothCameraInputProcessor(gameCamera)
-    private val inputSectorSelection = SectorSelectionInputProcessor(ui, client, gridRenderer)
-    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSectorSelection)
-
     init {
         client.gameState.ui = ui
     }
+
+    private val inputCameraPosition = SmoothCameraInputProcessor(gameCamera)
+    private val inputSectorSelection = SectorSelectionInputProcessor(ui, client, gridRenderer)
+    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSectorSelection)
 
     override fun show() {
         logger.info("showing GridScreen")
@@ -40,6 +40,7 @@ class GridScreen(game: SpaceAdmiral, assets: AssetManager, private val client: G
             logger.info("Disposing child {}", it)
             it.dispose()
         }
+        ui.firstShow()
 
         Gdx.input.inputProcessor = inputMultiplexer
 

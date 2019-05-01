@@ -15,12 +15,17 @@ class SquadSelectionController(val ui: GameUI) {
     private var lastClickedIndex = 0
 
     val squadListTable = table {
+    }
+
+    fun updateSquadListTable() {
+        squadListTable.clearChildren()
         ui.client.team.squads.forEachIndexed { i, squad ->
-            val card = SquadCard(this@SquadSelectionController, i, squad, skin)
-            this@table.add(card).pad(5f)
+            val card = SquadCard(this@SquadSelectionController, i, squad, squadListTable.skin)
+            squadListTable.add(card).pad(5f)
             squadVMs[squad] = SquadButtonVM(squad, card)
             cards.add(card)
         }
+        squadListTable.pack()
     }
 
     fun onSquadCardClicked(card: SquadCard) {
