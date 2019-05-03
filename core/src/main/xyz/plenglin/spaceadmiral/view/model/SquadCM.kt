@@ -7,6 +7,7 @@ import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.SquadUDTO
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
+import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommand
 import xyz.plenglin.spaceadmiral.view.ui.getIconLabel
 import java.util.*
 import kotlin.collections.HashMap
@@ -16,6 +17,7 @@ class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipTy
     val ui: GameUI? get() = gameState.ui
     val displayName: String get() = template.displayName
     val icon: TextureRegion? get() = ui?.uiAtlas?.findRegion(template.classification.getIconLabel())
+    //val texture: TextureRegion? get() = ui?.gameAtlas?.findRegion(template.classification.getIconLabel())
 
     var selected
         get() = ui!!.selectedSquads.contains(this)
@@ -34,7 +36,8 @@ class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipTy
     val ships: MutableMap<UUID, ShipCM> = HashMap()
     var index: Int = 0
 
-    val actions = mutableListOf<ActionCM>()
+    val sendableCommands: List<SquadCommand> = mutableListOf()
+    val queuedActions = mutableListOf<ActionCM>()
 
     val gameState: GameStateCM get() = team.gameState
     val centerOfMass: Vector2 get() {
@@ -47,8 +50,8 @@ class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipTy
 
     fun updateWith(dto: SquadUDTO) {
         visible = true
-        actions.clear()
-        actions.addAll(dto.actions.map { it.deserialize(gameState) })
+        queuedActions.clear()
+        queuedActions.addAll(dto.actions.map { it.deserialize(gameState) })
     }
 
 }

@@ -92,9 +92,9 @@ class SelectedSquadHighlighter(
     private fun drawSelectedSquad(squad: SquadCM) {
         shape.highlightSquad(squad)
 
-        if (squad.actions.isEmpty()) return
+        if (squad.queuedActions.isEmpty()) return
 
-        val actions = LinkedList(squad.actions)
+        val actions = LinkedList(squad.queuedActions)
         val state = actions.pop()
         var prev: ActionCM? = null
         actions.add(0, state)

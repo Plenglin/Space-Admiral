@@ -6,7 +6,7 @@ import xyz.plenglin.spaceadmiral.view.model.SquadCM
 
 class SquadInfoPaneController(val squad: SquadCM) {
 
-    val action = SquadActionController(squad)
+    val action = SquadCommandController(squad)
 
     val table = table {
         label(squad.displayName)
