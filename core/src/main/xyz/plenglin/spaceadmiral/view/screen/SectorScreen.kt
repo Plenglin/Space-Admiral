@@ -21,7 +21,7 @@ import xyz.plenglin.spaceadmiral.view.ui.sector.selection.SquadSelectionInputPro
 class SectorScreen(
         private val client: GameClient,
         private val ui: GameUI,
-        private val sector: SectorCM) : Screen {
+        val sector: SectorCM) : Screen {
 
     private val batch: SpriteBatch = SpriteBatch()
 

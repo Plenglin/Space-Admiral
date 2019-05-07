@@ -22,7 +22,7 @@ class GridScreen(game: SpaceAdmiral, assets: AssetManager, private val client: G
     }
     private val uiCamera: OrthographicCamera = OrthographicCamera()
 
-    private val gridRenderer: GridRenderer = SimpleGridRenderer()
+    val gridRenderer: GridRenderer = SimpleGridRenderer()
     private val ui: GameUI = GameUI(game, assets, client, this, uiCamera)
 
     init {

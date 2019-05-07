@@ -23,6 +23,7 @@ class GameUI(val game: SpaceAdmiral, val assets: AssetManager, val client: GameC
 
     val viewport = ScreenViewport(camera)
     val stage: Stage = Stage(viewport)
+    var sectorScreen: SectorScreen? = null
 
     val selectedSquads: MutableSet<SquadCM> = HashSet()
 
@@ -54,8 +55,6 @@ class GameUI(val game: SpaceAdmiral, val assets: AssetManager, val client: GameC
     override fun dispose() {
         stage.dispose()
     }
-
-    var sectorScreen: SectorScreen? = null
 
     fun openGrid() {
         game.screen = gridScreen
