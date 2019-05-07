@@ -57,6 +57,7 @@ class SquadSelectionController(val ui: GameUI) {
         if (ui.selectedSquads.isEmpty()) {
             lastClickedIndex = 0
         }
+        ui.infoPaneController.onSelectionChange()
     }
 
     private companion object {

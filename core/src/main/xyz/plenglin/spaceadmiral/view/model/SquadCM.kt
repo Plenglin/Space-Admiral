@@ -7,6 +7,7 @@ import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.SquadUDTO
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
+import xyz.plenglin.spaceadmiral.view.ui.command.JumpSquadCommand
 import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommand
 import xyz.plenglin.spaceadmiral.view.ui.getIconLabel
 import java.util.*
@@ -36,7 +37,7 @@ class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipTy
     val ships: MutableMap<UUID, ShipCM> = HashMap()
     var index: Int = 0
 
-    val sendableCommands: List<SquadCommand> = mutableListOf()
+    val sendableCommands: List<SquadCommand> = mutableListOf(JumpSquadCommand)
     val queuedActions = mutableListOf<ActionCM>()
 
     val gameState: GameStateCM get() = team.gameState

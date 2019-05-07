@@ -2,16 +2,33 @@ package xyz.plenglin.spaceadmiral.view.ui
 
 import ktx.scene2d.label
 import ktx.scene2d.table
-import xyz.plenglin.spaceadmiral.view.model.SquadCM
 
-class SquadInfoPaneController(val squad: SquadCM) {
-
-    val action = SquadCommandController(squad)
+class SquadInfoPaneController(val ui: GameUI) {
 
     val table = table {
-        label(squad.displayName)
-        row()
-        //image(squad.icon)
     }
 
+    init {
+        onSelectionChange()
+    }
+
+    fun onSelectionChange() {
+        val selection = ui.selectedSquads
+        val size = selection.size
+
+        table.clearChildren()
+        when (size) {
+            0 -> table.apply {
+                label("No selection")
+            }
+            1 -> table.apply {
+                label(selection.first().displayName)
+            }
+            else -> table.apply {
+                label("$size squads")
+            }
+        }
+
+        table.pack()
+    }
 }

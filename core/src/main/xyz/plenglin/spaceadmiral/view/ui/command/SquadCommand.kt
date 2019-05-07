@@ -6,14 +6,15 @@ import xyz.plenglin.spaceadmiral.view.ui.GameUI
 
 interface SquadCommand {
     val displayName: String
-    fun onActivate(ui: GameUI, targets: Set<SquadCM>, finishListener: (CommandResult) -> Unit): SquadCommandContext
+    fun onActivate(ui: GameUI, recipients: Set<SquadCM>, finishListener: (SquadCommandResult) -> Unit): SquadCommandContext
 }
 
 interface SquadCommandContext : InputProcessor {
     fun cancel()
 }
 
-sealed class CommandResult
+sealed class SquadCommandResult {
+    object Success : SquadCommandResult()
+    object Failure : SquadCommandResult()
+}
 
-object Success : CommandResult()
-object Failure : CommandResult()

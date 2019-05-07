@@ -28,14 +28,21 @@ class GameUI(val game: SpaceAdmiral, val assets: AssetManager, val client: GameC
     val selectedSquads: MutableSet<SquadCM> = HashSet()
 
     val ctrlSquadSelection by lazy { SquadSelectionController(this) }
+    val infoPaneController = SquadInfoPaneController(this)
 
     val windowSquadList = window(title = "Squads") {
         add(ctrlSquadSelection.squadListTable)
         pack()
     }
 
+    val windowInfoPane = window(title = "Squad Info") {
+        add(infoPaneController.table)
+        pack()
+    }
+
     init {
         stage.addActor(windowSquadList)
+        stage.addActor(windowInfoPane)
     }
 
     fun firstShow() {

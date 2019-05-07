@@ -6,7 +6,7 @@ import xyz.plenglin.spaceadmiral.view.ui.GameUI
 object MoveSquadCommand : SquadCommand {
     override val displayName: String = "Move"
 
-    override fun onActivate(ui: GameUI, targets: Set<SquadCM>, finishListener: (CommandResult) -> Unit): SquadCommandContext {
+    override fun onActivate(ui: GameUI, recipients: Set<SquadCM>, finishListener: (SquadCommandResult) -> Unit): SquadCommandContext {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

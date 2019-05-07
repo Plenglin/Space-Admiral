@@ -5,6 +5,7 @@ import xyz.plenglin.spaceadmiral.game.action.AttackSquadAction
 import xyz.plenglin.spaceadmiral.game.action.MoveSquadAction
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
+import xyz.plenglin.spaceadmiral.util.IntVector2
 import java.util.*
 
 data class ClearSquadActionQueueCommand(val recipient: UUID) : ClientCommand {
@@ -36,6 +37,13 @@ data class AttackSquadCommand(val recipient: UUID, val target: UUID) : ClientCom
         if (sender.team.uuid == target.team.uuid) return CommandResult.Fail("You can't attack your own team!")
 
         recipient.actionQueue.add(AttackSquadAction(recipient, target))
+        return CommandResult.Success
+    }
+}
+
+data class WarpSquadCommand(val recipient: UUID, val target: IntVector2) : ClientCommand {
+    override fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult {
+        TODO()
         return CommandResult.Success
     }
 }
