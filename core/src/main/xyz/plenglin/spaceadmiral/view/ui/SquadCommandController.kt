@@ -16,12 +16,12 @@ class SquadCommandController(val ui: GameUI) : InputProcessor {
     var currentCommand: SquadCommandContext? = null
 
     fun performSquadAction(action: SquadCommand) {
-        logger.info("Cancelling {}", currentCommand)
-        currentCommand?.cancel()
+        cancel()
 
         logger.info("Creating context for {}", action)
         val context = action.onActivate(ui, ui.selectedSquads) { result ->
             logger.info("{} finished with {}", action, result)
+            currentCommand = null
         }
         currentCommand = context
 
@@ -30,6 +30,7 @@ class SquadCommandController(val ui: GameUI) : InputProcessor {
     }
 
     fun cancel() {
+        logger.info("Cancelling {}", currentCommand)
         currentCommand?.cancel()
         currentCommand = null
     }

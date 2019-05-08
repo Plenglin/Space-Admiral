@@ -9,7 +9,7 @@ class GameInstance : Serializable {
     val gameState = GameState()
 
     fun update() {
-        logger.debug("update {}", gameState.time)
+        logger.trace("update {}", gameState.time)
 
         // Sector update
         gameState.sectors.forEach { (_, sector) ->

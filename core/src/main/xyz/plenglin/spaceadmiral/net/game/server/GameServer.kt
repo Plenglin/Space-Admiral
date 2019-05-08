@@ -33,11 +33,11 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
     }
 
     fun update() {
-        logger.debug("Updating server {}", this)
+        logger.trace("Updating server {}", this)
 
         applyCommands()
 
-        logger.debug("Updating GameInstance")
+        logger.trace("Updating GameInstance")
         instance.update()
 
         sendToClients()
@@ -67,7 +67,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         }
 
         players.forEach { player ->
-            logger.debug("Sending payload to {}", player)
+            logger.trace("Sending payload to {}", player)
             val tadar = TadarData()
             tadar.initializeNoise()
 

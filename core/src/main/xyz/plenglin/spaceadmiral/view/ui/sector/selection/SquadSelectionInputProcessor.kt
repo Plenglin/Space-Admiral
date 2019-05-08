@@ -41,7 +41,7 @@ class SquadSelectionInputProcessor(
         state?.let {
             it.dragged = true
             it.end.set(gameCamera.unproject2(screenX.toFloat(), screenY.toFloat()))
-            logger.info("Selection dragged, state={}", it)
+            logger.debug("Selection dragged, state={}", it)
             return true
         }
         return false
@@ -55,7 +55,7 @@ class SquadSelectionInputProcessor(
         logger.info("touchUp event with state={}", state)
 
         if (state.dragged) {
-            logger.info("Selection was dragged, interpreting as selection box")
+            logger.debug("Selection was dragged, interpreting as selection box")
             val selected = state.getSelectedSquads(sector.shipTree).map { client.getSquad(it.uuid) }
             logger.debug("Selected ships {}", selected)
             ui.selectedSquads.addAll(selected)

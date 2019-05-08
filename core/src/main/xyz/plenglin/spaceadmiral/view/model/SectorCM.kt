@@ -26,7 +26,7 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
     }
 
     fun updateTrees() {
-        logger.debug("Updating trees of {}", this)
+        logger.trace("Updating trees of {}", this)
         shipTree.clear()
         val ships = ships.values.toMutableList()//.let { ships ->
         ships.forEach {

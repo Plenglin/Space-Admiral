@@ -52,7 +52,7 @@ class GridScreen(game: SpaceAdmiral, assets: AssetManager, private val client: G
     }
 
     override fun render(delta: Float) {
-        logger.debug("performing a render, FPS = {}", 1 / delta)
+        logger.trace("performing a render, FPS = {}", 1 / delta)
 
         inputCameraPosition.update(delta)
         gameCamera.update()

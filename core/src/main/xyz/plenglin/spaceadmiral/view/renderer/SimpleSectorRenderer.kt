@@ -47,7 +47,7 @@ class SimpleSectorRenderer : SectorRenderer {
         val xMax = xs.max()!!
         val yMin = ys.min()!!
         val yMax = ys.max()!!
-        logger.debug("{} drawing with limits: x=[{}, {}] y=[{}, {}]", this, xMin, xMax, yMin, yMax)
+        logger.trace("{} drawing with limits: x=[{}, {}] y=[{}, {}]", this, xMin, xMax, yMin, yMax)
 
         nextShipColor = 0xff0000
         pixelToShip.clear()

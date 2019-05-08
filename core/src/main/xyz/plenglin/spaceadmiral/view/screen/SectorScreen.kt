@@ -62,7 +62,7 @@ class SectorScreen(
     }
 
     override fun render(delta: Float) {
-        logger.debug("SectorScreen performing a render, FPS = {}", 1 / delta)
+        logger.trace("SectorScreen performing a render, FPS = {}", 1 / delta)
 
         sector.squads.filter { (_, squad) -> squad.visible }.forEach { _, squad ->
             squad.ships.forEach { _, ship ->
@@ -112,7 +112,6 @@ class SectorScreen(
     override fun dispose() {
         logger.info("Disposing")
         batch.dispose()
-        ui.dispose()
     }
 
     companion object {
