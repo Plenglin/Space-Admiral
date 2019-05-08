@@ -31,7 +31,11 @@ class GridScreen(game: SpaceAdmiral, assets: AssetManager, private val client: G
 
     private val inputCameraPosition = SmoothCameraInputProcessor(gameCamera)
     private val inputSectorSelection = SectorSelectionInputProcessor(ui, client, gridRenderer)
-    private val inputMultiplexer = InputMultiplexer(ui.stage, inputCameraPosition, inputSectorSelection)
+    private val inputMultiplexer = InputMultiplexer(
+            ui.stage,
+            ui.squadCommand,
+            inputCameraPosition,
+            inputSectorSelection)
 
     override fun show() {
         logger.info("showing GridScreen")

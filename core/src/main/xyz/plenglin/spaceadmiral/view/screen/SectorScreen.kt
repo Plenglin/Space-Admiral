@@ -37,6 +37,7 @@ class SectorScreen(
     private val inputReturnFromSector = ReturnFromSectorInputProcessor(ui)
     private val inputMultiplexer = InputMultiplexer(
             ui.stage,
+            ui.squadCommand,
             inputCameraPosition,
             inputSquadCommand,
             inputSquadSelect,

@@ -1,5 +1,7 @@
 package xyz.plenglin.spaceadmiral.view.ui
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Table
 import ktx.actors.onClick
 import ktx.scene2d.button
 import ktx.scene2d.label
@@ -7,8 +9,7 @@ import ktx.scene2d.table
 
 class SquadInfoPaneController(val ui: GameUI) {
 
-    val table = table {
-    }
+    val table = Table(ui.skin)
 
     init {
         onSelectionChange()
@@ -26,7 +27,7 @@ class SquadInfoPaneController(val ui: GameUI) {
         }
 
         table.apply {
-            label(selectionLabel)
+            add(Label(selectionLabel, skin))
             if (selection.isEmpty()) {
                 return
             }
@@ -38,7 +39,7 @@ class SquadInfoPaneController(val ui: GameUI) {
                 actions = actions.intersect(it.sendableCommands)
             }
 
-            table {
+            add(table {
                 actions.forEach { action ->
                     button {
                         label(action.displayName)
@@ -47,7 +48,7 @@ class SquadInfoPaneController(val ui: GameUI) {
                         }
                     }
                 }
-            }
+            })
             pack()
         }
     }
