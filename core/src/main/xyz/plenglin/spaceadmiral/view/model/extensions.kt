@@ -19,7 +19,7 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
         cmGameState.teams[uuid] = cmTeam
 
         for (gsSquad in gsTeam.squads) {
-            val cmSquadParentSector = cmGameState.sectors.getValue(gsSquad.sector.pos)
+            val cmSquadParentSector = cmGameState.sectors.getValue(gsSquad.sector!!.pos)
             val cmSquad = SquadCM(
                     gsSquad.uuid,
                     cmTeam,

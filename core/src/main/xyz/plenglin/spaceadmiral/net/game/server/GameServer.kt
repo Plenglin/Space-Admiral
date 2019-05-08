@@ -62,8 +62,10 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
     private fun sendToClients() {
         val sectorOccupation = mutableMapOf<Team, HashSet<Sector>>()
-        instance.gameState.squads.forEach { (_, squad) ->
-            sectorOccupation.getOrPut(squad.team) { HashSet() }.add(squad.sector)
+        instance.gameState.sectors.forEach { (_, sector) ->
+            sector.squads.forEach { (_, squad) ->
+                sectorOccupation.getOrPut(squad.team) { HashSet() }.add(sector)
+            }
         }
 
         players.forEach { player ->
@@ -99,8 +101,9 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
                 }
             }
 
+            val warping = instance.gameState.warpBubbles.map { it.value!!.asUpdateDTO(instance.gameState.time) }
             val sentSectors = knownSectors.map { it.asUpdateDTO() }
-            val payload = ClientUpdatePayload(sentSectors, tadar)
+            val payload = ClientUpdatePayload(sentSectors, warping, tadar)
             player.sendPayload(payload)
         }
     }

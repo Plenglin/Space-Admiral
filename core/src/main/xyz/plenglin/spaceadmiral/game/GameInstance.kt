@@ -42,7 +42,7 @@ class GameInstance : Serializable {
 
         // Process repulsor forces
         repulsors.forEach { ship ->
-            ship.sector.shipTree!!.findInCircle(ship.transform.posGlobal, ship.template.repulsion!!.range)
+            ship.sector!!.shipTree!!.findInCircle(ship.transform.posGlobal, ship.template.repulsion!!.range)
                     .map { it.value!! }
                     .filter { !ship.team.isAlliedWith(it.team) }
                     .forEach { other ->
@@ -67,7 +67,7 @@ class GameInstance : Serializable {
         gameState.ships.values.forEach { ship ->
             if (ship.health.isDead) {
                 ship.onDeath()
-                ship.sector.recentlyDiedShips.add(ship)
+                ship.sector!!.recentlyDiedShips.add(ship)
             }
         }
         gameState.sectors.values.forEach { sector ->

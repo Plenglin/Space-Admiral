@@ -10,6 +10,7 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.Ship.Companion.IS_DEAD
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.game.squad.WarpBubble
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ShipUDTO.Companion.SENT_FLAGS
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.Transform2D
@@ -19,8 +20,18 @@ import java.util.*
 
 data class ClientUpdatePayload(
         val sectors: List<SectorUDTO>,
+        val warping: List<WarpBubbleUDTO>,
         val tadar: TadarData
 ) : Serializable
+
+data class WarpBubbleUDTO internal constructor(
+        val squads: List<SquadUDTO>,
+        val pos: Vector2
+)
+
+fun WarpBubble.asUpdateDTO(t: Long): WarpBubbleUDTO {
+    return WarpBubbleUDTO(squads.map { it.asUpdateDTO() }, getPos(t))
+}
 
 data class ProjectileUDTO internal constructor(
         val uuid: UUID,
