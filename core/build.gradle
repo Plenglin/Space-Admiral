@@ -20,6 +20,7 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
+    implementation "io.github.libktx:ktx-actors:$ktxVersion"
     implementation "io.github.libktx:ktx-scene2d:$ktxVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"

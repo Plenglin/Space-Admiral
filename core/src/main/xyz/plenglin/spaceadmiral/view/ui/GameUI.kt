@@ -25,6 +25,8 @@ class GameUI(val game: SpaceAdmiral, val assets: AssetManager, val client: GameC
     val stage: Stage = Stage(viewport)
     var sectorScreen: SectorScreen? = null
 
+    val squadCommand: SquadCommandController = SquadCommandController(this)
+
     val selectedSquads: MutableSet<SquadCM> = HashSet()
 
     val ctrlSquadSelection by lazy { SquadSelectionController(this) }

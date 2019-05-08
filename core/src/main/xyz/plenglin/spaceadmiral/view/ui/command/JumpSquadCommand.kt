@@ -21,7 +21,7 @@ object JumpSquadCommand : SquadCommand {
     private class Context(val ui: GameUI, val recipients: Set<SquadCM>, val finishListener: (SquadCommandResult) -> Unit) : SquadCommandContext {
         private var startingSector: SectorCM? = ui.sectorScreen?.sector
 
-        init {
+        override fun initialize() {
             ui.openGrid()
         }
 

@@ -10,6 +10,7 @@ interface SquadCommand {
 }
 
 interface SquadCommandContext : InputProcessor {
+    fun initialize()
     fun cancel()
 }
 
