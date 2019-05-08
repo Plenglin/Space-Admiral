@@ -27,6 +27,10 @@ fun Vector2.toIntVector2(): IntVector2 {
     return IntVector2(x.toInt(), y.toInt())
 }
 
+fun IntVector2.toFloatVector(): Vector2 {
+    return Vector2(x.toFloat(), y.toFloat())
+}
+
 class Transform2D(val posLocal: Vector2 = Vector2(), angleLocal: Float = 0f, parent: Transform2D? = null) : Serializable {
     private val children = mutableSetOf<Transform2D>()
 

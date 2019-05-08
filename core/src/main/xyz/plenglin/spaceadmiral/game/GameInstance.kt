@@ -21,6 +21,16 @@ class GameInstance : Serializable {
             squad.update()
         }
 
+        val bubbles = gameState.warpBubbles.map { it.value }.toMutableSet()
+        for (bubble in bubbles) {
+            if (bubble!!.hasArrived(gameState.time)) {
+                bubbles.remove(bubble)
+            } else {
+                val sector = gameState.getSector(bubble.endSector)
+                sector.squads
+            }
+        }
+
         // Ship initial logic update
         val repulsors = mutableListOf<Ship>()
         gameState.ships.forEach { (_, ship) ->
