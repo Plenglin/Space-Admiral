@@ -69,43 +69,47 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         }
 
         players.forEach { player ->
-            logger.trace("Sending payload to {}", player)
-            val tadar = TadarData()
-            tadar.initializeNoise()
-
-            val occupiedSectors = sectorOccupation[player.team] ?: hashSetOf()
-            val signals = instance.gameState.sectors.map { it.value to 0f }.toMap().toMutableMap()
-
-            occupiedSectors.forEach { s1 ->
-                val strength = s1.squads.values
-                        .filter { player.team.isAlliedWith(it.team) }
-                        .map { it.template.tadarStrength }
-                        .sum()
-                signals[s1] = 1f
-
-                (signals.keys - occupiedSectors).forEach { s2 ->
-                    val dist2 = s1.pos.dist2(s2.pos)
-                    val signature = s1.squads.values
-                            .map { it.template.tadarSignature }
-                            .sum()
-                    signals[s2] = signals[s2]!!.plus(strength * signature / dist2)
-                }
-            }
-
-            val knownSectors = mutableSetOf<Sector>()
-
-            signals.forEach { (sector, signal) ->
-                tadar[sector.pos] += signal
-                if (signal >= VISIBILITY_THRESHOLD) {
-                    knownSectors.add(sector)
-                }
-            }
-
-            val warping = instance.gameState.warpBubbles.map { it.value!!.asUpdateDTO(instance.gameState.time) }
-            val sentSectors = knownSectors.map { it.asUpdateDTO() }
-            val payload = ClientUpdatePayload(sentSectors, warping, tadar)
-            player.sendPayload(payload)
+            sendToPlayer(player, sectorOccupation)
         }
+    }
+
+    private fun sendToPlayer(player: GamePlayerInterface, sectorOccupation: MutableMap<Team, HashSet<Sector>>) {
+        logger.trace("Sending payload to {}", player)
+        val tadar = TadarData()
+        tadar.initializeNoise()
+
+        val occupiedSectors = sectorOccupation[player.team] ?: hashSetOf()
+        val signals = instance.gameState.sectors.map { it.value to 0f }.toMap().toMutableMap()
+
+        occupiedSectors.forEach { s1 ->
+            val strength = s1.squads.values
+                    .filter { player.team.isAlliedWith(it.team) }
+                    .map { it.template.tadarStrength }
+                    .sum()
+            signals[s1] = 1f
+
+            (signals.keys - occupiedSectors).forEach { s2 ->
+                val dist2 = s1.pos.dist2(s2.pos)
+                val signature = s1.squads.values
+                        .map { it.template.tadarSignature }
+                        .sum()
+                signals[s2] = signals[s2]!!.plus(strength * signature / dist2)
+            }
+        }
+
+        val knownSectors = mutableSetOf<Sector>()
+
+        signals.forEach { (sector, signal) ->
+            tadar[sector.pos] += signal
+            if (signal >= VISIBILITY_THRESHOLD) {
+                knownSectors.add(sector)
+            }
+        }
+
+        val warping = instance.gameState.warpBubbles.map { it.value!!.asUpdateDTO(instance.gameState.time) }
+        val sentSectors = knownSectors.map { it.asUpdateDTO() }
+        val payload = ClientUpdatePayload(sentSectors, events, tadar)
+        player.sendPayload(payload)
     }
 
     fun onCommandReceived(client: GamePlayerInterface, command: ClientCommand) {

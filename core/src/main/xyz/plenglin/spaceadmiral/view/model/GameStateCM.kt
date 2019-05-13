@@ -18,6 +18,9 @@ class GameStateCM {
     val squads = hashMapOf<UUID, SquadCM>()
     val ships = hashMapOf<UUID, ShipCM>()
 
+    val bubbles = hashMapOf<UUID, WarpBubbleCM>()
+    var time = 0L
+
     var tadar: TadarData = TadarData()
 
     var lastUpdateTime: Long = 0L

@@ -20,17 +20,18 @@ import java.util.*
 
 data class ClientUpdatePayload(
         val sectors: List<SectorUDTO>,
-        val warping: List<WarpBubbleUDTO>,
+        val events: List<GameEvent>,
         val tadar: TadarData
 ) : Serializable
 
 data class WarpBubbleUDTO internal constructor(
         val squads: List<SquadUDTO>,
-        val pos: Vector2
+        val pos: Vector2,
+        val velocity: Vector2
 )
 
 fun WarpBubble.asUpdateDTO(t: Long): WarpBubbleUDTO {
-    return WarpBubbleUDTO(squads.map { it.asUpdateDTO() }, getPos(t))
+    return WarpBubbleUDTO(squads.map { it.asUpdateDTO() }, getPos(t), Vector2(0f, 0f))
 }
 
 data class ProjectileUDTO internal constructor(
