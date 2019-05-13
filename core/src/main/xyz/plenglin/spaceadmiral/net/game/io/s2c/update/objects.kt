@@ -20,6 +20,7 @@ import java.util.*
 
 data class ClientUpdatePayload(
         val sectors: List<SectorUDTO>,
+        val warping: List<WarpBubbleUDTO>,
         val events: List<GameEvent>,
         val tadar: TadarData
 ) : Serializable

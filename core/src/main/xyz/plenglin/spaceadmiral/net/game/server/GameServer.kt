@@ -6,7 +6,6 @@ import xyz.plenglin.spaceadmiral.game.GameInstance
 import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.TadarData.Companion.VISIBILITY_THRESHOLD
-import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.CommandResult
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
@@ -19,7 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue
 class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameInstance = GameInstance()) {
 
     private val commands: BlockingQueue<Pair<GamePlayerInterface, ClientCommand>> = LinkedBlockingQueue()
-    val players: List<GamePlayerInterface>
+    val players: List<GamePlayer>
 
     private val bos = ByteArrayOutputStream()
     private val oos = ObjectOutputStream(bos)
@@ -28,7 +27,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         logger.info("Initializing server {}", this)
         this.players = players.mapIndexed { i, pl ->
             val team = instance.gameState.createTeam(COLORS[i], uuid = pl.team)
-            pl.createPlayerInterface(team, this)
+            GamePlayer(pl.createPlayerInterface(team, this))
         }
     }
 
@@ -61,25 +60,28 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
     }
 
     private fun sendToClients() {
-        val sectorOccupation = mutableMapOf<Team, HashSet<Sector>>()
-        instance.gameState.sectors.forEach { (_, sector) ->
-            sector.squads.forEach { (_, squad) ->
-                sectorOccupation.getOrPut(squad.team) { HashSet() }.add(sector)
+        players.forEach { player ->
+            player.occupied.clear()
+            player.team.squads.forEach {
+                val sector = it.sector
+                if (sector != null) {
+                    player.occupied.add(sector)
+                }
             }
         }
 
         players.forEach { player ->
-            sendToPlayer(player, sectorOccupation)
+            sendToPlayer(player)
         }
     }
 
-    private fun sendToPlayer(player: GamePlayerInterface, sectorOccupation: MutableMap<Team, HashSet<Sector>>) {
+    private fun sendToPlayer(player: GamePlayer) {
         logger.trace("Sending payload to {}", player)
         val tadar = TadarData()
         tadar.initializeNoise()
 
-        val occupiedSectors = sectorOccupation[player.team] ?: hashSetOf()
-        val signals = instance.gameState.sectors.map { it.value to 0f }.toMap().toMutableMap()
+        val occupiedSectors = player.occupied
+        val signals = instance.gameState.sectors.values.map { it to 0f }.toMap().toMutableMap()
 
         occupiedSectors.forEach { s1 ->
             val strength = s1.squads.values
@@ -108,8 +110,8 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
         val warping = instance.gameState.warpBubbles.map { it.value!!.asUpdateDTO(instance.gameState.time) }
         val sentSectors = knownSectors.map { it.asUpdateDTO() }
-        val payload = ClientUpdatePayload(sentSectors, events, tadar)
-        player.sendPayload(payload)
+        val payload = ClientUpdatePayload(sentSectors, warping, listOf(), tadar)
+        player.iface.sendPayload(payload)
     }
 
     fun onCommandReceived(client: GamePlayerInterface, command: ClientCommand) {
@@ -125,7 +127,6 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         val COLORS = listOf<Color>(
                 Color.BLUE,
                 Color.RED,
-                Color.CYAN,
                 Color.GREEN,
                 Color.YELLOW,
                 Color.PINK,
