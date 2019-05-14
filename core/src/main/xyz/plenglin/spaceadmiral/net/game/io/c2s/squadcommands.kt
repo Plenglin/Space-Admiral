@@ -41,9 +41,12 @@ data class AttackSquadCommand(val recipient: UUID, val target: UUID) : ClientCom
     }
 }
 
-data class WarpSquadCommand(val recipient: UUID, val target: IntVector2) : ClientCommand {
+data class WarpSquadCommand(val recipients: List<UUID>, val target: IntVector2) : ClientCommand {
     override fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult {
-        TODO()
+        val squadId = recipients.firstOrNull() ?: return CommandResult.InvalidData("No recipients supplied!")
+        val squad = instance.gameState.squads[squadId] ?: return CommandResult.InvalidData("Squad UUID $squadId does not exist!")
+        val dest = instance.gameState.sectors[target] ?: return CommandResult.InvalidData("Destination sector does not exist!")
+        val bubble = squad.sector?.createWarpBubble(recipients.toSet(), dest)
         return CommandResult.Success
     }
 }

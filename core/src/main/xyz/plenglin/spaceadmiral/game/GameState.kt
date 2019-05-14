@@ -7,7 +7,6 @@ import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.WarpBubble
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.IntVector2
-import xyz.plenglin.spaceadmiral.util.KDTree2
 import java.io.Serializable
 import java.util.*
 import kotlin.collections.HashMap
@@ -21,7 +20,7 @@ class GameState : Serializable {
     val ships = HashMap<UUID, Ship>()
     val projectiles = HashMap<UUID, Projectile>()
 
-    val warpBubbles = KDTree2<WarpBubble>()
+    val warpBubbles = HashMap<UUID, WarpBubble>()
 
     fun getSector(pos: IntVector2): Sector {
         var out = sectors[pos]

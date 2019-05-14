@@ -4,8 +4,10 @@ import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.lerp
 import xyz.plenglin.spaceadmiral.util.toFloatVector
 import java.io.Serializable
+import java.util.*
 
 data class WarpBubble(
+        val uuid: UUID,
         val squads: Set<Squad>,
         val startSector: IntVector2,
         val startTime: Long,

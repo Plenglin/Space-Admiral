@@ -39,8 +39,8 @@ object JumpSquadCommand : SquadCommand {
             recipients.forEach { squad ->
                 logger.debug("{} sending to {}", this, squad)
                 client.sendCommand(ClearSquadActionQueueCommand(squad.uuid))
-                client.sendCommand(WarpSquadCommand(squad.uuid, coord))
             }
+            client.sendCommand(WarpSquadCommand(recipients.map { it.uuid }, coord))
 
             finishListener(SquadCommandResult.Success)
             return true

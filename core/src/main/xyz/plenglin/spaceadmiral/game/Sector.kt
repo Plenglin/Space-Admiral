@@ -4,6 +4,7 @@ import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.game.squad.WarpBubble
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.KDTree2
 import java.io.Serializable
@@ -44,6 +45,19 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
             projectileTree.insert(projectile.pos, projectile)
         }
         this.projectileTree = projectileTree
+    }
+
+    fun createWarpBubble(squads: Set<UUID>, destination: Sector): WarpBubble {
+        if (this.squads.keys.containsAll(squads)) {
+            throw IllegalArgumentException("Not all squads in $squads are in $this!")
+        }
+        val bubbledSquads = squads.mapNotNull(this.squads::get).toSet()
+        squads.forEach {
+            this.squads.remove(it)
+        }
+        val out = WarpBubble(UUID.randomUUID(), bubbledSquads, this.pos, parent.time, destination.pos, parent.time + 1000)
+        parent.warpBubbles[out.uuid] = out
+        return out
     }
 
     override fun hashCode(): Int {
