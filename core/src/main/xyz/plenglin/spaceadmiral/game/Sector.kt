@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.game
 
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
@@ -48,12 +49,14 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
     }
 
     fun createWarpBubble(squads: Set<UUID>, destination: Sector): WarpBubble {
-        if (this.squads.keys.containsAll(squads)) {
-            throw IllegalArgumentException("Not all squads in $squads are in $this!")
-        }
+        //if (this.squads.keys.containsAll(squads)) {
+        //    throw IllegalArgumentException("Not all squads in $squads are in $this!")
+        //}
+        logger.info("Creating warp bubble from {} to {} with squads {}", this, destination, squads)
         val bubbledSquads = squads.mapNotNull(this.squads::get).toSet()
         squads.forEach {
-            this.squads.remove(it)
+            val squad = this.squads.remove(it)!!
+            squad.sector = null
         }
         val out = WarpBubble(UUID.randomUUID(), bubbledSquads, this.pos, parent.time, destination.pos, parent.time + 1000)
         parent.warpBubbles[out.uuid] = out
@@ -62,5 +65,14 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
     override fun hashCode(): Int {
         return pos.hashCode()
+    }
+
+    override fun toString(): String {
+        return "Sector($pos)"
+    }
+
+    private companion object {
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(Sector::class.java)
     }
 }

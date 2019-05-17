@@ -6,6 +6,7 @@ import xyz.plenglin.spaceadmiral.net.game.io.c2s.WarpSquadCommand
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.model.SquadCM
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
+import xyz.plenglin.spaceadmiral.view.ui.SquadCommandController
 
 object JumpSquadCommand : SquadCommand {
 
@@ -14,11 +15,11 @@ object JumpSquadCommand : SquadCommand {
 
     override val displayName: String = "Warp Drive"
 
-    override fun onActivate(ui: GameUI, recipients: Set<SquadCM>, finishListener: (SquadCommandResult) -> Unit): SquadCommandContext {
-        return Context(ui, recipients, finishListener)
+    override fun onActivate(ui: GameUI, recipients: Set<SquadCM>, controller: SquadCommandController): SquadCommandContext {
+        return Context(ui, recipients, controller)
     }
 
-    private class Context(val ui: GameUI, val recipients: Set<SquadCM>, val finishListener: (SquadCommandResult) -> Unit) : SquadCommandContext {
+    private class Context(val ui: GameUI, val recipients: Set<SquadCM>, val controller: SquadCommandController) : SquadCommandContext {
         private var startingSector: SectorCM? = ui.sectorScreen?.sector
 
         override fun initialize() {
@@ -27,7 +28,6 @@ object JumpSquadCommand : SquadCommand {
 
         override fun cancel() {
             logger.info("Canceling {}", this)
-            startingSector?.let { ui.openSector(it) }
         }
 
         override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
@@ -42,8 +42,12 @@ object JumpSquadCommand : SquadCommand {
             }
             client.sendCommand(WarpSquadCommand(recipients.map { it.uuid }, coord))
 
-            finishListener(SquadCommandResult.Success)
+            controller.onCommandFinish(SquadCommandResult.Success)
             return true
+        }
+
+        override fun unshow() {
+            startingSector?.let { ui.openSector(it) }
         }
 
         override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false

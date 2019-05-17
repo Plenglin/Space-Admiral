@@ -6,6 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommand
 import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandContext
+import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommandResult
 
 
 /**
@@ -19,10 +20,7 @@ class SquadCommandController(val ui: GameUI) : InputProcessor {
         cancel()
 
         logger.info("Creating context for {}", action)
-        val context = action.onActivate(ui, ui.selectedSquads) { result ->
-            logger.info("{} finished with {}", action, result)
-            currentCommand = null
-        }
+        val context = action.onActivate(ui, ui.selectedSquads, this)
         currentCommand = context
 
         logger.debug("Initializing context {}", context)
@@ -32,6 +30,13 @@ class SquadCommandController(val ui: GameUI) : InputProcessor {
     fun cancel() {
         logger.info("Cancelling {}", currentCommand)
         currentCommand?.cancel()
+        currentCommand?.unshow()
+        currentCommand = null
+    }
+
+    fun onCommandFinish(result: SquadCommandResult) {
+        logger.info("{} finished with {}", currentCommand, result)
+        currentCommand?.unshow()
         currentCommand = null
     }
 
