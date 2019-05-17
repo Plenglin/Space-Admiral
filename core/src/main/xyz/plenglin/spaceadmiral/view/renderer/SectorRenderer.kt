@@ -2,8 +2,6 @@ package xyz.plenglin.spaceadmiral.view.renderer
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
-import xyz.plenglin.spaceadmiral.game.Sector
-import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.model.ShipCM
 

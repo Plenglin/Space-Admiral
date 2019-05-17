@@ -1,7 +1,7 @@
 package xyz.plenglin.spaceadmiral.game.ship.weapon
 
 import xyz.plenglin.spaceadmiral.game.DamageType
-import xyz.plenglin.spaceadmiral.game.Sector
+import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import java.io.Serializable
 import java.util.*

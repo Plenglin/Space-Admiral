@@ -1,11 +1,11 @@
 package xyz.plenglin.spaceadmiral.net.game.io.s2c.update
 
 import com.badlogic.gdx.math.Vector2
-import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.action.ActionDTO
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
+import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.Ship.Companion.IS_DEAD
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
@@ -21,7 +21,7 @@ import java.util.*
 data class ClientUpdatePayload(
         val sectors: List<SectorUDTO>,
         val warping: List<WarpBubbleUDTO>,
-        val events: List<GameEvent>,
+        val events: List<SectorEventDTO>,
         val tadar: TadarData
 ) : Serializable
 

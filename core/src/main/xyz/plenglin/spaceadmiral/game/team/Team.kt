@@ -2,8 +2,8 @@ package xyz.plenglin.spaceadmiral.game.team
 
 import com.badlogic.gdx.graphics.Color
 import xyz.plenglin.spaceadmiral.game.GameState
-import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
+import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import java.io.Serializable

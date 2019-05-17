@@ -6,11 +6,11 @@ import xyz.plenglin.spaceadmiral.view.model.GameStateCM
 import xyz.plenglin.spaceadmiral.view.model.WarpBubbleCM
 import java.util.*
 
-interface GameEvent {
+interface SectorEventDTO {
     fun update(gameState: GameStateCM)
 }
 
-data class WarpBubbleBeginEvent(val bubbleUUID: UUID, val pos: Vector2, val velocity: Vector2, val squads: List<UUID>) : GameEvent {
+data class WarpBubbleBeginEvent(val bubbleUUID: UUID, val pos: Vector2, val velocity: Vector2, val squads: List<UUID>) : SectorEventDTO {
     override fun update(gameState: GameStateCM) {
         gameState.bubbles[bubbleUUID] = WarpBubbleCM(pos, velocity, gameState.time)
     }
@@ -22,7 +22,7 @@ data class WarpBubbleEndEvent(
         /**
          * Where the bubble finished. Null if it went off TADAR.
          */
-        val endSector: IntVector2?) : GameEvent {
+        val endSector: IntVector2?) : SectorEventDTO {
     override fun update(gameState: GameStateCM) {
         gameState.bubbles[bubbleUUID]!!.lastSeen = gameState.time
         if (endSector != null) {

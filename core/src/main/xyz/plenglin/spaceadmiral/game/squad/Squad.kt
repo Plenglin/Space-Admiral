@@ -2,8 +2,8 @@ package xyz.plenglin.spaceadmiral.game.squad
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
+import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.util.StateScheduler

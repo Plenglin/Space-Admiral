@@ -3,9 +3,9 @@ package xyz.plenglin.spaceadmiral.net.game.server
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.game.GameInstance
-import xyz.plenglin.spaceadmiral.game.Sector
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.TadarData.Companion.VISIBILITY_THRESHOLD
+import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.CommandResult
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload

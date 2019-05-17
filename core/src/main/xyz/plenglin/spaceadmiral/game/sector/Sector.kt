@@ -1,7 +1,9 @@
-package xyz.plenglin.spaceadmiral.game
+package xyz.plenglin.spaceadmiral.game.sector
 
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
+import xyz.plenglin.spaceadmiral.game.sector.event.SectorEvent
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
@@ -19,6 +21,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
     val firingEvents: MutableList<FiringEvent> = mutableListOf()
     val recentlyDiedShips = mutableListOf<Ship>()
+    val events: LinkedList<SectorEvent> = LinkedList()
 
     @Transient
     var shipTree: KDTree2<Ship>? = null
@@ -27,6 +30,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
     fun updateInitial() {
         // Clear events
+        events.clear()
         firingEvents.clear()
         recentlyDiedShips.clear()
 
