@@ -12,21 +12,23 @@ import xyz.plenglin.spaceadmiral.nextTeamID
 import java.io.Serializable
 import java.util.*
 
-class Team(val gameState: GameState,
+class Team constructor(val gameState: GameState,
            color: Color,
            val uuid: TeamID = nextTeamID(),
            val projectiles: MutableList<Projectile> = LinkedList(),
-           val squads: MutableList<Squad> = mutableListOf()) : Serializable {
+           squads: MutableList<Squad> = mutableListOf()) : Serializable{
+
+    val squads get() = squadMap.values.toList()
+    private val squadMap = squads.map { it.uuid.squad to it }.toMap().toMutableMap()
 
     val color = color.toIntBits()
     private var nextSquadId: Byte = 0
 
     fun createSquad(template: ShipType, sector: Sector): Squad {
-        val out = Squad(template, this, sector, SquadID(uuid, nextSquadId++))
-        squads.add(out)
-        gameState.squads[out.uuid] = out
+        val id = SquadID(uuid, nextSquadId++)
+        val out = Squad(template, this, sector, id)
+        squadMap[id.squad] = out
         sector.squads[out.uuid] = out
-        out.ships.forEach { gameState.ships[it.uuid] = it }
         return out
     }
 
@@ -40,6 +42,15 @@ class Team(val gameState: GameState,
 
     override fun toString(): String {
         return "Team($uuid)"
+    }
+
+    operator fun get(squadID: SquadID): Squad? {
+        if (squadID.team != this.uuid) return null
+        return squadMap[squadID.squad]
+    }
+
+    fun get(squadSubID: Byte): Squad? {
+        return squadMap[squadSubID]
     }
 
 }

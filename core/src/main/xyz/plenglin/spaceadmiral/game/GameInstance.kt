@@ -12,31 +12,34 @@ class GameInstance : Serializable {
         logger.trace("update {}", gameState.time)
 
         // Sector update
-        gameState.sectors.forEach { (_, sector) ->
+        gameState.sectors.forEach { sector ->
             sector.updateInitial()
         }
 
-        // Squad update
-        gameState.squads.forEach { (_, squad) ->
-            squad.update()
+        val repulsors = mutableListOf<Ship>()
+
+        for (team in gameState.teams) {
+            for (squad in team.squads) {
+                // Squad update
+                squad.update()
+
+                // Ship initial logic update
+                for (ship in squad.ships) {
+                    ship.updateLogic()
+                    if (ship.template.repulsion != null) {
+                        repulsors.add(ship)
+                    }
+                }
+            }
         }
 
         val bubbles = gameState.warpBubbles.map { it.value }.toMutableSet()
         for (bubble in bubbles) {
-            if (bubble!!.hasArrived(gameState.time)) {
+            if (bubble.hasArrived(gameState.time)) {
                 bubbles.remove(bubble)
             } else {
-                val sector = gameState.getSector(bubble.endSector)
+                val sector = gameState[bubble.endSector]
                 sector.squads
-            }
-        }
-
-        // Ship initial logic update
-        val repulsors = mutableListOf<Ship>()
-        gameState.ships.forEach { (_, ship) ->
-            ship.updateLogic()
-            if (ship.template.repulsion != null) {
-                repulsors.add(ship)
             }
         }
 
@@ -56,24 +59,32 @@ class GameInstance : Serializable {
         }
 
         // Move ships
-        gameState.ships.forEach { (_, ship) ->
-            ship.updatePosition()
+        for (team in gameState.teams) {
+            for (squad in team.squads) {
+                for (ship in squad.ships) {
+                    ship.updatePosition()
+                }
+            }
         }
 
         // Process projectiles
         // TODO
 
         // Bring out yer dead (ships)
-        gameState.ships.values.forEach { ship ->
-            if (ship.health.isDead) {
-                ship.onDeath()
-                ship.sector!!.recentlyDiedShips.add(ship)
+        for (team in gameState.teams) {
+            for (squad in team.squads) {
+                for (ship in squad.ships) {
+                    if (ship.health.isDead) {
+                        ship.onDeath()
+                        ship.sector!!.recentlyDiedShips.add(ship)
+                    }
+                }
             }
         }
-        gameState.sectors.values.forEach { sector ->
+
+        for (sector in gameState.sectors) {
             sector.recentlyDiedShips.forEach {
                 it.parent.ships.remove(it)
-                gameState.ships.remove(it.uuid)
             }
         }
 

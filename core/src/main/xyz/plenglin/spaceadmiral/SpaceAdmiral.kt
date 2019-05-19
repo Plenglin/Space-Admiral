@@ -15,7 +15,6 @@ import xyz.plenglin.spaceadmiral.net.game.local.GameLocalBridge
 import xyz.plenglin.spaceadmiral.net.game.server.GameServer
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.view.screen.GridScreen
-import java.util.*
 import kotlin.concurrent.thread
 
 class SpaceAdmiral : Game() {
@@ -43,10 +42,10 @@ class SpaceAdmiral : Game() {
         val server = GameServer(localBridge, dummy, instance = gameInstance)
 
         val instance = server.instance
-        val teams = instance.gameState.teams
-        val t1 = teams[localBridge.team]!!
-        val t2 = teams[dummy.team]!!
-        val sector = instance.gameState.getSector(IntVector2(0, 0))
+        val gameState = instance.gameState
+        val t1 = gameState[localBridge.team]!!
+        val t2 = gameState[dummy.team]!!
+        val sector = gameState[IntVector2(0, 0)]
 
         t1.createSquad(DummyFighter, sector).apply {
             transform.transform.angleLocal = 0.1f
