@@ -1,14 +1,10 @@
 package xyz.plenglin.spaceadmiral.view.model
 
-import xyz.plenglin.spaceadmiral.ShipID
-import xyz.plenglin.spaceadmiral.SquadID
-import xyz.plenglin.spaceadmiral.TeamID
-import xyz.plenglin.spaceadmiral.WarpBubbleID
+import xyz.plenglin.spaceadmiral.*
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
-import java.util.*
 
 class GameStateCM {
     /**
@@ -16,11 +12,11 @@ class GameStateCM {
      */
     var ui: GameUI? = null
 
-    val sectors = hashMapOf<IntVector2, SectorCM>()
+    private val sectorMap = hashMapOf<IntVector2, SectorCM>()
+    val sectors get() = sectorMap.values
 
-    val teams = hashMapOf<TeamID, TeamCM>()
-    val squads = hashMapOf<SquadID, SquadCM>()
-    val ships = hashMapOf<ShipID, ShipCM>()
+    private val teamMap = hashMapOf<TeamID, TeamCM>()
+    val teams get() = teamMap.values
 
     val bubbles = hashMapOf<WarpBubbleID, WarpBubbleCM>()
     var time = 0L
@@ -29,26 +25,40 @@ class GameStateCM {
 
     var lastUpdateTime: Long = 0L
 
+    operator fun get(sectorID: SectorID): SectorCM? {
+        return sectorMap[sectorID]
+    }
+
+    operator fun get(teamID: TeamID): TeamCM? {
+        return teamMap[teamID]
+    }
+
+    operator fun get(squadID: SquadID): SquadCM? {
+        return teamMap[squadID.team]?.get(squadID.squad)
+    }
+
     fun update(payload: ClientUpdatePayload) {
-        val unmentionedSectors = sectors.keys.toHashSet()  // Copy the keys
+        val unmentionedSectors = sectorMap.keys.toHashSet()  // Copy the keys
         tadar = payload.tadar
 
-        squads.values.forEach {
-            it.visible = false
+        for (team in teams) {
+            for (squad in team.squads) {
+                squad.visible = false
+            }
         }
 
-        payload.sectors.forEach { dtoSector ->
+        for (dtoSector in payload.sectors) {
             val pos = dtoSector.pos
             unmentionedSectors.remove(pos)
-            val sector = sectors.getOrPut(pos) { SectorCM(pos, this) }
+            val sector = sectorMap.getOrPut(pos) { SectorCM(pos, this) }
             sector.updateWith(dtoSector)
 
-            dtoSector.squads.forEach { dtoSquad ->
-                val squad = squads.getValue(dtoSquad.uuid)
+            for (dtoSquad in dtoSector.squads) {
+                val squad = this[dtoSquad.uuid]!!
                 squad.updateWith(dtoSquad)
 
-                dtoSquad.ships.forEach { dtoShip ->
-                    val ship = ships.getValue(dtoShip.uuid)
+                for (dtoShip in dtoSquad.ships) {
+                    val ship = squad[dtoShip.uuid.ship]!!
                     ship.updateWith(dtoShip)
                 }
             }
@@ -57,6 +67,10 @@ class GameStateCM {
         lastUpdateTime = System.currentTimeMillis()
         // Prune sectors
         //sectors.values.removeAll {  }
+    }
+
+    operator fun get(shipID: ShipID): ShipCM? {
+        return teamMap[shipID.squad.team]?.get(shipID.squad.squad)?.get(shipID.ship)
     }
 
 }

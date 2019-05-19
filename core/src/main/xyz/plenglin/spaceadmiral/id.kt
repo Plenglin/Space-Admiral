@@ -4,7 +4,12 @@ import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.random
 import java.util.*
 
-open class TeamID(open val team: Int) {
+typealias TeamSubID = Int
+typealias SquadSubID = Byte
+typealias ShipSubID = Short
+typealias TurretSubID = Byte
+
+open class TeamID(open val team: TeamSubID) {
     override fun toString(): String {
         return "T-${rawString()}"
     }
@@ -31,7 +36,7 @@ open class TeamID(open val team: Int) {
 fun nextTeamID(): TeamID = TeamID(random.nextInt())
 
 
-open class SquadID(val team: TeamID, val squad: Byte) {
+open class SquadID(val team: TeamID, val squad: SquadSubID) {
     override fun toString(): String {
         return "S-${rawString()}"
     }
@@ -59,7 +64,7 @@ open class SquadID(val team: TeamID, val squad: Byte) {
     }
 }
 
-open class ShipID(val squad: SquadID, val ship: Short) {
+open class ShipID(val squad: SquadID, val ship: ShipSubID) {
     override fun toString(): String {
         return "H-${rawString()}"
     }
@@ -87,7 +92,7 @@ open class ShipID(val squad: SquadID, val ship: Short) {
     }
 }
 
-open class TurretID(val ship: ShipID, val turret: Byte) {
+open class TurretID(val ship: ShipID, val turret: TurretSubID) {
     override fun toString(): String {
         return "M-${rawString()}"
     }

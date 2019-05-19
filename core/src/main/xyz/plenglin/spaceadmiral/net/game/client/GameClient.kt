@@ -5,9 +5,7 @@ import xyz.plenglin.spaceadmiral.SectorID
 import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
-import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.view.model.*
-import java.util.*
 
 /**
  * The client, after initial handshake and initial data
@@ -16,13 +14,13 @@ class GameClient(server: GameServerInterfaceFactory) {
     private val server: GameServerInterface = server.createServerInterface(this)
     val gameState: GameStateCM = server.awaitInitialPayload().toClientModel()
 
-    val team: TeamCM = gameState.teams[this.server.team]!!
+    val team: TeamCM = gameState[this.server.team]!!
 
     //fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
     //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
     //fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
-    fun getSquad(uuid: SquadID): SquadCM = gameState.squads[uuid]!!
-    fun getSector(pos: SectorID): SectorCM? = gameState.sectors[pos]
+    fun getSquad(uuid: SquadID): SquadCM = gameState[uuid]!!
+    fun getSector(pos: SectorID): SectorCM? = gameState[pos]
 
     @Synchronized
     fun onReceivePayload(payload: ClientUpdatePayload) {

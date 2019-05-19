@@ -3,6 +3,7 @@ package xyz.plenglin.spaceadmiral.view.model
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import xyz.plenglin.spaceadmiral.ShipID
+import xyz.plenglin.spaceadmiral.ShipSubID
 import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.game.action.ActionCM
 import xyz.plenglin.spaceadmiral.game.squad.ShipType
@@ -34,8 +35,10 @@ class SquadCM constructor(val uuid: SquadID, val team: TeamCM, val template: Shi
     var visible = false
 
     var sector: SectorCM? = null
-    val ships: MutableMap<ShipID, ShipCM> = HashMap()
     var index: Int = 0
+
+    private val shipMap: HashMap<ShipSubID, ShipCM> = HashMap()
+    val ships get() = shipMap.values
 
     val sendableCommands: List<SquadCommand> = mutableListOf(JumpSquadCommand)
     val queuedActions = mutableListOf<ActionCM>()
@@ -43,7 +46,7 @@ class SquadCM constructor(val uuid: SquadID, val team: TeamCM, val template: Shi
     val gameState: GameStateCM get() = team.gameState
     val centerOfMass: Vector2 get() {
         val out = Vector2(0f, 0f)
-        ships.forEach { (_, ship) ->
+        for (ship in ships) {
             out.add(ship.transform.posGlobal)
         }
         return out.scl(1f / ships.size)
@@ -57,6 +60,15 @@ class SquadCM constructor(val uuid: SquadID, val team: TeamCM, val template: Shi
 
     override fun toString(): String {
         return "SquadCM($uuid)"
+    }
+
+    operator fun get(shipID: ShipID): ShipCM? {
+        if (uuid != shipID.squad) return null
+        return shipMap[shipID.ship]
+    }
+
+    operator fun get(shipID: ShipSubID): ShipCM? {
+        return shipMap[shipID]
     }
 
 }

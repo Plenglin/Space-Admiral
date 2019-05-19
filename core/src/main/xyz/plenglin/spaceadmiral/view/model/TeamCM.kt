@@ -1,10 +1,16 @@
 package xyz.plenglin.spaceadmiral.view.model
 
 import com.badlogic.gdx.graphics.Color
+import xyz.plenglin.spaceadmiral.SquadSubID
 import xyz.plenglin.spaceadmiral.TeamID
 
 class TeamCM(val uuid: TeamID, val gameState: GameStateCM, val color: Color) {
-    val squads = mutableListOf<SquadCM>()
+    internal val squadMap: HashMap<SquadSubID, SquadCM> = hashMapOf()
+    val squads = squadMap.values
+
+    fun get(squadSubID: SquadSubID): SquadCM? {
+        return squadMap[squadSubID]
+    }
 
     fun isAlliedWith(other: TeamID): Boolean {
         return uuid == other

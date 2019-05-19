@@ -64,7 +64,7 @@ class SectorScreen(
     override fun render(delta: Float) {
         logger.trace("SectorScreen performing a render, FPS = {}", 1 / delta)
 
-        sector.squads.filter { (_, squad) -> squad.visible }.forEach { _, squad ->
+        sector.squads.filter { squad -> squad.visible }.forEach { _, squad ->
             squad.ships.forEach { _, ship ->
                 ship.updateRender(delta)
             }
