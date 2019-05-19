@@ -2,9 +2,11 @@ package xyz.plenglin.spaceadmiral.game.ship
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.ShipID
 import xyz.plenglin.spaceadmiral.SpaceAdmiral.Companion.DELTA_TIME
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.squad.Squad
+import xyz.plenglin.spaceadmiral.nextShipID
 import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import xyz.plenglin.spaceadmiral.util.Transform2D
@@ -19,7 +21,7 @@ class Ship(val parent: Squad, val number: Int) : Serializable {
     val sector get() = parent.sector
 
     var transformIndex = number
-    val uuid: UUID = UUID.randomUUID()
+    val uuid: ShipID = nextShipID()
     val transform = Transform2D(Vector2(), 0f)
     val target: Transform2D = transform
 

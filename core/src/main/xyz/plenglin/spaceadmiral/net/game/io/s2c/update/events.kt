@@ -10,23 +10,23 @@ interface SectorEventDTO : Serializable {
 }
 
 /*
-data class WarpBubbleBeginEvent(val bubbleUUID: UUID, val pos: Vector2, val velocity: Vector2, val squads: List<UUID>) : SectorEventDTO {
+data class WarpBubbleBeginEvent(val bubbleID: UUID, val pos: Vector2, val velocity: Vector2, val squads: List<UUID>) : SectorEventDTO {
     override fun applyTo(gameState: GameStateCM) {
-        gameState.bubbles[bubbleUUID] = WarpBubbleCM(pos, velocity, gameState.time)
+        gameState.bubbles[bubbleID] = WarpBubbleCM(pos, velocity, gameState.time)
     }
 }
 
 
 data class WarpBubbleEndEvent(
-        val bubbleUUID: UUID,
+        val bubbleID: UUID,
         /**
          * Where the bubble finished. Null if it went off TADAR.
          */
         val endSector: IntVector2?) : SectorEventDTO {
     override fun applyTo(gameState: GameStateCM) {
-        gameState.bubbles[bubbleUUID]!!.lastSeen = gameState.time
+        gameState.bubbles[bubbleID]!!.lastSeen = gameState.time
         if (endSector != null) {
-            gameState.bubbles.remove(bubbleUUID)
+            gameState.bubbles.remove(bubbleID)
         }
     }
 }

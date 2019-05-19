@@ -1,9 +1,11 @@
 package xyz.plenglin.spaceadmiral.game.projectile
 
 import com.badlogic.gdx.math.Vector2
+import xyz.plenglin.spaceadmiral.ProjectileID
 import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.team.Team
+import xyz.plenglin.spaceadmiral.nextProjectileID
 import xyz.plenglin.spaceadmiral.util.Capsule2D
 import xyz.plenglin.spaceadmiral.util.KDTree2Node
 import xyz.plenglin.spaceadmiral.util.MinMaxRectangle
@@ -31,9 +33,10 @@ abstract class Projectile(
         /**
          * The team that created this projectile.
          */
-        val team: Team? = null
+        val team: Team? = null,
+        val uuid: ProjectileID = nextProjectileID()
         ) : Serializable {
-    val uuid: UUID = UUID.randomUUID()
+
 
     var lastPos = Vector2(pos)
 

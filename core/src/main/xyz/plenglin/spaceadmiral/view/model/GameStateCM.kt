@@ -1,5 +1,9 @@
 package xyz.plenglin.spaceadmiral.view.model
 
+import xyz.plenglin.spaceadmiral.ShipID
+import xyz.plenglin.spaceadmiral.SquadID
+import xyz.plenglin.spaceadmiral.TeamID
+import xyz.plenglin.spaceadmiral.WarpBubbleID
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
@@ -14,11 +18,11 @@ class GameStateCM {
 
     val sectors = hashMapOf<IntVector2, SectorCM>()
 
-    val teams = hashMapOf<UUID, TeamCM>()
-    val squads = hashMapOf<UUID, SquadCM>()
-    val ships = hashMapOf<UUID, ShipCM>()
+    val teams = hashMapOf<TeamID, TeamCM>()
+    val squads = hashMapOf<SquadID, SquadCM>()
+    val ships = hashMapOf<ShipID, ShipCM>()
 
-    val bubbles = hashMapOf<UUID, WarpBubbleCM>()
+    val bubbles = hashMapOf<WarpBubbleID, WarpBubbleCM>()
     var time = 0L
 
     var tadar: TadarData = TadarData()

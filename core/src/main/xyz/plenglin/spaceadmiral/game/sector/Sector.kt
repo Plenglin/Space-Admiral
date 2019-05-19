@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.game.sector
 
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.sector.event.SectorEvent
@@ -8,6 +9,7 @@ import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.WarpBubble
+import xyz.plenglin.spaceadmiral.nextWarpBubbleID
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.KDTree2
 import java.io.Serializable
@@ -16,8 +18,8 @@ import kotlin.collections.HashMap
 
 class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
-    val squads = HashMap<UUID, Squad>()
-    val projectiles = HashMap<UUID, Projectile>()
+    val squads = HashMap<SquadID, Squad>()
+    val projectiles = HashMap<SquadID, Projectile>()
 
     val firingEvents: MutableList<FiringEvent> = mutableListOf()
     val recentlyDiedShips = mutableListOf<Ship>()
@@ -52,7 +54,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
         this.projectileTree = projectileTree
     }
 
-    fun createWarpBubble(squads: Set<UUID>, destination: Sector): WarpBubble {
+    fun createWarpBubble(squads: Set<SquadID>, destination: Sector): WarpBubble {
         //if (this.squads.keys.containsAll(squads)) {
         //    throw IllegalArgumentException("Not all squads in $squads are in $this!")
         //}
@@ -62,7 +64,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
             val squad = this.squads.remove(it)!!
             squad.sector = null
         }
-        val out = WarpBubble(UUID.randomUUID(), bubbledSquads, this.pos, parent.time, destination.pos, parent.time + 1000)
+        val out = WarpBubble(nextWarpBubbleID(), bubbledSquads, this.pos, parent.time, destination.pos, parent.time + 1000)
         parent.warpBubbles[out.uuid] = out
         return out
     }

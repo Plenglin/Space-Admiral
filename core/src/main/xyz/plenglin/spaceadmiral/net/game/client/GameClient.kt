@@ -1,6 +1,8 @@
 package xyz.plenglin.spaceadmiral.net.game.client
 
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SectorID
+import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.util.IntVector2
@@ -19,8 +21,8 @@ class GameClient(server: GameServerInterfaceFactory) {
     //fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
     //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
     //fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
-    fun getSquad(uuid: UUID): SquadCM = gameState.squads[uuid]!!
-    fun getSector(pos: IntVector2): SectorCM? = gameState.sectors[pos]
+    fun getSquad(uuid: SquadID): SquadCM = gameState.squads[uuid]!!
+    fun getSector(pos: SectorID): SectorCM? = gameState.sectors[pos]
 
     @Synchronized
     fun onReceivePayload(payload: ClientUpdatePayload) {

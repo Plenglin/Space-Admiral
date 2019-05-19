@@ -2,10 +2,12 @@ package xyz.plenglin.spaceadmiral.game.squad
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
 import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
 import xyz.plenglin.spaceadmiral.game.team.Team
+import xyz.plenglin.spaceadmiral.nextSquadID
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
@@ -24,7 +26,7 @@ class Squad(val template: ShipType, var team: Team, var sector: Sector?) : Seria
             count = template.squadSize,
             spacing = template.spacing,
             width = template.defaultFormationWidth)
-    val uuid: UUID = UUID.randomUUID()
+    val uuid: SquadID = nextSquadID()
     val centerOfMass: Vector2 get() {
         val out = Vector2(0f, 0f)
         ships.forEach {

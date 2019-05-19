@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.game.local
 
+import xyz.plenglin.spaceadmiral.TeamID
 import xyz.plenglin.spaceadmiral.game.team.Team
 import xyz.plenglin.spaceadmiral.net.game.client.GameClient
 import xyz.plenglin.spaceadmiral.net.game.client.GameServerInterface
@@ -15,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 
-class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, GameServerInterfaceFactory {
+class GameLocalBridge(override val team: TeamID) : GamePlayerInterfaceFactory, GameServerInterfaceFactory {
     var initialPayload: ClientInitialPayload? = null
     val lockServerSide = ReentrantLock()
 
@@ -37,7 +38,7 @@ class GameLocalBridge(override val team: UUID) : GamePlayerInterfaceFactory, Gam
 
     private inner class ClientSide(val client: GameClient) : GameServerInterface {
         override val connected: Boolean get() = serverSide != null
-        override val team: UUID = this@GameLocalBridge.team
+        override val team: TeamID = this@GameLocalBridge.team
 
         private val commands = mutableListOf<ClientCommand>()
 

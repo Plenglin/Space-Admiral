@@ -2,6 +2,8 @@ package xyz.plenglin.spaceadmiral.view.model
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import xyz.plenglin.spaceadmiral.ShipID
+import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.game.action.ActionCM
 import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
@@ -13,7 +15,7 @@ import xyz.plenglin.spaceadmiral.view.ui.getIconLabel
 import java.util.*
 import kotlin.collections.HashMap
 
-class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipType, val transform: SquadTransform) {
+class SquadCM constructor(val uuid: SquadID, val team: TeamCM, val template: ShipType, val transform: SquadTransform) {
 
     val ui: GameUI? get() = gameState.ui
     val displayName: String get() = template.displayName
@@ -34,7 +36,7 @@ class SquadCM constructor(val uuid: UUID, val team: TeamCM, val template: ShipTy
     var visible = false
 
     var sector: SectorCM? = null
-    val ships: MutableMap<UUID, ShipCM> = HashMap()
+    val ships: MutableMap<ShipID, ShipCM> = HashMap()
     var index: Int = 0
 
     val sendableCommands: List<SquadCommand> = mutableListOf(JumpSquadCommand)

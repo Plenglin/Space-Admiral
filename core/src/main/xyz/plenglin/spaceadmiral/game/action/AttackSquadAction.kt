@@ -2,6 +2,7 @@ package xyz.plenglin.spaceadmiral.game.action
 
 import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
+import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.game.ship.action.OrbitalSwarmAttack
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
@@ -38,7 +39,7 @@ class AttackSquadAction(squad: Squad, val target: Squad) : SquadAction(squad) {
         return DTO(target.uuid)
     }
 
-    private data class DTO(val target: UUID) : ActionDTO {
+    private data class DTO(val target: SquadID) : ActionDTO {
         override fun deserialize(gs: GameStateCM): ActionCM {
             return CM(gs.squads[target]!!)
         }

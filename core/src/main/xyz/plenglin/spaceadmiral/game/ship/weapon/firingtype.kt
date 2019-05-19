@@ -1,5 +1,7 @@
 package xyz.plenglin.spaceadmiral.game.ship.weapon
 
+import xyz.plenglin.spaceadmiral.ShipID
+import xyz.plenglin.spaceadmiral.TurretID
 import xyz.plenglin.spaceadmiral.game.DamageType
 import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
@@ -12,8 +14,8 @@ sealed class FiringType : Serializable {
 
 sealed class FiringEvent : Serializable {
     abstract val source: FiringType
-    abstract val mount: UUID
-    abstract val target: UUID
+    abstract val mount: TurretID
+    abstract val target: ShipID
 }
 
 class HitscanFiringType(val damage: Int, val damageType: DamageType) : FiringType() {
@@ -31,8 +33,8 @@ class HitscanFiringType(val damage: Int, val damageType: DamageType) : FiringTyp
 data class HitscanFiringEvent(
         val success: Boolean,
         override val source: HitscanFiringType,
-        override val mount: UUID,
-        override val target: UUID) : FiringEvent()
+        override val mount: TurretID,
+        override val target: ShipID) : FiringEvent()
 
 /*
 class ProjectileFiringType(val projectile: ProjectileFactory) : FiringType() {

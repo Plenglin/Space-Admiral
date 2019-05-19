@@ -1,6 +1,9 @@
 package xyz.plenglin.spaceadmiral.net.game.io.s2c.update
 
 import com.badlogic.gdx.math.Vector2
+import xyz.plenglin.spaceadmiral.ProjectileID
+import xyz.plenglin.spaceadmiral.ShipID
+import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.action.ActionDTO
 import xyz.plenglin.spaceadmiral.game.action.SquadAction
@@ -36,7 +39,7 @@ fun WarpBubble.asUpdateDTO(t: Long): WarpBubbleUDTO {
 }
 
 data class ProjectileUDTO internal constructor(
-        val uuid: UUID,
+        val uuid: ProjectileID,
         val pos: Vector2,
         val velocity: Vector2
 ) : Serializable
@@ -54,7 +57,7 @@ data class SectorUDTO internal constructor(
         val squads: List<SquadUDTO>,
         val projectiles: List<ProjectileUDTO>,
         val firingEvents: List<FiringEvent>,
-        val recentlyDiedShips: List<UUID>
+        val recentlyDiedShips: List<ShipID>
 ) : Serializable
 
 fun Sector.asUpdateDTO(): SectorUDTO {
@@ -68,7 +71,7 @@ fun Sector.asUpdateDTO(): SectorUDTO {
 }
 
 data class SquadUDTO internal constructor(
-        val uuid: UUID,
+        val uuid: SquadID,
         val ships: List<ShipUDTO>,
         val actions: List<ActionDTO>
 ) : Serializable
@@ -86,7 +89,7 @@ fun Squad.asUpdateDTO(): SquadUDTO {
 }
 
 data class ShipUDTO internal constructor(
-        val uuid: UUID,
+        val uuid: ShipID,
         val transform: Transform2D,
         val velocity: Vector2,
         val flags: Int

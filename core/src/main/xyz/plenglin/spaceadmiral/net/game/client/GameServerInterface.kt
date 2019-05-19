@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.game.client
 
+import xyz.plenglin.spaceadmiral.TeamID
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import java.util.*
 
@@ -8,7 +9,7 @@ import java.util.*
  */
 interface GameServerInterface {
     val connected: Boolean
-    val team: UUID
+    val team: TeamID
 
     fun queueCommandToServer(command: ClientCommand)
     fun sendDisconnectToServer()

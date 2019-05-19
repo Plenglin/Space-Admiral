@@ -1,6 +1,7 @@
 package xyz.plenglin.spaceadmiral.game
 
 import com.badlogic.gdx.graphics.Color
+import xyz.plenglin.spaceadmiral.*
 import xyz.plenglin.spaceadmiral.game.projectile.Projectile
 import xyz.plenglin.spaceadmiral.game.sector.Sector
 import xyz.plenglin.spaceadmiral.game.ship.Ship
@@ -15,13 +16,13 @@ import kotlin.collections.HashMap
 class GameState : Serializable {
     var time: Long = 0
 
-    val sectors = HashMap<IntVector2, Sector>()
-    val teams = HashMap<UUID, Team>()
-    val squads = HashMap<UUID, Squad>()
-    val ships = HashMap<UUID, Ship>()
-    val projectiles = HashMap<UUID, Projectile>()
+    val sectors = HashMap<SectorID, Sector>()
+    val teams = HashMap<TeamID, Team>()
+    val squads = HashMap<SquadID, Squad>()
+    val ships = HashMap<ShipID, Ship>()
+    val projectiles = HashMap<ProjectileID, Projectile>()
 
-    val warpBubbles = HashMap<UUID, WarpBubble>()
+    val warpBubbles = HashMap<WarpBubbleID, WarpBubble>()
 
     fun getSector(pos: IntVector2): Sector {
         var out = sectors[pos]
@@ -32,7 +33,7 @@ class GameState : Serializable {
         return out
     }
 
-    fun createTeam(color: Color, uuid: UUID = UUID.randomUUID()): Team {
+    fun createTeam(color: Color, uuid: TeamID = nextTeamID()): Team {
         val out = Team(this, color, uuid = uuid)
         teams[out.uuid] = out
         return out

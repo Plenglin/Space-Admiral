@@ -37,8 +37,8 @@ class SpaceAdmiral : Game() {
 
         val gameInstance = GameInstance()
 
-        val localBridge = GameLocalBridge(UUID.randomUUID())
-        val dummy = GameDummyPlayer(UUID.randomUUID())
+        val localBridge = GameLocalBridge(nextTeamID())
+        val dummy = GameDummyPlayer(nextTeamID())
 
         val server = GameServer(localBridge, dummy, instance = gameInstance)
 
