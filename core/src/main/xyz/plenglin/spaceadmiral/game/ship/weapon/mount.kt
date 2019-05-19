@@ -3,10 +3,8 @@ package xyz.plenglin.spaceadmiral.game.ship.weapon
 import xyz.plenglin.spaceadmiral.TurretID
 import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.ship.Ship
-import xyz.plenglin.spaceadmiral.nextTurretID
 import xyz.plenglin.spaceadmiral.util.Transform2D
 import java.io.Serializable
-import java.util.*
 
 data class WeaponMountTemplate(
         /**
@@ -25,14 +23,11 @@ data class WeaponMountTemplate(
          * How far from the target it can begin firing at
          */
         val firingLimit: Float = 0f
-) : Serializable {
-    fun createMount(ship: Ship): WeaponMount {
-        return WeaponMount(this, ship)
-    }
-}
+) : Serializable
 
-class WeaponMount internal constructor(template: WeaponMountTemplate, val ship: Ship) : Serializable {
-    val uuid: TurretID = nextTurretID()
+
+class WeaponMount internal constructor(template: WeaponMountTemplate, val ship: Ship, val uuid: TurretID) : Serializable {
+
     val gameState: GameState get() = ship.gameState
     val transform: Transform2D = template.transform.clone().apply {
         this.parent = ship.transform

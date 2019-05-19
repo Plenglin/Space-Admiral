@@ -8,7 +8,6 @@ import xyz.plenglin.spaceadmiral.game.ship.weapon.FiringEvent
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.SectorUDTO
 import xyz.plenglin.spaceadmiral.util.IntVector2
 import xyz.plenglin.spaceadmiral.util.KDTree2
-import java.util.*
 
 class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
 
@@ -35,6 +34,10 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
         ships.forEach {
             shipTree.insert(it.transform.posGlobal, it)
         }
+    }
+
+    override fun toString(): String {
+        return "SectorCM($pos)"
     }
 
     private companion object {

@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector3
 import java.io.Serializable
 import java.util.*
 
+val random = Random()
+
 data class IntVector2(var x: Int, var y: Int) : Serializable, Comparable<IntVector2> {
     override fun compareTo(other: IntVector2): Int {
         val dx = x - other.x

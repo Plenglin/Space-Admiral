@@ -12,8 +12,6 @@ import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.command.JumpSquadCommand
 import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommand
 import xyz.plenglin.spaceadmiral.view.ui.getIconLabel
-import java.util.*
-import kotlin.collections.HashMap
 
 class SquadCM constructor(val uuid: SquadID, val team: TeamCM, val template: ShipType, val transform: SquadTransform) {
 
@@ -55,6 +53,10 @@ class SquadCM constructor(val uuid: SquadID, val team: TeamCM, val template: Shi
         visible = true
         queuedActions.clear()
         queuedActions.addAll(dto.actions.map { it.deserialize(gameState) })
+    }
+
+    override fun toString(): String {
+        return "SquadCM($uuid)"
     }
 
 }

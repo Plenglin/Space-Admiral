@@ -8,7 +8,6 @@ import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ShipUDTO
 import xyz.plenglin.spaceadmiral.util.LinearInterpolator2
 import xyz.plenglin.spaceadmiral.util.Transform2D
-import java.util.*
 
 class ShipCM(val uuid: ShipID, val squad: SquadCM, val transform: Transform2D) {
 
@@ -37,6 +36,10 @@ class ShipCM(val uuid: ShipID, val squad: SquadCM, val transform: Transform2D) {
 
     fun onDead() {
         alive = false
+    }
+
+    override fun toString(): String {
+        return "ShipCM($uuid)"
     }
 
 }
