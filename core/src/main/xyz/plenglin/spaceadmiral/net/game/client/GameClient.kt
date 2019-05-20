@@ -1,11 +1,12 @@
 package xyz.plenglin.spaceadmiral.net.game.client
 
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.SectorID
-import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
-import xyz.plenglin.spaceadmiral.view.model.*
+import xyz.plenglin.spaceadmiral.view.model.GameStateCM
+import xyz.plenglin.spaceadmiral.view.model.TeamCM
+import xyz.plenglin.spaceadmiral.view.model.toClientModel
+import java.util.concurrent.LinkedBlockingQueue
 
 /**
  * The client, after initial handshake and initial data
@@ -16,20 +17,20 @@ class GameClient(server: GameServerInterfaceFactory) {
 
     val team: TeamCM = gameState[this.server.team]!!
 
-    //fun getShip(uuid: UUID): ShipRef = ShipRef(uuid, this)
-    //fun getProjectile(uuid: UUID): ProjectileRef = ProjectileRef(uuid, this)
-    //fun getTeam(uuid: UUID): TeamRef = TeamRef(uuid, this)
-    fun getSquad(uuid: SquadID): SquadCM = gameState[uuid]!!
-    fun getSector(pos: SectorID): SectorCM? = gameState[pos]
+    private val payloadQueue = LinkedBlockingQueue<ClientUpdatePayload>()
 
     @Synchronized
     fun onReceivePayload(payload: ClientUpdatePayload) {
         //logger.debug("Received update payload: {}", payload)
-        gameState.update(payload)
+        payloadQueue.add(payload)
     }
 
     fun update() {
         server.commitCommandsToServer()
+        while (true) {
+            val payload = payloadQueue.poll() ?: break
+            gameState.update(payload)
+        }
     }
 
     fun sendCommand(cmd: ClientCommand) {

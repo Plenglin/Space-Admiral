@@ -12,7 +12,7 @@ class SectorSelectionInputProcessor(
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val pos = renderer.getSectorAtScreenPos(screenX, screenY) ?: return false
-        val sector = client.getSector(pos) ?: return false
+        val sector = client.gameState[pos] ?: return false
         ui.openSector(sector)
         return true
     }

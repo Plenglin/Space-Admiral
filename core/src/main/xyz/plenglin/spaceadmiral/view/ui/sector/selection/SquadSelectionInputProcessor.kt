@@ -56,7 +56,7 @@ class SquadSelectionInputProcessor(
 
         if (state.dragged) {
             logger.debug("Selection was dragged, interpreting as selection box")
-            val selected = state.getSelectedSquads(sector.shipTree).map { client.getSquad(it.uuid) }
+            val selected = state.getSelectedSquads(sector.shipTree).map { client.gameState[it.uuid]!! }
             logger.debug("Selected ships {}", selected)
             ui.selectedSquads.addAll(selected)
         } else {
