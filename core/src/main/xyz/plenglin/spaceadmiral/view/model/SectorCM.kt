@@ -31,17 +31,16 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
         }
     }
 
-    fun onRender() {
+    fun onRender(delta: Float) {
         logger.trace("Updating rendering data of {}", this)
         shipTree.clear()
-        squads.clear()
 
         for (squad in squads) {
             if (squad.sector != this) continue
 
-            squads.add(squad)
             for (ship in squad.ships) {
                 shipTree.insert(ship.transform.posGlobal, ship)
+                ship.updateRender(delta)
             }
         }
     }

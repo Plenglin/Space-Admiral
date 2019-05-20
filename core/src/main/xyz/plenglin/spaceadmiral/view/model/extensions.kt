@@ -29,14 +29,16 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
             )
 
             cmSquad.sector = cmSquadParentSector
-            cmTeam.squads.add(cmSquad)
+            cmTeam.squadMap[cmSquad.uuid.squad] = cmSquad
             //cmSquadParentSector.squadMap[cmSquad.uuid] = cmSquad
 
             for (gsShip in gsSquad.ships) {
-                val cmShip = cmSquad.addShip(
+                val cmShip = ShipCM(
                         gsShip.uuid,
+                        cmSquad,
                         gsShip.transform.toGlobal()
                 )
+                cmSquad.shipMap[cmShip.uuid.ship] = cmShip
 
                 for (gsTurret in gsShip.turrets) {
                     val cmTurret = TurretCM(
