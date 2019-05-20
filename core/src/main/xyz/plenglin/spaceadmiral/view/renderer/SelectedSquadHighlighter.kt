@@ -46,8 +46,7 @@ class SelectedSquadHighlighter(
             shape.end()
         }
 
-        val state = input.state
-        when (state) {
+        when (val state = input.state) {
             is MoveToTransform -> {
                 if (state.dragged) {
                     shape.color = COLOR_COMMAND
@@ -116,7 +115,7 @@ class SelectedSquadHighlighter(
     }
 
     private fun ShapeRenderer.highlightSquad(squad: SquadCM) {
-        squad.ships.forEach { _, ship ->
+        squad.ships.forEach { ship ->
             val pos = ship.transform.posGlobal
             circle(pos.x, pos.y, squad.template.displayScale * 0.4f, 10)
         }

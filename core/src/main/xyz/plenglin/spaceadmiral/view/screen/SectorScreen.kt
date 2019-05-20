@@ -64,12 +64,14 @@ class SectorScreen(
     override fun render(delta: Float) {
         logger.trace("SectorScreen performing a render, FPS = {}", 1 / delta)
 
-        sector.squads.filter { squad -> squad.visible }.forEach { _, squad ->
-            squad.ships.forEach { _, ship ->
+        for (squad in sector.squads) {
+            if (!squad.visible) continue
+            for (ship in squad.ships) {
                 ship.updateRender(delta)
             }
         }
-        sector.updateTrees()
+
+        sector.onRender()
         client.update()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)

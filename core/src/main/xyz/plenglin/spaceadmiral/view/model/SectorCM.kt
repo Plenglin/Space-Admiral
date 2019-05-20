@@ -18,27 +18,31 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
     val firingEvents = mutableListOf<FiringEvent>()
 
     fun updateWith(dto: SectorUDTO) {
+        logger.trace("Updating rendering data of {} with {}", this, dto)
         squads.clear()
         shipTree.clear()
         for (squad in dto.squads) {
             squads.add(gameState[squad.uuid]!!)
-            for (ship in squad.ships) {
-                shipTree.insert(ship.transform.posGlobal, ship)
-            }
         }
         firingEvents.clear()
         firingEvents.addAll(dto.firingEvents)
         dto.recentlyDiedShips.forEach {
-            gameState[it].onDead()
+            gameState[it]!!.onDead()
         }
     }
 
-    fun updateTrees() {
-        logger.trace("Updating trees of {}", this)
+    fun onRender() {
+        logger.trace("Updating rendering data of {}", this)
         shipTree.clear()
-        val ships = ships.values.toMutableList()//.let { ships ->
-        ships.forEach {
-            shipTree.insert(it.transform.posGlobal, it)
+        squads.clear()
+
+        for (squad in squads) {
+            if (squad.sector != this) continue
+
+            squads.add(squad)
+            for (ship in squad.ships) {
+                shipTree.insert(ship.transform.posGlobal, ship)
+            }
         }
     }
 

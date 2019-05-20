@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.ship.weapon.HitscanFiringEvent
 import xyz.plenglin.spaceadmiral.view.model.ProjectileCM
 import xyz.plenglin.spaceadmiral.view.model.SectorCM
 import xyz.plenglin.spaceadmiral.view.model.ShipCM
@@ -47,6 +46,7 @@ class SimpleSectorRenderer : SectorRenderer {
         val xMax = xs.max()!!
         val yMin = ys.min()!!
         val yMax = ys.max()!!
+
         logger.trace("{} drawing with limits: x=[{}, {}] y=[{}, {}]", this, xMin, xMax, yMin, yMax)
 
         nextShipColor = 0xff0000
@@ -65,19 +65,20 @@ class SimpleSectorRenderer : SectorRenderer {
         shape.end()
 
         // Firing events
+        /*
         gs.firingEvents.forEach {
             if (it is HitscanFiringEvent) {
                 val target = gs.ships[it.target]!!
                 val turret = gs.turrets[it.mount]!!
                 lasers.add(Laser(turret.transform.posGlobal.cpy(), target.transform.posGlobal.cpy()))
             }
-        }
+        }*/
 
         // Draw and update lasers
         Gdx.gl.glEnable(GL20.GL_BLEND)
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
         shape.begin(ShapeRenderer.ShapeType.Line)
-        lasers.forEach {
+        for (it in lasers) {
             draw(it)
             it.color.a -= 0.9f * delta
         }
@@ -87,12 +88,13 @@ class SimpleSectorRenderer : SectorRenderer {
 
         // Ships and projectiles
         shape.begin(ShapeRenderer.ShapeType.Line)
-        gs.shipTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, ship) ->
+        for ((_, ship) in gs.shipTree.findInRect(xMin, xMax, yMin, yMax)) {
             draw(ship!!)
         }
-        gs.projectileTree.findInRect(xMin, xMax, yMin, yMax).forEach { (_, proj) ->
+        for ((_, proj) in gs.projectileTree.findInRect(xMin, xMax, yMin, yMax)) {
             draw(proj!!)
         }
+
         shape.end()
     }
 

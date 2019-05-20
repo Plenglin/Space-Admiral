@@ -9,6 +9,7 @@ import xyz.plenglin.spaceadmiral.game.action.ActionCM
 import xyz.plenglin.spaceadmiral.game.squad.ShipType
 import xyz.plenglin.spaceadmiral.game.squad.SquadTransform
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.SquadUDTO
+import xyz.plenglin.spaceadmiral.util.Transform2D
 import xyz.plenglin.spaceadmiral.view.ui.GameUI
 import xyz.plenglin.spaceadmiral.view.ui.command.JumpSquadCommand
 import xyz.plenglin.spaceadmiral.view.ui.command.SquadCommand
@@ -69,6 +70,16 @@ class SquadCM constructor(val uuid: SquadID, val team: TeamCM, val template: Shi
 
     operator fun get(shipID: ShipSubID): ShipCM? {
         return shipMap[shipID]
+    }
+
+    fun addShip(uuid: ShipID, transform: Transform2D): ShipCM {
+        val cmShip = ShipCM(
+                uuid,
+                this,
+                transform.toGlobal()
+        )
+        shipMap[uuid.ship] = cmShip
+        return cmShip
     }
 
 }

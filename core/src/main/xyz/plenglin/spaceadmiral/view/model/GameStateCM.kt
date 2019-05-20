@@ -12,10 +12,10 @@ class GameStateCM {
      */
     var ui: GameUI? = null
 
-    private val sectorMap = hashMapOf<IntVector2, SectorCM>()
+    internal val sectorMap = hashMapOf<IntVector2, SectorCM>()
     val sectors get() = sectorMap.values
 
-    private val teamMap = hashMapOf<TeamID, TeamCM>()
+    internal val teamMap = hashMapOf<TeamID, TeamCM>()
     val teams get() = teamMap.values
 
     val bubbles = hashMapOf<WarpBubbleID, WarpBubbleCM>()

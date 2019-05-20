@@ -10,7 +10,6 @@ import xyz.plenglin.spaceadmiral.util.State
 import xyz.plenglin.spaceadmiral.util.StateScheduler
 import xyz.plenglin.spaceadmiral.view.model.GameStateCM
 import xyz.plenglin.spaceadmiral.view.model.SquadCM
-import java.util.*
 
 class AttackSquadAction(squad: Squad, val target: Squad) : SquadAction(squad) {
 
@@ -41,7 +40,7 @@ class AttackSquadAction(squad: Squad, val target: Squad) : SquadAction(squad) {
 
     private data class DTO(val target: SquadID) : ActionDTO {
         override fun deserialize(gs: GameStateCM): ActionCM {
-            return CM(gs.squads[target]!!)
+            return CM(gs[target]!!)
         }
     }
 

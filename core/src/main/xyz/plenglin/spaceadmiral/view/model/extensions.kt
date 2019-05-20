@@ -8,18 +8,19 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
     val cmGameState = GameStateCM()
     val gs = gameState
 
-    gs.sectors.forEach { (pos, sector) ->
-        cmGameState.sectors[pos] = SectorCM(pos, cmGameState)
+    for (sector in gs.sectors) {
+        cmGameState.sectorMap[sector.pos] = SectorCM(sector.pos, cmGameState)
     }
 
-    gs.teams.forEach { (uuid, gsTeam) ->
+    gs.teams.forEach { gsTeam ->
         val color = Color()
         Color.argb8888ToColor(color, gsTeam.color)
+        val uuid = gsTeam.uuid
         val cmTeam = TeamCM(uuid, cmGameState, color)
-        cmGameState.teams[uuid] = cmTeam
+        cmGameState.teamMap[uuid] = cmTeam
 
         for (gsSquad in gsTeam.squads) {
-            val cmSquadParentSector = cmGameState.sectors.getValue(gsSquad.sector!!.pos)
+            val cmSquadParentSector = cmGameState[gsSquad.sector!!.pos]!!
             val cmSquad = SquadCM(
                     gsSquad.uuid,
                     cmTeam,
@@ -28,20 +29,14 @@ fun ClientInitialPayload.toClientModel(): GameStateCM {
             )
 
             cmSquad.sector = cmSquadParentSector
-
             cmTeam.squads.add(cmSquad)
-            cmGameState.squads[cmSquad.uuid] = cmSquad
-            cmSquadParentSector.squads[cmSquad.uuid] = cmSquad
+            //cmSquadParentSector.squadMap[cmSquad.uuid] = cmSquad
 
             for (gsShip in gsSquad.ships) {
-                val cmShip = ShipCM(
+                val cmShip = cmSquad.addShip(
                         gsShip.uuid,
-                        cmSquad,
                         gsShip.transform.toGlobal()
                 )
-                cmSquad.ships[cmShip.uuid] = cmShip
-                cmGameState.ships[cmShip.uuid] = cmShip
-                cmSquadParentSector.ships[cmShip.uuid] = cmShip
 
                 for (gsTurret in gsShip.turrets) {
                     val cmTurret = TurretCM(
