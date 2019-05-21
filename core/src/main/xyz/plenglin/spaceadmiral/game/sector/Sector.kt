@@ -81,10 +81,15 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
     fun insertSquad(squad: Squad, pos: Vector2) {
         squad.sector = this
         squads[squad.uuid] = squad
+        squad.transform.transform.apply {
+            setLocalPosition(pos)
+            parent = null
+        }
+        squad.resetShipPositions()
     }
 
     private companion object {
         @JvmStatic
-        val logger = LoggerFactory.getLogger(Sector::class.java)
+        private val logger = LoggerFactory.getLogger(Sector::class.java)
     }
 }

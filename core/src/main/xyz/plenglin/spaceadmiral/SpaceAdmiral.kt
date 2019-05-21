@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.assets.AssetManager
 import ktx.scene2d.Scene2DSkin
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.GameInstance
+import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.squad.DummyCorvette
 import xyz.plenglin.spaceadmiral.game.squad.DummyCruiser
 import xyz.plenglin.spaceadmiral.game.squad.DummyFighter
@@ -34,15 +34,13 @@ class SpaceAdmiral : Game() {
 
         Scene2DSkin.defaultSkin = assets.get(ASSET_SKIN)
 
-        val gameInstance = GameInstance()
+        val gameState = GameState()
 
         val localBridge = GameLocalBridge(nextTeamID())
         val dummy = GameDummyPlayer(nextTeamID())
 
-        val server = GameServer(localBridge, dummy, instance = gameInstance)
+        val server = GameServer(localBridge, dummy, gameState = gameState)
 
-        val instance = server.instance
-        val gameState = instance.gameState
         val t1 = gameState[localBridge.team]!!
         val t2 = gameState[dummy.team]!!
 
@@ -91,7 +89,7 @@ class SpaceAdmiral : Game() {
             resetShipPositions()
         }
 
-        val initialPayload = gameInstance.toInitialDTO()
+        val initialPayload = gameState.toInitialDTO()
         localBridge.initialPayload = initialPayload
         localBridge.lockServerSide.unlock()
         logger.debug("{}", initialPayload)

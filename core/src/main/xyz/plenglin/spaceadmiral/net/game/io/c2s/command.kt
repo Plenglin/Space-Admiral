@@ -1,6 +1,6 @@
 package xyz.plenglin.spaceadmiral.net.game.io.c2s
 
-import xyz.plenglin.spaceadmiral.game.GameInstance
+import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.squad.Squad
 import xyz.plenglin.spaceadmiral.net.game.server.GamePlayerInterface
 import java.io.Serializable
@@ -22,12 +22,12 @@ sealed class CommandResult {
  */
 interface ClientCommand : Serializable {
     /**
-     * Called on the server side. Attempt to apply this command to the [GameInstance]. In the event of a failure, there
+     * Called on the server side. Attempt to apply this command to the [GameState]. In the event of a failure, there
      * should be NO changes applied.
      *
      * @param sender the player who sent it
-     * @param instance the [GameInstance] to apply it on
+     * @param gameState the [GameState] to apply it on
      * @return the result
      */
-    fun applyCommand(sender: GamePlayerInterface, instance: GameInstance): CommandResult
+    fun applyCommand(sender: GamePlayerInterface, gameState: GameState): CommandResult
 }

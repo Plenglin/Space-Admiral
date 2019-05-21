@@ -2,7 +2,7 @@ package xyz.plenglin.spaceadmiral.net.game.server
 
 import com.badlogic.gdx.graphics.Color
 import org.slf4j.LoggerFactory
-import xyz.plenglin.spaceadmiral.game.GameInstance
+import xyz.plenglin.spaceadmiral.game.GameState
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.game.TadarData.Companion.VISIBILITY_THRESHOLD
 import xyz.plenglin.spaceadmiral.game.sector.Sector
@@ -13,7 +13,7 @@ import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.asUpdateDTO
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameInstance = GameInstance()) {
+class GameServer(vararg players: GamePlayerInterfaceFactory, val gameState: GameState = GameState()) {
 
     private val commands: BlockingQueue<Pair<GamePlayerInterface, ClientCommand>> = LinkedBlockingQueue()
     val players: List<GamePlayer>
@@ -21,7 +21,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
     init {
         logger.info("Initializing server {}", this)
         this.players = players.mapIndexed { i, pl ->
-            val team = instance.gameState.createTeam(COLORS[i], uuid = pl.team)
+            val team = gameState.createTeam(COLORS[i], uuid = pl.team)
             GamePlayer(pl.createPlayerInterface(team, this))
         }
     }
@@ -42,7 +42,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         applyCommands()
 
         logger.trace("Updating GameInstance")
-        instance.update()
+        gameState.update()
 
         sendToClients()
     }
@@ -53,7 +53,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         commands.forEach { (sender, cmd) ->
             logger.info("Received command {} from {}", cmd, sender)
 
-            when (val result = cmd.applyCommand(sender, instance)) {
+            when (val result = cmd.applyCommand(sender, gameState)) {
                 is CommandResult.Success -> {
                     logger.info("Command {} successfully executed", cmd)
                 }
@@ -77,7 +77,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
         val occupiedSectors = player.occupied
         println(occupiedSectors)
-        val signals = instance.gameState.sectors.map { it to 0f }.toMap().toMutableMap()
+        val signals = gameState.sectors.map { it to 0f }.toMap().toMutableMap()
 
         occupiedSectors.forEach { s1 ->
             val strength = s1.squads.values
@@ -104,7 +104,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
             }
         }
 
-        val warping = instance.gameState.warpBubbles.map { it.value!!.asUpdateDTO(instance.gameState.time) }
+        val warping = gameState.warpBubbles.map { it.value.asUpdateDTO(gameState.time) }
         val sentSectors = knownSectors.map { it.asUpdateDTO() }
         val payload = ClientUpdatePayload(sentSectors, warping, listOf(), tadar)
         player.iface.sendPayload(payload)
