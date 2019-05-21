@@ -61,8 +61,8 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
         //}
         logger.info("Creating warp bubble from {} to {} with squads {}", this, destination, squads)
         val bubbledSquads = squads.mapNotNull(this.squads::get).toSet()
-        squads.forEach {
-            val squad = this.squads.remove(it)!!
+        for (squadID in squads) {
+            val squad = this.squads.remove(squadID)!!
             squad.sector = null
         }
         val out = WarpBubble(nextWarpBubbleID(), bubbledSquads, this.pos, parent.time, destination.pos, parent.time + 50)

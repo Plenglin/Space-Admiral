@@ -60,6 +60,7 @@ class GameStateCM {
             for (dtoSquad in dtoSector.squads) {
                 val squad = this[dtoSquad.uuid]!!
                 squad.updateWith(dtoSquad)
+                squad.sector = sector
 
                 for (dtoShip in dtoSquad.ships) {
                     val ship = squad[dtoShip.uuid.ship]!!

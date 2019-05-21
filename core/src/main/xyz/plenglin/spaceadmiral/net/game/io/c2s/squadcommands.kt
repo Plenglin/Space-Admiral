@@ -45,7 +45,7 @@ data class WarpSquadCommand(val recipients: List<SquadID>, val target: SectorID)
     override fun applyCommand(sender: GamePlayerInterface, gameState: GameState): CommandResult {
         val squadId = recipients.firstOrNull() ?: return CommandResult.InvalidData("No recipients supplied!")
         val squad = gameState[squadId] ?: return CommandResult.InvalidData("SquadID $squadId does not exist!")
-        //val dest = gameState.sectors[target] ?: return CommandResult.InvalidData("Destination sector does not exist!")
+
         val dest = gameState[target]
         val bubble = squad.sector?.createWarpBubble(recipients.toSet(), dest)
         return CommandResult.Success

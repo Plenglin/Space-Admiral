@@ -80,7 +80,9 @@ class GameState : Serializable {
                 warpBubbles.remove(bubble.uuid)
 
                 for (squad in bubble.squads) {
-                    sector.insertSquad(squad, bubble.delta.setLength(200f))
+                    val localDist = bubble.delta.setLength(200f).scl(-1f)
+                    logger.debug("Placing squad {} at {}", squad, localDist)
+                    sector.insertSquad(squad, localDist)
                 }
             }
         }

@@ -76,7 +76,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val gameState: Game
         tadar.initializeNoise()
 
         val occupiedSectors = player.occupied
-        println(occupiedSectors)
+        //println(occupiedSectors)
         val signals = gameState.sectors.map { it to 0f }.toMap().toMutableMap()
 
         occupiedSectors.forEach { s1 ->

@@ -36,7 +36,7 @@ class SectorCM(val pos: IntVector2, val gameState: GameStateCM) {
         shipTree.clear()
 
         for (squad in squads) {
-            if (squad.sector != this) continue
+            if (squad.sector != this) throw IllegalStateException("Squad $squad has sector ${squad.sector}, but is in $this!")
 
             for (ship in squad.ships) {
                 shipTree.insert(ship.transform.posGlobal, ship)
