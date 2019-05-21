@@ -26,25 +26,31 @@ class GameInstance : Serializable {
                 // Ship initial logic update
                 for (ship in squad.ships) {
                     ship.updateLogic()
-                    if (ship.template.repulsion != null) {
-                        repulsors.add(ship)
-                    }
+                }
+
+                // Process repulsors
+                if (squad.template.repulsion == null || squad.sector == null) continue  // Do not process
+                for (ship in squad.ships) {
+                    repulsors.add(ship)
                 }
             }
         }
 
-        val bubbles = gameState.warpBubbles.map { it.value }.toMutableSet()
-        for (bubble in bubbles) {
+        for (bubble in gameState.warpBubbles.values) {
             if (bubble.hasArrived(gameState.time)) {
-                bubbles.remove(bubble)
-            } else {
                 val sector = gameState[bubble.endSector]
-                sector.squads
+
+                logger.info("{} has arrived at {}", bubble, sector)
+                gameState.warpBubbles.remove(bubble.uuid)
+
+                for (squad in bubble.squads) {
+                    sector.insertSquad(squad, bubble.delta.setLength(200f))
+                }
             }
         }
 
         // Process repulsor forces
-        repulsors.forEach { ship ->
+        for (ship in repulsors) {
             ship.sector!!.shipTree!!.findInCircle(ship.transform.posGlobal, ship.template.repulsion!!.range)
                     .map { it.value!! }
                     .filter { !ship.team.isAlliedWith(it.team) }

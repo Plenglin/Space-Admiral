@@ -33,8 +33,9 @@ class SimpleGridRenderer : GridRenderer {
         gridPixmap.blending = Pixmap.Blending.None
         gridPixmap.fill()
         gridPixmap.blending = Pixmap.Blending.SourceOver
+
         gs.tadar.drawTadar(gridPixmap)
-        gs.sectors.forEach { s ->
+        for (s in gs.sectors) {
             val p = s.pos
             gridPixmap.setColor(contested)
             gridPixmap.drawPixel(p.x, GRID_SIZE - p.y - 1)

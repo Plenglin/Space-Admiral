@@ -45,46 +45,48 @@ class SpaceAdmiral : Game() {
         val gameState = instance.gameState
         val t1 = gameState[localBridge.team]!!
         val t2 = gameState[dummy.team]!!
-        val sector = gameState[IntVector2(0, 0)]
 
-        t1.createSquad(DummyFighter, sector).apply {
+        val sector1 = gameState[IntVector2(0, 0)]
+        val sector2 = gameState[IntVector2(1, 1)]
+
+        t1.createSquad(DummyFighter, sector1).apply {
             transform.transform.angleLocal = 0.1f
             transform.transform.setLocalPosition(0f, 0f)
             resetShipPositions()
         }
 
-        t1.createSquad(DummyFighter, sector).apply {
+        t1.createSquad(DummyFighter, sector2).apply {
             transform.transform.setLocalPosition(10f, 0f)
             resetShipPositions()
         }
 
-        t1.createSquad(DummyFighter, sector).apply {
+        t1.createSquad(DummyFighter, sector1).apply {
             transform.transform.angleLocal = 0.1f
             transform.transform.setLocalPosition(-14f, 53f)
             resetShipPositions()
         }
 
-        t1.createSquad(DummyFighter, sector).apply {
+        t1.createSquad(DummyFighter, sector1).apply {
             transform.transform.setLocalPosition(36f, 23f)
             resetShipPositions()
         }
 
-        t1.createSquad(DummyCorvette, sector).apply {
+        t1.createSquad(DummyCorvette, sector1).apply {
             transform.transform.setLocalPosition(-30f, 20f)
             resetShipPositions()
         }
 
-        t1.createSquad(DummyCruiser, sector).apply {
+        t1.createSquad(DummyCruiser, sector1).apply {
             transform.transform.setLocalPosition(43f, -23f)
             resetShipPositions()
         }
 
-        t2.createSquad(DummyFighter, sector).apply {
+        t2.createSquad(DummyFighter, sector1).apply {
             transform.transform.setLocalPosition(10f, 20f)
             resetShipPositions()
         }
 
-        t2.createSquad(DummyCorvette, sector).apply {
+        t2.createSquad(DummyCorvette, sector1).apply {
             transform.transform.setLocalPosition(-20f, 20f)
             resetShipPositions()
         }

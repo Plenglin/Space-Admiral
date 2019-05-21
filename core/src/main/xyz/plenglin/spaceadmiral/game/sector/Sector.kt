@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.game.sector
 
+import com.badlogic.gdx.math.Vector2
 import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.SquadID
 import xyz.plenglin.spaceadmiral.game.GameState
@@ -64,7 +65,7 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
             val squad = this.squads.remove(it)!!
             squad.sector = null
         }
-        val out = WarpBubble(nextWarpBubbleID(), bubbledSquads, this.pos, parent.time, destination.pos, parent.time + 1000)
+        val out = WarpBubble(nextWarpBubbleID(), bubbledSquads, this.pos, parent.time, destination.pos, parent.time + 50)
         parent.warpBubbles[out.uuid] = out
         return out
     }
@@ -75,6 +76,11 @@ class Sector(val parent: GameState, val pos: IntVector2) : Serializable {
 
     override fun toString(): String {
         return "Sector($pos)"
+    }
+
+    fun insertSquad(squad: Squad, pos: Vector2) {
+        squad.sector = this
+        squads[squad.uuid] = squad
     }
 
     private companion object {

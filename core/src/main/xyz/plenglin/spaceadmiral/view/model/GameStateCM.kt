@@ -1,5 +1,6 @@
 package xyz.plenglin.spaceadmiral.view.model
 
+import org.slf4j.LoggerFactory
 import xyz.plenglin.spaceadmiral.*
 import xyz.plenglin.spaceadmiral.game.TadarData
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
@@ -50,7 +51,10 @@ class GameStateCM {
         for (dtoSector in payload.sectors) {
             val pos = dtoSector.pos
             unmentionedSectors.remove(pos)
-            val sector = sectorMap.getOrPut(pos) { SectorCM(pos, this) }
+            val sector = sectorMap.getOrPut(pos) {
+                logger.info("Sector at {} not recorded. Creating new sector", pos)
+                SectorCM(pos, this)
+            }
             sector.updateWith(dtoSector)
 
             for (dtoSquad in dtoSector.squads) {
@@ -73,4 +77,8 @@ class GameStateCM {
         return teamMap[shipID.squad.team]?.get(shipID.squad.squad)?.get(shipID.ship)
     }
 
+    private companion object {
+        @JvmStatic
+        val logger = LoggerFactory.getLogger(GameStateCM::class.java)
+    }
 }

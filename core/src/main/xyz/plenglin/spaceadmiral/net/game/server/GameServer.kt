@@ -10,8 +10,6 @@ import xyz.plenglin.spaceadmiral.net.game.io.c2s.ClientCommand
 import xyz.plenglin.spaceadmiral.net.game.io.c2s.CommandResult
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.ClientUpdatePayload
 import xyz.plenglin.spaceadmiral.net.game.io.s2c.update.asUpdateDTO
-import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -19,9 +17,6 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
     private val commands: BlockingQueue<Pair<GamePlayerInterface, ClientCommand>> = LinkedBlockingQueue()
     val players: List<GamePlayer>
-
-    private val bos = ByteArrayOutputStream()
-    private val oos = ObjectOutputStream(bos)
 
     init {
         logger.info("Initializing server {}", this)
@@ -33,6 +28,16 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
     fun update() {
         logger.trace("Updating server {}", this)
+
+        players.forEach { player ->
+            player.occupied.clear()
+            player.team.squads.forEach {
+                val sector = it.sector
+                if (sector != null) {
+                    player.occupied.add(sector)
+                }
+            }
+        }
 
         applyCommands()
 
@@ -61,16 +66,6 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
 
     private fun sendToClients() {
         players.forEach { player ->
-            player.occupied.clear()
-            player.team.squads.forEach {
-                val sector = it.sector
-                if (sector != null) {
-                    player.occupied.add(sector)
-                }
-            }
-        }
-
-        players.forEach { player ->
             sendToPlayer(player)
         }
     }
@@ -81,6 +76,7 @@ class GameServer(vararg players: GamePlayerInterfaceFactory, val instance: GameI
         tadar.initializeNoise()
 
         val occupiedSectors = player.occupied
+        println(occupiedSectors)
         val signals = instance.gameState.sectors.map { it to 0f }.toMap().toMutableMap()
 
         occupiedSectors.forEach { s1 ->
